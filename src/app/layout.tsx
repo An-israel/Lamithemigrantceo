@@ -4,6 +4,9 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
+import { CartProvider } from "@/components/cart/CartProvider";
+import { CartDrawer } from "@/components/cart/CartDrawer";
+import { PageViewTracker } from "@/components/PageViewTracker";
 import { getSettings } from "@/lib/data";
 
 // Variable font: when `axes` are set, `weight` must not be pinned — the wght
@@ -53,10 +56,14 @@ export default async function RootLayout({
   return (
     <html lang="en-GB" className={`${fraunces.variable} ${karla.variable}`}>
       <body className="min-h-screen flex flex-col">
-        <AnnouncementBar settings={settings} />
-        <Header settings={settings} />
-        <main className="flex-1">{children}</main>
-        <Footer settings={settings} />
+        <CartProvider>
+          <AnnouncementBar settings={settings} />
+          <Header settings={settings} />
+          <main className="flex-1">{children}</main>
+          <Footer settings={settings} />
+          <CartDrawer />
+        </CartProvider>
+        <PageViewTracker />
       </body>
     </html>
   );

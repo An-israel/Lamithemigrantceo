@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { getPrograms } from "@/lib/data";
+import { getBundles } from "@/lib/wholesale";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const programs = await getPrograms();
+  const [programs, bundles] = await Promise.all([getPrograms(), getBundles()]);
 
   const staticRoutes = [
     "",
@@ -23,5 +24,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
   }));
 
-  return [...staticRoutes, ...programRoutes];
+  const bundleRoutes = bundles.map((b) => ({
+    url: `${base}/wholesale/${b.slug}`,
+    lastModified: new Date(),
+  }));
+
+  return [...staticRoutes, ...programRoutes, ...bundleRoutes];
 }

@@ -13,6 +13,12 @@ Supabase dashboard → **SQL editor** → paste and run, in order:
 1. `supabase/migrations/0001_init.sql` — tables, enums, RLS, triggers.
 2. `supabase/migrations/0002_seed.sql` — placeholder content (edit later from
    the admin panel).
+3. `supabase/migrations/0003_release2.sql` — `media` storage bucket + policies,
+   editable homepage receipt, and anon insert policies for analytics
+   (`page_views`) and restock alerts.
+
+Running `0003` also creates the image-upload bucket, so the admin editors work
+out of the box — you can skip the manual bucket step in section 5.
 
 Or with the CLI:
 

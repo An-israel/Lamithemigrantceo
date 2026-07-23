@@ -42,7 +42,11 @@ export default async function HomePage() {
           </div>
 
           <div className="pb-8">
-            <Receipt />
+            <Receipt
+              items={settings.receipt_items ?? undefined}
+              resold={settings.receipt_resold_gbp ?? undefined}
+              note={settings.receipt_note ?? undefined}
+            />
           </div>
         </div>
       </section>

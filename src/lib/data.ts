@@ -153,6 +153,15 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   announcement_enabled: false,
   announcement_message: null,
   announcement_link: null,
+  receipt_items: [
+    { label: "Mixed jewelry bundle", value: 85 },
+    { label: "Packaging and labels", value: 22 },
+    { label: "Postage float", value: 18 },
+    { label: "Sample stock", value: 45 },
+    { label: "Business cards", value: 30 },
+  ],
+  receipt_resold_gbp: 640,
+  receipt_note: "Her actual first order, 2021.",
 };
 
 // --- Query helpers ---------------------------------------------------------
