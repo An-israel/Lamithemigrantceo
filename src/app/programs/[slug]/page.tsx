@@ -22,6 +22,12 @@ export async function generateMetadata({
   return {
     title: program.name,
     description: program.short_description,
+    alternates: { canonical: `/programs/${program.slug}` },
+    openGraph: {
+      title: program.name,
+      description: program.short_description,
+      images: program.cover_image ? [program.cover_image] : undefined,
+    },
   };
 }
 
@@ -43,8 +49,35 @@ export default async function ProgramDetailPage({
   const formatLabel =
     program.format === "live_cohort" ? "Live cohort" : "Self-paced";
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: program.name,
+    description: program.short_description,
+    provider: {
+      "@type": "Organization",
+      name: "Lami the Migrant CEO",
+      sameAs: siteUrl,
+    },
+    offers: {
+      "@type": "Offer",
+      category: formatLabel,
+      price: program.price_gbp,
+      priceCurrency: "GBP",
+      availability: soldOut
+        ? "https://schema.org/SoldOut"
+        : "https://schema.org/InStock",
+      url: `${siteUrl}/programs/${program.slug}`,
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Section background="shell" className="!pb-10">
         <Link href="/programs" className="text-sm text-muted no-underline hover:text-clay">
           ← All programs

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ButtonLink } from "@/components/Button";
+import { CartButton } from "@/components/cart/CartButton";
 import type { SiteSettings } from "@/lib/types";
 
 const NAV = [
@@ -62,21 +63,25 @@ export function Header({ settings }: { settings: SiteSettings }) {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-2 md:flex">
+          <CartButton />
           <ButtonLink href={bookCall}>Book a call</ButtonLink>
         </div>
 
-        <button
-          className="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-input"
-          aria-label="Open menu"
-          aria-expanded={open}
-          onClick={() => setOpen(true)}
-        >
+        <div className="flex items-center md:hidden">
+          <CartButton />
+          <button
+            className="inline-flex h-11 w-11 items-center justify-center rounded-input"
+            aria-label="Open menu"
+            aria-expanded={open}
+            onClick={() => setOpen(true)}
+          >
           <span className="sr-only">Open menu</span>
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
-        </button>
+          </button>
+        </div>
       </div>
 
       {/* Full-screen mobile menu */}

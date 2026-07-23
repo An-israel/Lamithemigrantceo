@@ -96,6 +96,11 @@ export interface AppUser {
   role: UserRole;
 }
 
+export interface ReceiptItem {
+  label: string;
+  value: number;
+}
+
 export interface SiteSettings {
   id: number;
   whatsapp_number: string | null;
@@ -108,6 +113,9 @@ export interface SiteSettings {
   announcement_enabled: boolean;
   announcement_message: string | null;
   announcement_link: string | null;
+  receipt_items: ReceiptItem[] | null;
+  receipt_resold_gbp: number | null;
+  receipt_note: string | null;
 }
 
 type Row<T> = T;

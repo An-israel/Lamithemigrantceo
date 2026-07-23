@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import type { SiteSettings } from "@/lib/types";
+import type { SiteSettings, ReceiptItem } from "@/lib/types";
 
 /** Editable contact details, hero copy and announcement bar. Writes to the
  *  single `site_settings` row (id = 1). */
@@ -33,6 +33,9 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
           announcement_enabled: form.announcement_enabled,
           announcement_message: form.announcement_message,
           announcement_link: form.announcement_link,
+          receipt_items: form.receipt_items,
+          receipt_resold_gbp: form.receipt_resold_gbp,
+          receipt_note: form.receipt_note,
         })
         .eq("id", 1);
       if (error) throw error;
@@ -85,6 +88,79 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
               className="field resize-y"
             />
           </div>
+        </div>
+      </section>
+
+      <section className="rounded-card border border-line p-6">
+        <h3>Homepage receipt</h3>
+        <p className="mt-1 text-sm text-muted">
+          The £200 receipt on the homepage. Edit the line items, the resold
+          total and the caption. The total and margin calculate automatically.
+        </p>
+        <div className="mt-4 space-y-2">
+          {(form.receipt_items || []).map((item, i) => (
+            <div key={i} className="flex gap-2">
+              <input
+                value={item.label}
+                onChange={(e) => {
+                  const next = [...(form.receipt_items || [])];
+                  next[i] = { ...next[i], label: e.target.value };
+                  set("receipt_items", next);
+                }}
+                placeholder="Line item"
+                className="field"
+              />
+              <input
+                type="number"
+                value={item.value}
+                onChange={(e) => {
+                  const next = [...(form.receipt_items || [])];
+                  next[i] = { ...next[i], value: Number(e.target.value) };
+                  set("receipt_items", next);
+                }}
+                className="field w-28"
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  set(
+                    "receipt_items",
+                    (form.receipt_items || []).filter((_, idx) => idx !== i)
+                  )
+                }
+                className="shrink-0 rounded-input border border-line px-3 text-muted hover:border-clay"
+                aria-label="Remove line"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() =>
+              set("receipt_items", [
+                ...(form.receipt_items || []),
+                { label: "", value: 0 } as ReceiptItem,
+              ])
+            }
+            className="text-sm text-clay underline"
+          >
+            + Add line
+          </button>
+        </div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="label mb-2 block">Resold for (GBP)</label>
+            <input
+              type="number"
+              value={form.receipt_resold_gbp ?? ""}
+              onChange={(e) =>
+                set("receipt_resold_gbp", e.target.value ? Number(e.target.value) : null)
+              }
+              className="field"
+            />
+          </div>
+          {field("Caption", "receipt_note")}
         </div>
       </section>
 

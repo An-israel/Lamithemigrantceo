@@ -24,11 +24,14 @@ mentorship, a student area and an admin control room.
 | Contact form → Supabase `enquiries` + email notify | ✅ Release 1 |
 | Admin shell, dashboard, enquiries inbox, settings | ✅ Release 1 |
 | Auth (magic link), student area `/my` | ✅ Release 1/2 |
-| Stripe checkout for programs + webhook | ✅ scaffolded |
-| Wholesale storefront (cart/checkout) | 🚧 Release 2 |
-| Programs & wholesale editors, orders fulfilment | 🚧 Release 2 |
-| Analytics, announcement/testimonials admin | 🚧 Release 3 |
-| SEO (sitemap, robots, OG, JSON-LD), legal pages | ✅ / 🚧 |
+| Stripe checkout for programs + webhook | ✅ Release 1/2 |
+| Wholesale storefront: detail pages, cart, multi-item checkout | ✅ Release 2 |
+| Restock alerts on sold-out bundles | ✅ Release 2 |
+| Programs & wholesale editors (autosave, WebP image upload) | ✅ Release 2 |
+| Orders admin: fulfilment, tracking email, CSV export | ✅ Release 2 |
+| Cookieless analytics (traffic, sources, funnel) | ✅ Release 3 |
+| Testimonials admin, editable homepage receipt | ✅ Release 3 |
+| SEO (sitemap, robots, OG, Course JSON-LD), legal pages | ✅ Release 3 |
 
 See `docs/lamiwebsitebuildprompts.md`-style spec was the source of truth; the
 three-release plan is preserved in the roadmap above.
