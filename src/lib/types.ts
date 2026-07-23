@@ -1,0 +1,140 @@
+/**
+ * Hand-maintained database types. Keep in sync with
+ * supabase/migrations. Regenerate with `supabase gen types typescript`
+ * once the CLI is linked to the project if you prefer generated types.
+ */
+
+export type ProgramFormat = "live_cohort" | "self_paced";
+export type ProgramStatus = "draft" | "live" | "sold_out";
+export type EnquiryStatus = "new" | "read" | "replied";
+export type OrderStatus = "pending" | "paid" | "refunded" | "failed";
+export type FulfilmentStatus = "none" | "new" | "packed" | "shipped" | "delivered";
+export type UserRole = "student" | "admin";
+
+export interface Program {
+  id: string;
+  created_at: string;
+  slug: string;
+  name: string;
+  short_description: string;
+  full_description: string;
+  cover_image: string | null;
+  price_gbp: number;
+  compare_at_gbp: number | null;
+  format: ProgramFormat;
+  start_date: string | null;
+  duration: string | null;
+  who_for: string[];
+  what_you_get: string[];
+  status: ProgramStatus;
+  sort_order: number;
+}
+
+export interface Testimonial {
+  id: string;
+  created_at: string;
+  name: string;
+  photo: string | null;
+  quote: string;
+  result_figure: string | null;
+  program_id: string | null;
+  sort_order: number;
+  archived: boolean;
+}
+
+export interface Enquiry {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  whatsapp: string | null;
+  topic: string;
+  message: string;
+  marketing_opt_in: boolean;
+  status: EnquiryStatus;
+  source_page: string | null;
+  admin_notes: string | null;
+}
+
+export interface WholesaleProduct {
+  id: string;
+  created_at: string;
+  slug: string;
+  name: string;
+  description: string;
+  whats_inside: string;
+  unit_count: number;
+  price_gbp: number;
+  typical_resale_gbp: number | null;
+  stock: number;
+  category: string;
+  images: string[];
+  archived: boolean;
+  sort_order: number;
+}
+
+export interface Order {
+  id: string;
+  created_at: string;
+  stripe_session_id: string | null;
+  email: string;
+  name: string | null;
+  item_type: "program" | "wholesale";
+  item_id: string | null;
+  amount_gbp: number;
+  status: OrderStatus;
+  fulfilment_status: FulfilmentStatus;
+  tracking_number: string | null;
+  shipping_address: Record<string, unknown> | null;
+}
+
+export interface AppUser {
+  id: string;
+  created_at: string;
+  email: string;
+  full_name: string | null;
+  role: UserRole;
+}
+
+export interface SiteSettings {
+  id: number;
+  whatsapp_number: string | null;
+  public_email: string | null;
+  calendly_url: string | null;
+  instagram_handle: string | null;
+  tiktok_handle: string | null;
+  hero_headline: string | null;
+  hero_paragraph: string | null;
+  announcement_enabled: boolean;
+  announcement_message: string | null;
+  announcement_link: string | null;
+}
+
+type Row<T> = T;
+type Insert<T> = Partial<T>;
+type Update<T> = Partial<T>;
+
+interface TableDef<T> {
+  Row: Row<T>;
+  Insert: Insert<T>;
+  Update: Update<T>;
+  Relationships: [];
+}
+
+export interface Database {
+  public: {
+    Tables: {
+      users: TableDef<AppUser>;
+      programs: TableDef<Program>;
+      testimonials: TableDef<Testimonial>;
+      enquiries: TableDef<Enquiry>;
+      wholesale_products: TableDef<WholesaleProduct>;
+      orders: TableDef<Order>;
+      site_settings: TableDef<SiteSettings>;
+    };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
+  };
+}
