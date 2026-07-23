@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Design tokens — the single source of truth for the brand.
+   Rules: never pure black, never pure white, never grey.
+   To recede, use --muted. To separate, use --line.
+   ========================================================================== */
+:root {
+  --shell: #fcf4ef; /* page background, warm off-white with a peach cast */
+  --peach: #f7dccb; /* full-bleed section tint, used as blocks not accents */
+  --peach-deep: #efc3a8; /* card backgrounds, hover on tinted sections */
+  --clay: #b5502f; /* primary. buttons, links, active states */
+  --clay-deep: #8e3c22; /* button hover and pressed */
+  --ink: #2a1b14; /* all body and heading text, warm near-black brown */
+  --muted: #8b7469; /* secondary text, captions, form hints */
+  --jade: #2f5548; /* rare accent. only for status: enrolled, paid, verified */
+  --line: #e8d5c7; /* hairline borders and dividers */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--shell);
+    color: var(--ink);
+    font-family: var(--font-karla), system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 17px;
+    }
+  }
+
+  /* Type scale ------------------------------------------------------------ */
+  h1,
+  .h1 {
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-variation-settings: "WONK" 1, "opsz" 60;
+  }
+
+  h2,
+  .h2 {
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.15;
+    font-variation-settings: "WONK" 1, "opsz" 40;
+  }
+
+  h3,
+  .h3 {
+    font-family: var(--font-karla), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  @media (min-width: 768px) {
+    h1,
+    .h1 {
+      font-size: 60px;
+    }
+    h2,
+    .h2 {
+      font-size: 40px;
+    }
+    h3,
+    .h3 {
+      font-size: 24px;
+    }
+  }
+
+  a {
+    color: var(--clay);
+    text-underline-offset: 3px;
+  }
+
+  /* Visible focus rings on every interactive element. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--clay);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--peach-deep);
+    color: var(--ink);
+  }
+}
+
+@layer components {
+  /* Label style — uppercase micro-heading. */
+  .label {
+    font-family: var(--font-karla), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  /* Price style — tabular figures. */
+  .price {
+    font-family: var(--font-karla), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (min-width: 768px) {
+    .price {
+      font-size: 24px;
+    }
+  }
+
+  /* Constrained body measure. */
+  .prose-measure {
+    max-width: 68ch;
+  }
+
+  /* Buttons -------------------------------------------------------------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-family: var(--font-karla), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      transform 200ms ease,
+      border-color 200ms ease;
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background-color: var(--clay);
+    color: var(--shell);
+    border: 1.5px solid var(--clay);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--clay-deep);
+    border-color: var(--clay-deep);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--clay);
+    border: 1.5px solid var(--clay);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--clay);
+    color: var(--shell);
+    transform: translateY(-1px);
+  }
+
+  .card {
+    background-color: var(--shell);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  .field {
+    width: 100%;
+    background: var(--shell);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 12px 14px;
+    font-family: var(--font-karla), system-ui, sans-serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .field::placeholder {
+    color: var(--muted);
+  }
+  .field:focus {
+    border-color: var(--clay);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: var(--font-karla), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+  }
+}
+
+/* Motion — respect user preference and disable everything non-essential. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
