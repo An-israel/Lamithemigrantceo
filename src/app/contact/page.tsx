@@ -5,7 +5,16 @@ import { getSettings } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Talk to Lami. Tell her where you are and she'll tell you the next step.",
+  description:
+    "Speaking, media, partnerships, consulting or general enquiries — reach Lami the right way.",
+};
+
+const TYPE_LABELS: Record<string, string> = {
+  speaking: "Speaking",
+  media: "Media",
+  partnerships: "Partnerships",
+  consulting: "Consulting",
+  general: "General",
 };
 
 function ContactRow({
@@ -37,19 +46,29 @@ function ContactRow({
   );
 }
 
-export default async function ContactPage() {
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: { type?: string };
+}) {
   const settings = await getSettings();
   const waDigits = (settings.whatsapp_number || "").replace(/[^0-9]/g, "");
+  const initialType =
+    searchParams.type && TYPE_LABELS[searchParams.type]
+      ? TYPE_LABELS[searchParams.type]
+      : undefined;
 
   return (
     <Section background="shell">
-      <h1>Talk to Lami.</h1>
+      <p className="label text-clay">Contact</p>
+      <h1 className="mt-3">Let&rsquo;s talk.</h1>
       <p className="mt-4 max-w-prose text-muted">
-        Tell me where you are and I will tell you the next step.
+        Choose the right route below and I&rsquo;ll make sure your message
+        reaches the right place. I aim to reply within one working day.
       </p>
 
       <div className="mt-10 grid gap-10 md:grid-cols-2">
-        <ContactForm />
+        <ContactForm initialType={initialType} />
 
         <div className="rounded-card border border-line bg-peach p-6">
           <p className="label">Or reach me directly</p>
@@ -65,13 +84,19 @@ export default async function ContactPage() {
               label="Email"
               detail={settings.public_email || "hello@lamithemigrantceo.com"}
             />
-            <ContactRow
-              href={settings.calendly_url || "#"}
-              label="Book a call"
-              detail="15 minutes, free"
-              external
-            />
+            {settings.calendly_url && (
+              <ContactRow
+                href={settings.calendly_url}
+                label="Book a call"
+                detail="Schedule a time"
+                external
+              />
+            )}
           </div>
+          <p className="mt-6 text-sm text-muted">
+            For press and speaking, use the form and pick the matching enquiry
+            type so it routes correctly.
+          </p>
         </div>
       </div>
     </Section>

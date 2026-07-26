@@ -7,11 +7,15 @@ import { clsx } from "@/lib/clsx";
 const NAV = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/enquiries", label: "Enquiries" },
+  { href: "/admin/journal", label: "Journal" },
+  { href: "/admin/links", label: "Links" },
+  { href: "/admin/resources", label: "Resources" },
   { href: "/admin/programs", label: "Programs" },
   { href: "/admin/wholesale", label: "Wholesale" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/students", label: "Students" },
   { href: "/admin/testimonials", label: "Testimonials" },
+  { href: "/admin/impact", label: "Impact" },
   { href: "/admin/analytics", label: "Analytics" },
   { href: "/admin/settings", label: "Settings" },
 ];

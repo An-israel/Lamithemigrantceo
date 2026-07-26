@@ -4,19 +4,29 @@
 
 /* ==========================================================================
    Design tokens — the single source of truth for the brand.
-   Rules: never pure black, never pure white, never grey.
+   Palette per client brief §7: matte black, ivory, deep emerald, rich gold.
+   Premium, established, warm, ambitious — NOT a pink/feminine influencer look.
+   Rules: never pure black, never pure white. Gold is an ACCENT, used sparingly.
    To recede, use --muted. To separate, use --line.
+
+   Note: token names are kept from the original build so every existing
+   component re-skins consistently. Semantic mapping:
+     --shell = ivory page          --peach/-deep = warm ivory tints/cards
+     --clay/-deep = deep emerald    --ink = matte black    --jade = success
+     --gold/-soft = rich gold accent
    ========================================================================== */
 :root {
-  --shell: #fcf4ef; /* page background, warm off-white with a peach cast */
-  --peach: #f7dccb; /* full-bleed section tint, used as blocks not accents */
-  --peach-deep: #efc3a8; /* card backgrounds, hover on tinted sections */
-  --clay: #b5502f; /* primary. buttons, links, active states */
-  --clay-deep: #8e3c22; /* button hover and pressed */
-  --ink: #2a1b14; /* all body and heading text, warm near-black brown */
-  --muted: #8b7469; /* secondary text, captions, form hints */
-  --jade: #2f5548; /* rare accent. only for status: enrolled, paid, verified */
-  --line: #e8d5c7; /* hairline borders and dividers */
+  --shell: #f8f6f0; /* page background, ivory */
+  --peach: #efe8da; /* full-bleed section tint, warm ivory */
+  --peach-deep: #e6dac2; /* card backgrounds, hover on tinted sections */
+  --clay: #0e4d3a; /* primary. buttons, links, active states — deep emerald */
+  --clay-deep: #0a3a2b; /* button hover and pressed */
+  --ink: #17140e; /* all body and heading text, matte warm black */
+  --muted: #6e6658; /* secondary text, captions, form hints */
+  --jade: #2f6e52; /* status: enrolled, paid, verified */
+  --line: #e5ddcb; /* hairline borders and dividers */
+  --gold: #b4893c; /* rich gold accent — used sparingly */
+  --gold-soft: #cba85c; /* softer gold for large figures on dark */
 }
 
 @layer base {

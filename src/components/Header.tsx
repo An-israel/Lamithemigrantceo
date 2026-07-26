@@ -8,9 +8,11 @@ import { CartButton } from "@/components/cart/CartButton";
 import type { SiteSettings } from "@/lib/types";
 
 const NAV = [
-  { href: "/programs", label: "Programs" },
-  { href: "/wholesale", label: "Wholesale" },
+  { href: "/start-here", label: "Start Here" },
   { href: "/about", label: "About" },
+  { href: "/ecosystem", label: "Ecosystem" },
+  { href: "/speaking", label: "Speaking" },
+  { href: "/journal", label: "Journal" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -42,8 +44,6 @@ export function Header({ settings }: { settings: SiteSettings }) {
     };
   }, [open]);
 
-  const bookCall = settings.calendly_url || "/contact";
-
   return (
     <header className="sticky top-0 z-40 h-[72px] border-b border-line bg-shell">
       <div className="mx-auto flex h-full max-w-content items-center justify-between px-5 md:px-10">
@@ -65,7 +65,7 @@ export function Header({ settings }: { settings: SiteSettings }) {
 
         <div className="hidden items-center gap-2 md:flex">
           <CartButton />
-          <ButtonLink href={bookCall}>Book a call</ButtonLink>
+          <ButtonLink href="/work-with-lami">Work With Me</ButtonLink>
         </div>
 
         <div className="flex items-center md:hidden">
@@ -114,8 +114,8 @@ export function Header({ settings }: { settings: SiteSettings }) {
             ))}
           </nav>
           <div className="p-5">
-            <ButtonLink href={bookCall} fullWidthMobile>
-              Book a call
+            <ButtonLink href="/work-with-lami" fullWidthMobile>
+              Work With Me
             </ButtonLink>
           </div>
         </div>

@@ -152,9 +152,27 @@ export function EnquiriesInbox({ initial }: { initial: Enquiry[] }) {
 
             <dl className="mt-4 space-y-2 text-sm">
               <div>
-                <dt className="label">Topic</dt>
+                <dt className="label">Enquiry type</dt>
                 <dd>{selected.topic}</dd>
               </div>
+              {selected.organisation && (
+                <div>
+                  <dt className="label">Organisation</dt>
+                  <dd>{selected.organisation}</dd>
+                </div>
+              )}
+              {selected.event_date && (
+                <div>
+                  <dt className="label">Event date</dt>
+                  <dd>{new Date(selected.event_date).toLocaleDateString("en-GB")}</dd>
+                </div>
+              )}
+              {selected.budget_range && (
+                <div>
+                  <dt className="label">Budget</dt>
+                  <dd>{selected.budget_range}</dd>
+                </div>
+              )}
               {selected.whatsapp && (
                 <div>
                   <dt className="label">WhatsApp</dt>

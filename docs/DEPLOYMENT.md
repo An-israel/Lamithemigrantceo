@@ -16,6 +16,10 @@ Supabase dashboard → **SQL editor** → paste and run, in order:
 3. `supabase/migrations/0003_release2.sql` — `media` storage bucket + policies,
    editable homepage receipt, and anon insert policies for analytics
    (`page_views`) and restock alerts.
+4. `supabase/migrations/0004_brief.sql` — routed-enquiry fields (organisation,
+   event date, budget), and the CMS tables from the client brief: journal
+   posts, bio links (link-in-bio), resources, impact stats, plus the
+   `increment_bio_click` RPC. Run this alongside the others.
 
 Running `0003` also creates the image-upload bucket, so the admin editors work
 out of the box — you can skip the manual bucket step in section 5.

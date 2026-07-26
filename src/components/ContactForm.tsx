@@ -2,24 +2,34 @@
 
 import { useState } from "react";
 
-const TOPICS = [
-  "Joining a program",
-  "Wholesale bundles",
-  "Speaking or press",
-  "Something else",
+// §6.10 — separate enquiry routes
+const TYPES = ["Speaking", "Media", "Partnerships", "Consulting", "General"];
+const BUDGETS = [
+  "Not sure yet",
+  "Under £1,000",
+  "£1,000–£5,000",
+  "£5,000–£15,000",
+  "£15,000+",
 ];
 
-const MAX_MESSAGE = 500;
+const MAX_MESSAGE = 1000;
 
-export function ContactForm() {
+export function ContactForm({ initialType }: { initialType?: string }) {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
   const [error, setError] = useState<string | null>(null);
+  const [topic, setTopic] = useState(initialType || TYPES[0]);
   const [message, setMessage] = useState("");
+  // Honeypot for basic spam protection.
+  const [company, setCompany] = useState("");
+
+  const showEventDate = topic === "Speaking";
+  const showBudget = ["Speaking", "Partnerships", "Consulting"].includes(topic);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (company) return; // honeypot tripped
     setState("sending");
     setError(null);
 
@@ -33,8 +43,10 @@ export function ContactForm() {
         body: JSON.stringify({
           name: data.name,
           email: data.email,
-          whatsapp: data.whatsapp,
-          topic: data.topic,
+          organisation: data.organisation,
+          topic,
+          event_date: data.event_date || null,
+          budget_range: data.budget_range || null,
           message: data.message,
           marketing_opt_in: data.marketing_opt_in === "on",
           source_page: "/contact",
@@ -45,12 +57,12 @@ export function ContactForm() {
         throw new Error(body.error || "Message did not send.");
       }
       setState("sent");
-    } catch (e) {
+    } catch (err) {
       setState("error");
       setError(
-        e instanceof Error
-          ? e.message
-          : "Message did not send. Message me on WhatsApp instead."
+        err instanceof Error
+          ? err.message
+          : "Message did not send. Try WhatsApp instead."
       );
     }
   }
@@ -59,9 +71,7 @@ export function ContactForm() {
     return (
       <div className="rounded-card border border-jade bg-shell p-8">
         <p className="font-display text-2xl text-jade">Message sent.</p>
-        <p className="mt-2 text-muted">
-          Lami replies within one working day.
-        </p>
+        <p className="mt-2 text-muted">Lami replies within one working day.</p>
         <button
           className="btn btn-secondary mt-6"
           onClick={() => {
@@ -77,11 +87,38 @@ export function ContactForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
+      {/* Enquiry type first — it routes the message */}
       <div>
-        <label htmlFor="name" className="label mb-2 block">
-          Full name
+        <label htmlFor="topic" className="label mb-2 block">
+          Enquiry type
         </label>
-        <input id="name" name="name" required className="field" />
+        <select
+          id="topic"
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          className="field"
+        >
+          {TYPES.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="name" className="label mb-2 block">
+            Full name
+          </label>
+          <input id="name" name="name" required className="field" />
+        </div>
+        <div>
+          <label htmlFor="organisation" className="label mb-2 block">
+            Organisation (optional)
+          </label>
+          <input id="organisation" name="organisation" className="field" />
+        </div>
       </div>
 
       <div>
@@ -91,25 +128,32 @@ export function ContactForm() {
         <input id="email" name="email" type="email" required className="field" />
       </div>
 
-      <div>
-        <label htmlFor="whatsapp" className="label mb-2 block">
-          WhatsApp number (optional)
-        </label>
-        <input id="whatsapp" name="whatsapp" className="field" />
-      </div>
-
-      <div>
-        <label htmlFor="topic" className="label mb-2 block">
-          What do you need help with?
-        </label>
-        <select id="topic" name="topic" required className="field" defaultValue={TOPICS[0]}>
-          {TOPICS.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </div>
+      {(showEventDate || showBudget) && (
+        <div className="grid gap-5 sm:grid-cols-2">
+          {showEventDate && (
+            <div>
+              <label htmlFor="event_date" className="label mb-2 block">
+                Event date (if relevant)
+              </label>
+              <input id="event_date" name="event_date" type="date" className="field" />
+            </div>
+          )}
+          {showBudget && (
+            <div>
+              <label htmlFor="budget_range" className="label mb-2 block">
+                Budget range
+              </label>
+              <select id="budget_range" name="budget_range" className="field" defaultValue={BUDGETS[0]}>
+                {BUDGETS.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+      )}
 
       <div>
         <label htmlFor="message" className="label mb-2 block">
@@ -130,20 +174,27 @@ export function ContactForm() {
         </p>
       </div>
 
+      {/* Honeypot — hidden from users, catches bots */}
+      <div className="hidden" aria-hidden>
+        <label>
+          Company
+          <input
+            tabIndex={-1}
+            autoComplete="off"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+          />
+        </label>
+      </div>
+
       <label className="flex items-start gap-3">
-        <input
-          type="checkbox"
-          name="marketing_opt_in"
-          className="mt-1 h-4 w-4 accent-clay"
-        />
+        <input type="checkbox" name="marketing_opt_in" className="mt-1 h-4 w-4 accent-clay" />
         <span className="text-sm text-muted">
-          Send me occasional emails about new programs
+          Send me The Build Letter — occasional business, wealth and legacy insights
         </span>
       </label>
 
-      {state === "error" && error && (
-        <p className="text-clay">{error}</p>
-      )}
+      {state === "error" && error && <p className="text-clay">{error}</p>}
 
       <button
         type="submit"
