@@ -31,8 +31,8 @@ const PATHS = [
   {
     q: "I want to attend an event",
     to: "Build Her Empire Live and future events.",
-    href: "/ecosystem#build-her-empire",
-    cta: "View the event",
+    href: "/events",
+    cta: "View events",
   },
   {
     q: "I want to book Lami",

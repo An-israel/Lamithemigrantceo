@@ -13,6 +13,7 @@ const EXPLORE = [
 const WORK = [
   ["/work-with-lami", "Work With Lami"],
   ["/speaking", "Speaking"],
+  ["/events", "Events"],
   ["/media", "Media"],
   ["/resources", "Resources"],
   ["/journal", "The Build Journal"],

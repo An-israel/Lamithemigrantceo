@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
+import { JoinForm } from "@/components/JoinForm";
 
 export const metadata: Metadata = {
   title: "The Movement",
@@ -82,14 +83,11 @@ export default function MovementPage() {
           <h2>Build with us.</h2>
           <p className="mt-4 text-muted">
             African Women Builds is where this happens together. Add your name
-            and we&rsquo;ll tell you the next step.
+            and I&rsquo;ll tell you the next step.
           </p>
-          <div className="mt-8 flex justify-center gap-3">
-            <ButtonLink href="/contact?type=general">Join African Women Builds</ButtonLink>
-            <ButtonLink href="/ecosystem" variant="secondary">
-              See the ecosystem
-            </ButtonLink>
-          </div>
+        </div>
+        <div className="mt-8">
+          <JoinForm />
         </div>
       </Section>
     </>

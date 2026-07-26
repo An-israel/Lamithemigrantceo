@@ -20,6 +20,10 @@ Supabase dashboard → **SQL editor** → paste and run, in order:
    event date, budget), and the CMS tables from the client brief: journal
    posts, bio links (link-in-bio), resources, impact stats, plus the
    `increment_bio_click` RPC. Run this alongside the others.
+5. `supabase/migrations/0005_platform.sql` — Phase 4: `events` (+ ticketing),
+   `memberships` (African Women Builds join), `applications` (programme
+   applications), `ventures` (future ventures), and the
+   `increment_tickets_sold` RPC. Seeds Build Her Empire Live.
 
 Running `0003` also creates the image-upload bucket, so the admin editors work
 out of the box — you can skip the manual bucket step in section 5.

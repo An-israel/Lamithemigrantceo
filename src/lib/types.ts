@@ -105,6 +105,62 @@ export interface ImpactStat {
   sort_order: number;
 }
 
+export type EventStatus = "draft" | "live" | "sold_out" | "past";
+export type ApplicationStatus = "new" | "reviewing" | "accepted" | "declined";
+
+export interface EventItem {
+  id: string;
+  created_at: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  cover_image: string | null;
+  location: string | null;
+  starts_at: string | null;
+  ends_at: string | null;
+  price_gbp: number;
+  compare_at_gbp: number | null;
+  capacity: number | null;
+  tickets_sold: number;
+  status: EventStatus;
+  sort_order: number;
+}
+
+export interface Membership {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  whatsapp: string | null;
+  reason: string | null;
+  status: string;
+}
+
+export interface Application {
+  id: string;
+  created_at: string;
+  program_id: string | null;
+  program_name: string | null;
+  name: string;
+  email: string;
+  whatsapp: string | null;
+  answers: Record<string, unknown> | null;
+  status: ApplicationStatus;
+  admin_notes: string | null;
+}
+
+export interface Venture {
+  id: string;
+  created_at: string;
+  name: string;
+  summary: string;
+  status: string;
+  link: string | null;
+  published: boolean;
+  sort_order: number;
+}
+
 export interface WholesaleProduct {
   id: string;
   created_at: string;

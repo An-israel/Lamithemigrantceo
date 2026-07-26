@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
+import { getVentures } from "@/lib/ventures";
 
 export const metadata: Metadata = {
   title: "The Ecosystem",
@@ -35,11 +36,12 @@ const PARTS = [
     name: "Build Her Empire Live",
     body: "The flagship in-person experience for ambitious African women business owners. Liverpool, 15 August 2026.",
     cta: "View the Event",
-    href: "/contact?type=general",
+    href: "/events/build-her-empire-live-2026",
   },
 ];
 
-export default function EcosystemPage() {
+export default async function EcosystemPage() {
+  const ventures = await getVentures();
   return (
     <>
       <Section background="ink">
@@ -87,6 +89,26 @@ export default function EcosystemPage() {
             ready for public launch.
           </p>
         </div>
+        {ventures.length > 0 && (
+          <div className="mx-auto mt-10 grid max-w-3xl gap-6 sm:grid-cols-2">
+            {ventures.map((v) => (
+              <div key={v.id} className="card p-6">
+                <div className="flex items-center justify-between">
+                  <h3>{v.name}</h3>
+                  <span className="pill bg-peach text-ink text-xs capitalize">
+                    {v.status.replace("_", " ")}
+                  </span>
+                </div>
+                <p className="mt-2 text-muted">{v.summary}</p>
+                {v.link && (
+                  <a href={v.link} className="mt-3 inline-block font-bold text-clay">
+                    Learn more →
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </Section>
     </>
   );

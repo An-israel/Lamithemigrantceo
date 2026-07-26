@@ -97,6 +97,13 @@ Deno.serve(async (req: Request) => {
         shipping_address: (session as any).shipping_details?.address ?? null,
       });
 
+      // For event tickets, increment the sold count so capacity stays live.
+      if (session.metadata?.item_type === "event" && session.metadata?.item_id) {
+        await supabase.rpc("increment_tickets_sold", {
+          event_id: session.metadata.item_id,
+        });
+      }
+
       // Access to /my is matched by the buyer's email. Their profile row is
       // created automatically on first magic-link sign-in (see the
       // on_auth_user_created trigger), so nothing to insert here.

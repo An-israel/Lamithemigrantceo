@@ -56,7 +56,7 @@ Legend: ✅ done · 🔨 in progress · ⬜ not started · 🅿️ needs Lami's 
 - ✅ **Phase 1 Foundation:** Home, About, Start Here, Ecosystem, Work With Lami, Contact, legal, analytics, email capture
 - ✅ **Phase 2 Authority:** Speaking, Impact, Movement, Media, testimonials, video placeholders, speaker assets section
 - ✅ **Phase 3 Growth:** Resources, Build Journal, SEO content, lead magnets
-- 🔨 **Phase 4 Platform:** events/programme applications & member pathways (commerce + programs exist; deeper event ticketing later)
+- ✅ **Phase 4 Platform:** event ticketing (events + Stripe tickets + capacity), programme applications (apply flow + admin review), community/member pathway (African Women Builds join), future-venture pages (CMS). Build Her Empire Live wired as a real ticketed event.
 
 ## Launch acceptance checklist (§14)
 - ✅ Internal links resolve to real pages
