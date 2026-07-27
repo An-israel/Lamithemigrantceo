@@ -54,6 +54,111 @@ export interface Enquiry {
   status: EnquiryStatus;
   source_page: string | null;
   admin_notes: string | null;
+  organisation: string | null;
+  event_date: string | null;
+  budget_range: string | null;
+}
+
+export interface JournalPost {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  cover_image: string | null;
+  category: string;
+  author: string;
+  published: boolean;
+  published_at: string | null;
+  sort_order: number;
+}
+
+export interface BioLink {
+  id: string;
+  created_at: string;
+  label: string;
+  url: string;
+  description: string | null;
+  sort_order: number;
+  active: boolean;
+  clicks: number;
+}
+
+export interface Resource {
+  id: string;
+  created_at: string;
+  title: string;
+  description: string;
+  file_url: string | null;
+  requires_email: boolean;
+  sort_order: number;
+  active: boolean;
+}
+
+export interface ImpactStat {
+  id: string;
+  created_at: string;
+  figure: string;
+  label: string;
+  sort_order: number;
+}
+
+export type EventStatus = "draft" | "live" | "sold_out" | "past";
+export type ApplicationStatus = "new" | "reviewing" | "accepted" | "declined";
+
+export interface EventItem {
+  id: string;
+  created_at: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  cover_image: string | null;
+  location: string | null;
+  starts_at: string | null;
+  ends_at: string | null;
+  price_gbp: number;
+  compare_at_gbp: number | null;
+  capacity: number | null;
+  tickets_sold: number;
+  status: EventStatus;
+  sort_order: number;
+}
+
+export interface Membership {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  whatsapp: string | null;
+  reason: string | null;
+  status: string;
+}
+
+export interface Application {
+  id: string;
+  created_at: string;
+  program_id: string | null;
+  program_name: string | null;
+  name: string;
+  email: string;
+  whatsapp: string | null;
+  answers: Record<string, unknown> | null;
+  status: ApplicationStatus;
+  admin_notes: string | null;
+}
+
+export interface Venture {
+  id: string;
+  created_at: string;
+  name: string;
+  summary: string;
+  status: string;
+  link: string | null;
+  published: boolean;
+  sort_order: number;
 }
 
 export interface WholesaleProduct {

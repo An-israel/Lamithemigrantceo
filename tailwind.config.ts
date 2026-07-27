@@ -22,6 +22,8 @@ const config: Config = {
         muted: "var(--muted)",
         jade: "var(--jade)",
         line: "var(--line)",
+        gold: "var(--gold)",
+        "gold-soft": "var(--gold-soft)",
       },
       fontFamily: {
         display: ["var(--font-fraunces)", "Georgia", "serif"],
@@ -53,7 +55,7 @@ const config: Config = {
       },
       boxShadow: {
         // The single permitted soft shadow, reserved for the primary buy button.
-        buy: "0 6px 20px -8px rgba(181, 80, 47, 0.55)",
+        buy: "0 6px 20px -8px rgba(14, 77, 58, 0.5)",
       },
     },
   },

@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const name = String(body.name || "").trim();
   const email = String(body.email || "").trim();
   const message = String(body.message || "").trim();
-  const topic = String(body.topic || "Something else").trim();
+  const topic = String(body.topic || "General").trim();
 
   if (!name || !email || !message) {
     return NextResponse.json(
@@ -38,8 +38,11 @@ export async function POST(request: Request) {
       name,
       email,
       whatsapp: body.whatsapp ? String(body.whatsapp).trim() : null,
+      organisation: body.organisation ? String(body.organisation).trim() : null,
       topic,
-      message: message.slice(0, 500),
+      event_date: body.event_date ? String(body.event_date) : null,
+      budget_range: body.budget_range ? String(body.budget_range) : null,
+      message: message.slice(0, 1000),
       marketing_opt_in: Boolean(body.marketing_opt_in),
       status: "new",
       source_page: body.source_page ? String(body.source_page) : null,

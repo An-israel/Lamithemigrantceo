@@ -1,9 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { clsx } from "@/lib/clsx";
 
-/** Footer email capture. Stores into the `enquiries`-adjacent newsletter flow. */
-export function NewsletterForm() {
+/** The Build Letter email capture. `theme` adapts it to dark (footer) or
+ *  light (on-page) backgrounds. */
+export function NewsletterForm({
+  theme = "dark",
+  cta = "Get The Build Letter",
+}: {
+  theme?: "dark" | "light";
+  cta?: string;
+}) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">(
     "idle"
@@ -28,35 +36,40 @@ export function NewsletterForm() {
 
   if (state === "done") {
     return (
-      <p className="text-peach-deep">
-        Check your inbox — the starter list is on its way.
+      <p className={theme === "dark" ? "text-gold-soft" : "text-jade"}>
+        You&rsquo;re in — check your inbox to confirm.
       </p>
     );
   }
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-2 sm:flex-row">
-      <label htmlFor="footer-email" className="sr-only">
+      <label htmlFor={`nl-${theme}`} className="sr-only">
         Email address
       </label>
       <input
-        id="footer-email"
+        id={`nl-${theme}`}
         type="email"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="you@email.com"
-        className="field bg-shell/10 border-shell/25 text-shell placeholder:text-shell/50"
+        className={clsx(
+          "field",
+          theme === "dark"
+            ? "bg-shell/10 border-shell/25 text-shell placeholder:text-shell/50"
+            : "bg-shell border-line text-ink"
+        )}
       />
       <button
         type="submit"
         disabled={state === "sending"}
         className="btn btn-primary shrink-0"
       >
-        {state === "sending" ? "Sending…" : "Get the free starter list"}
+        {state === "sending" ? "Sending…" : cta}
       </button>
       {state === "error" && (
-        <p className="text-peach-deep sm:hidden">
+        <p className={theme === "dark" ? "text-gold-soft" : "text-clay"}>
           That did not go through. Try again.
         </p>
       )}

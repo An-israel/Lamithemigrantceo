@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { BuyButton } from "@/components/BuyButton";
+import { ApplyForm } from "@/components/ApplyForm";
 import { Accordion } from "@/components/Accordion";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import {
@@ -183,6 +184,7 @@ export default async function ProgramDetailPage({
               <p className="mt-3 text-[13px] text-muted">
                 Secure card payment. Instant access by email.
               </p>
+              <ApplyForm programId={program.id} programName={program.name} />
             </div>
           </div>
         </div>

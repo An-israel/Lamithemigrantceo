@@ -1,79 +1,93 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
-import { getSettings } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "About Lami",
+  title: "The Story Behind The Migrant CEO",
   description:
-    "From a £200 order to a warehouse. The story behind Lami the Migrant CEO.",
+    "Temitope Olamide Oni Mole — known publicly as Lami the Migrant CEO — entrepreneur, educator, speaker and community builder.",
 };
 
+// §6.2 timeline
 const TIMELINE = [
-  { year: "2019", text: "Arrived in the UK. Agency shifts, no plan." },
-  { year: "2021", text: "First £200 jewelry order. Sold out in a weekend." },
-  { year: "2022", text: "Started teaching what worked to five women." },
-  { year: "2024", text: "GBG Wholesale Hub opens to students." },
-  { year: "2025", text: "Warehouse keys, on my birthday." },
+  {
+    year: "Nigeria",
+    text: "Built and ran businesses; developed experience in sales, sourcing, marketing and customer service.",
+  },
+  { year: "2022", text: "Moved to the United Kingdom and began rebuilding." },
+  { year: "The restart", text: "Started a UK business journey with less than £200." },
+  { year: "Growth", text: "Expanded into education, wholesale, content and community." },
+  { year: "Warehouse era", text: "Established a physical wholesale operation in Liverpool." },
+  { year: "2026", text: "Launched African Women Builds and Build Her Empire Live." },
+  {
+    year: "The future",
+    text: "Building a global movement around business ownership, assets and legacy.",
+  },
 ];
 
 const PULL_QUOTES = [
-  "I did not have a network. I had £200 and a lot of stubbornness.",
-  "The first order taught me more than a year of watching other people.",
-  "Teaching it made me better at doing it.",
+  "I rebuilt my life, so you can build yours.",
+  "Migrants do not have to abandon their ambition when they move countries.",
+  "Business ownership is the beginning. Wealth and legacy are the destination.",
 ];
 
-export default async function AboutPage() {
-  const settings = await getSettings();
-
+export default function AboutPage() {
   return (
     <>
       <Section background="peach" className="!pb-10 md:!pb-16">
-        <h1>From a £200 order to a warehouse.</h1>
+        <p className="label text-clay">About Lami</p>
+        <h1 className="mt-3">The Story Behind The Migrant CEO</h1>
         <div className="mt-8 aspect-video w-full overflow-hidden rounded-card bg-peach-deep">
-          {/* TODO(lami): replace with a wide 16:9 photo of Lami. */}
+          {/* TODO(lami): wide 16:9 founder portrait. */}
           <div className="flex h-full items-center justify-center text-ink/50">
-            Photo of Lami
+            Founder portrait
           </div>
         </div>
       </Section>
 
       <Section background="shell">
         <div className="mx-auto max-w-prose">
-          <p>
-            When I moved to the UK, the plan was simple and it was wrong: work
-            hard, save, and one day things would open up. The shifts paid the
-            rent. They did not build anything that was mine.
+          <p className="text-lg">
+            Temitope Olamide Oni Mole, known publicly as Lami the Migrant CEO, is
+            an entrepreneur, educator, speaker and community builder.
+          </p>
+
+          <p className="mt-6 text-muted">
+            Her entrepreneurial life began in Nigeria, where she built and ran
+            businesses and learned the real work of sales, sourcing, marketing
+            and looking after customers. It was hands-on, practical experience —
+            not theory.
           </p>
 
           <PullQuote>{PULL_QUOTES[0]}</PullQuote>
 
-          <p>
-            My first order was £200 of mixed jewelry. I got the pricing wrong, I
-            got the packaging wrong, and I still made my money back in a
-            weekend. That weekend told me everything. The gap between me and the
-            people I admired was not money or luck. It was a first order.
+          <p className="text-muted">
+            In 2022 she moved to the United Kingdom. Migration meant rebuilding
+            identity, income and opportunity from the ground up. She started her
+            UK business journey with less than £200 — and treated that
+            constraint as a starting line, not a ceiling.
+          </p>
+
+          <p className="mt-4 text-muted">
+            From there she built product businesses, taught other entrepreneurs,
+            formed communities and moved into a physical warehouse operation in
+            Liverpool. Along the way, helping African women build wealth became
+            bigger than business coaching.
           </p>
 
           <PullQuote>{PULL_QUOTES[1]}</PullQuote>
 
-          <p>
-            Women started asking how I did it. I showed five of them. They sold
-            out too. That is when it clicked that the thing I actually had was
-            not a jewelry business — it was a way in for people who were told to
-            wait their turn.
+          <p className="text-muted">
+            Her belief is simple: migrants do not have to shrink their dream to
+            fit a new country. The long-term vision is to become the leading
+            global voice helping African women migrants build businesses and
+            generational wealth.
           </p>
 
           <PullQuote>{PULL_QUOTES[2]}</PullQuote>
-
-          <p>
-            Now I run programs, a wholesale hub, and a community of women who are
-            building the same way. This is what I am building next, and I would
-            like you in it.
-          </p>
         </div>
 
-        {/* TIMELINE */}
+        {/* Timeline */}
         <div className="mx-auto mt-16 max-w-prose border-l border-line pl-6">
           {TIMELINE.map((entry, i) => (
             <div key={entry.year} className="relative pb-8 last:pb-0">
@@ -86,33 +100,32 @@ export default async function AboutPage() {
         </div>
       </Section>
 
-      {/* STATS BAND — TODO(lami): confirm real numbers */}
+      {/* Stats band — §4 verified facts, brief wording */}
       <Section background="ink">
         <div className="grid gap-10 text-center md:grid-cols-3">
           {[
-            ["120+", "Students taught"],
-            ["4,000+", "Orders shipped"],
-            ["5", "Years in business"],
+            ["500+", "directly supported"],
+            ["~24,000", "combined followers"],
+            ["10+ years", "in business"],
           ].map(([figure, label]) => (
             <div key={label}>
-              <p className="font-display text-5xl font-bold text-peach">
-                {figure}
-              </p>
+              <p className="font-display text-5xl font-bold text-gold-soft">{figure}</p>
               <p className="label mt-2 text-shell/70">{label}</p>
             </div>
           ))}
         </div>
+        <p className="mt-6 text-center text-sm text-shell/50">
+          Over 500 people directly supported; total impact approaching 1,000.
+        </p>
       </Section>
 
       <Section background="shell">
         <div className="mx-auto max-w-prose text-center">
-          <h2>Start with what you have.</h2>
-          <p className="mt-4 text-muted">
-            One honest conversation about where you are and what to do next.
-          </p>
-          <div className="mt-8 flex justify-center">
-            <ButtonLink href={settings.calendly_url || "/contact"}>
-              Book a free 15 minute call
+          <h2>Your next chapter can start here.</h2>
+          <div className="mt-8 flex justify-center gap-3">
+            <ButtonLink href="/start-here">Start Here</ButtonLink>
+            <ButtonLink href="/work-with-lami" variant="secondary">
+              Work With Me
             </ButtonLink>
           </div>
         </div>

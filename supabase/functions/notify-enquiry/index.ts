@@ -21,6 +21,9 @@ interface EnquiryRecord {
   message: string;
   marketing_opt_in: boolean;
   source_page: string | null;
+  organisation: string | null;
+  event_date: string | null;
+  budget_range: string | null;
 }
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
@@ -57,8 +60,11 @@ Deno.serve(async (req: Request) => {
       const adminBody = [
         `New enquiry from ${record.name}`,
         ``,
-        `Topic:    ${record.topic}`,
+        `Type:     ${record.topic}`,
         `Email:    ${record.email}`,
+        `Org:      ${record.organisation ?? "—"}`,
+        `Event:    ${record.event_date ?? "—"}`,
+        `Budget:   ${record.budget_range ?? "—"}`,
         `WhatsApp: ${record.whatsapp ?? "—"}`,
         `Opt-in:   ${record.marketing_opt_in ? "yes" : "no"}`,
         `Page:     ${record.source_page ?? "—"}`,

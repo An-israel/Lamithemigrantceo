@@ -23,6 +23,7 @@ export async function POST(request: Request) {
   let body: {
     type?: string;
     programId?: string;
+    eventId?: string;
     items?: { id: string; quantity: number }[];
   };
   try {
@@ -35,6 +36,45 @@ export async function POST(request: Request) {
   const supabase = createServiceClient();
 
   try {
+    // --- Event ticket checkout -------------------------------------------
+    if (body.type === "event" && body.eventId) {
+      const { data: event, error } = await supabase
+        .from("events")
+        .select("id, name, price_gbp, slug, status, capacity, tickets_sold")
+        .eq("id", body.eventId)
+        .single();
+
+      if (error || !event) {
+        return NextResponse.json({ error: "Event not found." }, { status: 404 });
+      }
+      const soldOut =
+        event.status === "sold_out" ||
+        (event.capacity != null && event.tickets_sold >= event.capacity);
+      if (soldOut || event.status === "past") {
+        return NextResponse.json({ error: "Tickets are not available." }, { status: 409 });
+      }
+
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        currency: "gbp",
+        line_items: [
+          {
+            quantity: 1,
+            price_data: {
+              currency: "gbp",
+              unit_amount: Math.round(event.price_gbp * 100),
+              product_data: { name: `${event.name} — ticket` },
+            },
+          },
+        ],
+        metadata: { item_type: "event", item_id: event.id },
+        success_url: `${siteUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${siteUrl}/events/${event.slug}`,
+      });
+
+      return NextResponse.json({ url: session.url });
+    }
+
     // --- Program checkout -------------------------------------------------
     if (body.type === "program" && body.programId) {
       const { data: program, error } = await supabase

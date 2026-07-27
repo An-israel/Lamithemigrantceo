@@ -7,6 +7,7 @@ import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { CookieConsent } from "@/components/CookieConsent";
 import { getSettings } from "@/lib/data";
 
 // Variable font: when `axes` are set, `weight` must not be pinned — the wght
@@ -30,15 +31,15 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Lami the Migrant CEO — Start a profitable product business",
+    default: "Lami the Migrant CEO — Build the Business. Build the Wealth. Build the Legacy.",
     template: "%s · Lami the Migrant CEO",
   },
   description:
-    "I help African migrant women in the UK start a profitable product business on a small budget. Programs, wholesale bundles and 1:1 mentorship.",
+    "Helping African women migrants transform ambition into thriving businesses, financial freedom and generational wealth. Founder, educator, speaker and founder of African Women Builds.",
   openGraph: {
     title: "Lami the Migrant CEO",
     description:
-      "Start a profitable product business in the UK on a small budget.",
+      "Build the Business. Build the Wealth. Build the Legacy.",
     type: "website",
     locale: "en_GB",
     url: siteUrl,
@@ -63,6 +64,7 @@ export default async function RootLayout({
           <Footer settings={settings} />
           <CartDrawer />
         </CartProvider>
+        <CookieConsent />
         <PageViewTracker />
       </body>
     </html>
