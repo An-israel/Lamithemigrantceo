@@ -3,15 +3,17 @@ import type { Membership } from "@/lib/types";
 
 export default async function AdminMembersPage() {
   let members: Membership[] = [];
+  let dbReady = true;
   try {
     const supabase = createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("memberships")
       .select("*")
       .order("created_at", { ascending: false });
+    if (error) dbReady = false;
     members = (data as Membership[]) || [];
   } catch {
-    /* db not ready */
+    dbReady = false;
   }
 
   return (
@@ -20,6 +22,12 @@ export default async function AdminMembersPage() {
       <p className="mt-2 text-sm text-muted">
         People who joined African Women Builds from the Movement page.
       </p>
+
+      {!dbReady && (
+        <div className="mt-6 rounded-card border border-line bg-peach p-4 text-sm">
+          The database is not connected yet. See docs/DEPLOYMENT.md.
+        </div>
+      )}
 
       <div className="mt-6 overflow-hidden rounded-card border border-line">
         {members.length === 0 ? (

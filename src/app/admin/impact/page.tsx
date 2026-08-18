@@ -4,15 +4,17 @@ import type { ImpactStat } from "@/lib/types";
 
 export default async function AdminImpactPage() {
   let stats: ImpactStat[] = [];
+  let dbReady = true;
   try {
     const supabase = createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("impact_stats")
       .select("*")
       .order("sort_order", { ascending: true });
+    if (error) dbReady = false;
     stats = (data as ImpactStat[]) || [];
   } catch {
-    /* db not ready */
+    dbReady = false;
   }
 
   return (
@@ -23,6 +25,13 @@ export default async function AdminImpactPage() {
         brief&rsquo;s wording — &ldquo;over 500 directly supported&rdquo;,
         &ldquo;impact approaching 1,000&rdquo;.
       </p>
+
+      {!dbReady && (
+        <div className="mt-6 rounded-card border border-line bg-peach p-4 text-sm">
+          The database is not connected yet. See docs/DEPLOYMENT.md.
+        </div>
+      )}
+
       <div className="mt-6">
         <ImpactManager initial={stats} />
       </div>

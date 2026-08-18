@@ -4,15 +4,17 @@ import type { Resource } from "@/lib/types";
 
 export default async function AdminResourcesPage() {
   let resources: Resource[] = [];
+  let dbReady = true;
   try {
     const supabase = createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("resources")
       .select("*")
       .order("sort_order", { ascending: true });
+    if (error) dbReady = false;
     resources = (data as Resource[]) || [];
   } catch {
-    /* db not ready */
+    dbReady = false;
   }
 
   return (
@@ -22,6 +24,13 @@ export default async function AdminResourcesPage() {
         Free guides and lead magnets shown on the Resources page. Upload a file
         or leave it email-gated.
       </p>
+
+      {!dbReady && (
+        <div className="mt-6 rounded-card border border-line bg-peach p-4 text-sm">
+          The database is not connected yet. See docs/DEPLOYMENT.md.
+        </div>
+      )}
+
       <div className="mt-6">
         <ResourcesManager initial={resources} />
       </div>
