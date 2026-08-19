@@ -21,7 +21,7 @@ const NAV = [
 
 function Wordmark({ onClick }: { onClick?: () => void }) {
   return (
-    <Link href="/" onClick={onClick} className="no-underline leading-none">
+    <Link href="/" onClick={onClick} className="whitespace-nowrap no-underline leading-none">
       <span className="block font-display font-bold text-[22px] text-ink">
         LAMI
       </span>
@@ -49,15 +49,18 @@ export function Header({ settings }: { settings: SiteSettings }) {
 
   return (
     <header className="sticky top-0 z-40 h-[72px] border-b border-line bg-shell">
-      <div className="mx-auto flex h-full max-w-content items-center justify-between px-5 md:px-10">
+      <div className="mx-auto grid h-full max-w-content grid-cols-[auto_1fr_auto] items-center gap-4 px-5 md:px-10">
         <Wordmark />
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
+        <nav
+          className="hidden items-center justify-self-center gap-5 lg:gap-6 md:flex"
+          aria-label="Primary"
+        >
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`no-underline font-medium ${
+              className={`whitespace-nowrap text-sm no-underline font-medium ${
                 pathname.startsWith(item.href) ? "text-clay" : "text-ink"
               } hover:text-clay`}
             >
@@ -66,12 +69,14 @@ export function Header({ settings }: { settings: SiteSettings }) {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center justify-self-end gap-2 md:flex">
           <CartButton />
-          <ButtonLink href="/work-with-lami">Work With Me</ButtonLink>
+          <ButtonLink href="/work-with-lami" className="whitespace-nowrap">
+            Work With Me
+          </ButtonLink>
         </div>
 
-        <div className="flex items-center md:hidden">
+        <div className="flex items-center justify-self-end md:hidden">
           <CartButton />
           <button
             className="inline-flex h-11 w-11 items-center justify-center rounded-input"
