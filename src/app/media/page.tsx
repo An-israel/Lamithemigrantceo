@@ -69,11 +69,12 @@ export default async function MediaPage() {
             <h3>Headshots &amp; logos</h3>
             <p className="mt-2 text-sm text-muted">
               {/* TODO(lami): upload approved headshots + logos (zip) and link here. */}
-              Approved headshots and logos — download pack coming before launch.
+              Approved headshots and logos are being finalised — for now, request
+              them directly.
             </p>
-            <button className="btn btn-secondary mt-4 text-sm" disabled>
-              Download brand pack
-            </button>
+            <ButtonLink href="/contact?type=media" variant="secondary" className="mt-4 text-sm">
+              Request brand assets
+            </ButtonLink>
           </div>
           <div className="card p-6">
             <h3>Speaking topics</h3>

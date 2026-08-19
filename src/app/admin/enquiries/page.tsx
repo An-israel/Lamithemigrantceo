@@ -3,17 +3,18 @@ import { EnquiriesInbox } from "@/components/admin/EnquiriesInbox";
 import type { Enquiry } from "@/lib/types";
 
 export default async function AdminEnquiriesPage() {
-  const supabase = createClient();
-
   let enquiries: Enquiry[] = [];
+  let dbReady = true;
   try {
-    const { data } = await supabase
+    const supabase = createClient();
+    const { data, error } = await supabase
       .from("enquiries")
       .select("*")
       .order("created_at", { ascending: false });
+    if (error) dbReady = false;
     enquiries = (data as Enquiry[]) || [];
   } catch {
-    enquiries = [];
+    dbReady = false;
   }
 
   return (
@@ -22,6 +23,13 @@ export default async function AdminEnquiriesPage() {
       <p className="mt-2 text-sm text-muted">
         When someone uses the contact form it lands here.
       </p>
+
+      {!dbReady && (
+        <div className="mt-6 rounded-card border border-line bg-peach p-4 text-sm">
+          The database is not connected yet. See docs/DEPLOYMENT.md.
+        </div>
+      )}
+
       <div className="mt-6">
         <EnquiriesInbox initial={enquiries} />
       </div>

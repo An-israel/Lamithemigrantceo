@@ -1,6 +1,18 @@
 import { createClient } from "@/lib/supabase/server";
 import type { EventItem } from "@/lib/types";
 
+/**
+ * True once the event's end (or start, if no end time is set) has passed —
+ * independent of the manually-set `status` field, so a live event stops
+ * selling tickets on its own the moment it's over instead of relying on an
+ * admin remembering to flip it to "past".
+ */
+export function isEventOver(event: Pick<EventItem, "starts_at" | "ends_at">) {
+  const end = event.ends_at || event.starts_at;
+  if (!end) return false;
+  return new Date(end).getTime() < Date.now();
+}
+
 export const SEED_EVENTS: EventItem[] = [
   {
     id: "e-seed-1",

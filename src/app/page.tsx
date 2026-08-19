@@ -4,6 +4,7 @@ import { Section } from "@/components/Section";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { AuthorityStrip } from "@/components/AuthorityStrip";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { Receipt } from "@/components/Receipt";
 import { getTestimonials, getSettings } from "@/lib/data";
 
 // §6.1 Choose your path
@@ -79,36 +80,47 @@ export default async function HomePage() {
       {/* 1. HERO */}
       <section className="bg-shell">
         <div className="mx-auto max-w-content px-5 py-16 md:px-10 md:py-24">
-          <p className="label text-clay">Lami — The Migrant CEO</p>
-          <h1 className="mt-4 max-w-4xl">
-            Build the Business.{" "}
-            <span className="text-clay">Build the Wealth.</span>{" "}
-            Build the Legacy.
-          </h1>
-          <p className="prose-measure mt-6 text-lg text-muted">
-            Helping African women transform ambition into thriving businesses,
-            financial freedom and generational wealth.
-          </p>
-          <p className="prose-measure mt-4 text-muted">
-            I&rsquo;m Lami, The Migrant CEO — entrepreneur, educator, speaker and
-            founder of African Women Builds. After rebuilding my life and
-            businesses in the UK, I&rsquo;ve dedicated my work to helping African
-            women create businesses that change not only their income, but their
-            family&rsquo;s future.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/start-here" fullWidthMobile>
-              Start Here
-            </ButtonLink>
-            <ButtonLink href="/work-with-lami" variant="secondary" fullWidthMobile>
-              Work With Me
-            </ButtonLink>
+          <div className="grid items-center gap-14 lg:grid-cols-[3fr_2fr]">
+            <div>
+              <p className="label text-clay">Lami — The Migrant CEO</p>
+              <h1 className="mt-4 max-w-4xl">
+                Build the Business.{" "}
+                <span className="text-clay">Build the Wealth.</span>{" "}
+                Build the Legacy.
+              </h1>
+              <p className="prose-measure mt-6 text-lg text-muted">
+                Helping African women transform ambition into thriving businesses,
+                financial freedom and generational wealth.
+              </p>
+              <p className="prose-measure mt-4 text-muted">
+                I&rsquo;m Lami, The Migrant CEO — entrepreneur, educator, speaker and
+                founder of African Women Builds. After rebuilding my life and
+                businesses in the UK, I&rsquo;ve dedicated my work to helping African
+                women create businesses that change not only their income, but their
+                family&rsquo;s future.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <ButtonLink href="/start-here" fullWidthMobile>
+                  Start Here
+                </ButtonLink>
+                <ButtonLink href="/work-with-lami" variant="secondary" fullWidthMobile>
+                  Work With Me
+                </ButtonLink>
+              </div>
+              <p className="mt-6">
+                <Link href="/about" className="text-clay underline underline-offset-4">
+                  Watch my story →
+                </Link>
+              </p>
+            </div>
+            <div className="mx-auto w-full max-w-sm pb-6 lg:pb-0">
+              <Receipt
+                items={settings.receipt_items ?? undefined}
+                resold={settings.receipt_resold_gbp ?? undefined}
+                note={settings.receipt_note ?? undefined}
+              />
+            </div>
           </div>
-          <p className="mt-6">
-            <Link href="/about" className="text-clay underline underline-offset-4">
-              Watch my story →
-            </Link>
-          </p>
         </div>
       </section>
 

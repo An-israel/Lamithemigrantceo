@@ -122,6 +122,7 @@ export default async function WholesaleDetailPage({
                     name: bundle.name,
                     price_gbp: bundle.price_gbp,
                     image: cover,
+                    stock: bundle.stock,
                   }}
                   className="w-full sm:w-auto"
                 />

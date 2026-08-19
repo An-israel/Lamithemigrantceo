@@ -4,15 +4,17 @@ import type { Application } from "@/lib/types";
 
 export default async function AdminApplicationsPage() {
   let applications: Application[] = [];
+  let dbReady = true;
   try {
     const supabase = createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("applications")
       .select("*")
       .order("created_at", { ascending: false });
+    if (error) dbReady = false;
     applications = (data as Application[]) || [];
   } catch {
-    /* db not ready */
+    dbReady = false;
   }
 
   return (
@@ -22,6 +24,13 @@ export default async function AdminApplicationsPage() {
         Programme applications from people who applied instead of buying
         instantly.
       </p>
+
+      {!dbReady && (
+        <div className="mt-6 rounded-card border border-line bg-peach p-4 text-sm">
+          The database is not connected yet. See docs/DEPLOYMENT.md.
+        </div>
+      )}
+
       <div className="mt-6">
         <ApplicationsInbox initial={applications} />
       </div>

@@ -59,6 +59,7 @@ export function WholesaleCard({ b }: { b: WholesaleProduct }) {
                 name: b.name,
                 price_gbp: b.price_gbp,
                 image: cover,
+                stock: b.stock,
               }}
               className="w-full"
             />

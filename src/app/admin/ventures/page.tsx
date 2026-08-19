@@ -4,15 +4,17 @@ import type { Venture } from "@/lib/types";
 
 export default async function AdminVenturesPage() {
   let ventures: Venture[] = [];
+  let dbReady = true;
   try {
     const supabase = createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("ventures")
       .select("*")
       .order("sort_order", { ascending: true });
+    if (error) dbReady = false;
     ventures = (data as Venture[]) || [];
   } catch {
-    /* db not ready */
+    dbReady = false;
   }
 
   return (
@@ -22,6 +24,13 @@ export default async function AdminVenturesPage() {
         New businesses and projects shown on the Ecosystem page. Keep drafts
         unpublished — don&rsquo;t reveal confidential concepts too early.
       </p>
+
+      {!dbReady && (
+        <div className="mt-6 rounded-card border border-line bg-peach p-4 text-sm">
+          The database is not connected yet. See docs/DEPLOYMENT.md.
+        </div>
+      )}
+
       <div className="mt-6">
         <VenturesManager initial={ventures} />
       </div>

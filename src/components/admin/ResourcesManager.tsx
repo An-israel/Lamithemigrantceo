@@ -20,6 +20,7 @@ export function ResourcesManager({ initial }: { initial: Resource[] }) {
         title: r.title,
         description: r.description,
         file_url: r.file_url,
+        requires_email: r.requires_email,
         active: r.active,
         sort_order: r.sort_order,
       })
@@ -98,19 +99,33 @@ export function ResourcesManager({ initial }: { initial: Resource[] }) {
                 />
               )}
             </div>
-            <div className="mt-3 flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={r.active}
-                  onChange={(e) => {
-                    update(r.id, { active: e.target.checked });
-                    persist({ ...r, active: e.target.checked });
-                  }}
-                  className="h-4 w-4 accent-clay"
-                />
-                Active
-              </label>
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-4">
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={r.active}
+                    onChange={(e) => {
+                      update(r.id, { active: e.target.checked });
+                      persist({ ...r, active: e.target.checked });
+                    }}
+                    className="h-4 w-4 accent-clay"
+                  />
+                  Active
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={r.requires_email}
+                    onChange={(e) => {
+                      update(r.id, { requires_email: e.target.checked });
+                      persist({ ...r, requires_email: e.target.checked });
+                    }}
+                    className="h-4 w-4 accent-clay"
+                  />
+                  Requires email to get it
+                </label>
+              </div>
               <button onClick={() => remove(r.id)} className="text-sm text-clay underline">
                 Delete
               </button>
