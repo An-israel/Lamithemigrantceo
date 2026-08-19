@@ -119,6 +119,17 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             Lami the Migrant CEO is the home of African Women Builds and the GBG
             Wholesale Hub. Company details to be confirmed before launch.
           </p>
+          <p className="text-right text-[10px] text-shell/30">
+            Built by{" "}
+            <a
+              href="https://swiftcreator.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-shell/30 no-underline hover:text-shell/60"
+            >
+              Swift Creator
+            </a>
+          </p>
         </div>
       </div>
     </footer>
