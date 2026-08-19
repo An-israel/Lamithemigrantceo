@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Section } from "@/components/Section";
 import { TicketButton } from "@/components/TicketButton";
 import { formatGBP } from "@/lib/format";
-import { getEventBySlug, getEvents } from "@/lib/events";
+import { getEventBySlug, getEvents, isEventOver } from "@/lib/events";
 
 export async function generateMetadata({
   params,
@@ -48,10 +48,11 @@ export default async function EventDetailPage({
   const event = await getEventBySlug(params.slug);
   if (!event) notFound();
 
+  const isPast = event.status === "past" || isEventOver(event);
   const soldOut =
-    event.status === "sold_out" ||
-    (event.capacity != null && event.tickets_sold >= event.capacity);
-  const isPast = event.status === "past";
+    !isPast &&
+    (event.status === "sold_out" ||
+      (event.capacity != null && event.tickets_sold >= event.capacity));
 
   const jsonLd = {
     "@context": "https://schema.org",

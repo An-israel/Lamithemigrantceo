@@ -10,6 +10,8 @@ import type { SiteSettings } from "@/lib/types";
 const NAV = [
   { href: "/start-here", label: "Start Here" },
   { href: "/about", label: "About" },
+  { href: "/programs", label: "Programs" },
+  { href: "/wholesale", label: "Wholesale" },
   { href: "/ecosystem", label: "Ecosystem" },
   { href: "/events", label: "Events" },
   { href: "/speaking", label: "Speaking" },

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { ResourceRequestForm } from "@/components/ResourceRequestForm";
 import { getResources } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -42,9 +43,7 @@ export default async function ResourcesPage() {
                   Download
                 </a>
               ) : (
-                <span className="mt-4 text-sm text-muted">
-                  Sign up below to get this free.
-                </span>
+                <ResourceRequestForm resourceId={r.id} resourceTitle={r.title} />
               )}
             </div>
           ))}

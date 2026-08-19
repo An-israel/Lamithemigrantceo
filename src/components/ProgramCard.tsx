@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/Button";
+import { ProgramWaitlist } from "@/components/ProgramWaitlist";
 import { formatGBP } from "@/lib/format";
 import type { Program } from "@/lib/types";
 
@@ -66,7 +67,10 @@ export function ProgramCard({
 
         <div className="mt-4">
           {soldOut ? (
-            <span className="pill bg-jade text-shell">Next cohort soon</span>
+            <div className="space-y-2">
+              <span className="pill bg-jade text-shell">Next cohort soon</span>
+              <ProgramWaitlist programId={program.id} programName={program.name} />
+            </div>
           ) : (
             <ButtonLink
               href={`/programs/${program.slug}`}

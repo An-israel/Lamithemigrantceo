@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createServiceClient } from "@/lib/supabase/server";
+import { isEventOver } from "@/lib/events";
 
 /**
  * Creates a Stripe Checkout Session in GBP for either:
@@ -40,17 +41,18 @@ export async function POST(request: Request) {
     if (body.type === "event" && body.eventId) {
       const { data: event, error } = await supabase
         .from("events")
-        .select("id, name, price_gbp, slug, status, capacity, tickets_sold")
+        .select("id, name, price_gbp, slug, status, capacity, tickets_sold, starts_at, ends_at")
         .eq("id", body.eventId)
         .single();
 
       if (error || !event) {
         return NextResponse.json({ error: "Event not found." }, { status: 404 });
       }
+      const isPast = event.status === "past" || isEventOver(event);
       const soldOut =
         event.status === "sold_out" ||
         (event.capacity != null && event.tickets_sold >= event.capacity);
-      if (soldOut || event.status === "past") {
+      if (isPast || soldOut) {
         return NextResponse.json({ error: "Tickets are not available." }, { status: 409 });
       }
 
@@ -141,6 +143,14 @@ export async function POST(request: Request) {
         if (product.stock <= 0) {
           return NextResponse.json(
             { error: `${product.name} is sold out.` },
+            { status: 409 }
+          );
+        }
+        if (qty > product.stock) {
+          return NextResponse.json(
+            {
+              error: `Only ${product.stock} of ${product.name} left. Lower the quantity to continue.`,
+            },
             { status: 409 }
           );
         }

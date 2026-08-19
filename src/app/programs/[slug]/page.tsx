@@ -6,6 +6,7 @@ import { BuyButton } from "@/components/BuyButton";
 import { ApplyForm } from "@/components/ApplyForm";
 import { Accordion } from "@/components/Accordion";
 import { TestimonialCard } from "@/components/TestimonialCard";
+import { ProgramWaitlist } from "@/components/ProgramWaitlist";
 import {
   getProgramBySlug,
   getPrograms,
@@ -171,9 +172,15 @@ export default async function ProgramDetailPage({
 
               <div className="mt-5">
                 {soldOut ? (
-                  <span className="pill bg-jade text-shell">
-                    Next cohort soon
-                  </span>
+                  <div className="space-y-3">
+                    <span className="pill bg-jade text-shell">
+                      Next cohort soon
+                    </span>
+                    <ProgramWaitlist
+                      programId={program.id}
+                      programName={program.name}
+                    />
+                  </div>
                 ) : (
                   <BuyButton
                     programId={program.id}

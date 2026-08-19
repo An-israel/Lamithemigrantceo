@@ -14,6 +14,7 @@ export function AddToOrderButton({
     name: string;
     price_gbp: number;
     image: string | null;
+    stock: number;
   };
   className?: string;
   label?: string;

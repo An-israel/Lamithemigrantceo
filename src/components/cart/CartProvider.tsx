@@ -15,6 +15,7 @@ export interface CartLine {
   name: string;
   price_gbp: number;
   image: string | null;
+  stock: number;
   quantity: number;
 }
 
@@ -65,10 +66,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const existing = prev.find((l) => l.id === line.id);
         if (existing) {
           return prev.map((l) =>
-            l.id === line.id ? { ...l, quantity: l.quantity + qty } : l
+            l.id === line.id
+              ? { ...l, quantity: Math.min(l.quantity + qty, l.stock) }
+              : l
           );
         }
-        return [...prev, { ...line, quantity: qty }];
+        return [...prev, { ...line, quantity: Math.min(qty, line.stock) }];
       });
       setOpen(true);
     },
@@ -79,7 +82,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setLines((prev) =>
       qty <= 0
         ? prev.filter((l) => l.id !== id)
-        : prev.map((l) => (l.id === id ? { ...l, quantity: qty } : l))
+        : prev.map((l) =>
+            l.id === id ? { ...l, quantity: Math.min(qty, l.stock) } : l
+          )
     );
   }, []);
 

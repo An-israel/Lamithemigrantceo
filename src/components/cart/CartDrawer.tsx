@@ -89,8 +89,9 @@ export function CartDrawer() {
                         {l.quantity}
                       </span>
                       <button
-                        className="h-8 w-8 rounded-input border border-line"
+                        className="h-8 w-8 rounded-input border border-line disabled:opacity-40"
                         onClick={() => setQuantity(l.id, l.quantity + 1)}
+                        disabled={l.quantity >= l.stock}
                         aria-label="Increase quantity"
                       >
                         +
@@ -102,6 +103,11 @@ export function CartDrawer() {
                         Remove
                       </button>
                     </div>
+                    {l.quantity >= l.stock && (
+                      <p className="mt-1 text-xs text-muted">
+                        Only {l.stock} in stock.
+                      </p>
+                    )}
                   </div>
                 </li>
               ))}

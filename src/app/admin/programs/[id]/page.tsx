@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ProgramEditor } from "@/components/admin/ProgramEditor";
-import type { Program } from "@/lib/types";
+import { ProgramModulesManager } from "@/components/admin/ProgramModulesManager";
+import type { Program, ProgramModule } from "@/lib/types";
 
 export default async function ProgramEditorPage({
   params,
@@ -10,11 +11,14 @@ export default async function ProgramEditorPage({
   params: { id: string };
 }) {
   const supabase = createClient();
-  const { data } = await supabase
-    .from("programs")
-    .select("*")
-    .eq("id", params.id)
-    .single();
+  const [{ data }, { data: moduleRows }] = await Promise.all([
+    supabase.from("programs").select("*").eq("id", params.id).single(),
+    supabase
+      .from("program_modules")
+      .select("*")
+      .eq("program_id", params.id)
+      .order("sort_order", { ascending: true }),
+  ]);
 
   if (!data) notFound();
 
@@ -27,6 +31,12 @@ export default async function ProgramEditorPage({
         ← All programs
       </Link>
       <ProgramEditor program={data as Program} />
+      <div className="mt-4 max-w-2xl border-t border-line pt-8 pb-16">
+        <ProgramModulesManager
+          programId={params.id}
+          initial={(moduleRows as ProgramModule[]) || []}
+        />
+      </div>
     </>
   );
 }

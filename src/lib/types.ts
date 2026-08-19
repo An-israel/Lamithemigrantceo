@@ -184,13 +184,24 @@ export interface Order {
   stripe_session_id: string | null;
   email: string;
   name: string | null;
-  item_type: "program" | "wholesale";
+  item_type: "program" | "wholesale" | "event";
   item_id: string | null;
   amount_gbp: number;
   status: OrderStatus;
   fulfilment_status: FulfilmentStatus;
   tracking_number: string | null;
   shipping_address: Record<string, unknown> | null;
+}
+
+export interface ProgramModule {
+  id: string;
+  created_at: string;
+  program_id: string;
+  title: string;
+  body: string;
+  video_url: string | null;
+  file_url: string | null;
+  sort_order: number;
 }
 
 export interface AppUser {

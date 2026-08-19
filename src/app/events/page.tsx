@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { formatGBP } from "@/lib/format";
-import { getEvents } from "@/lib/events";
+import { getEvents, isEventOver } from "@/lib/events";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -34,9 +34,11 @@ export default async function EventsPage() {
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         {events.map((e) => {
+          const isPast = e.status === "past" || isEventOver(e);
           const soldOut =
-            e.status === "sold_out" ||
-            (e.capacity != null && e.tickets_sold >= e.capacity);
+            !isPast &&
+            (e.status === "sold_out" ||
+              (e.capacity != null && e.tickets_sold >= e.capacity));
           return (
             <Link
               key={e.id}
@@ -57,7 +59,9 @@ export default async function EventsPage() {
                 <p className="mt-3 text-muted">{e.tagline}</p>
                 <div className="mt-4 flex items-center justify-between">
                   <span className="price">{formatGBP(e.price_gbp)}</span>
-                  {soldOut ? (
+                  {isPast ? (
+                    <span className="pill bg-line text-muted">Past event</span>
+                  ) : soldOut ? (
                     <span className="pill bg-jade text-shell">Sold out</span>
                   ) : (
                     <span className="font-bold text-clay">Get tickets →</span>
