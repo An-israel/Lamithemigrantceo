@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import type { SiteSettings, ReceiptItem } from "@/lib/types";
 
 /** Editable contact details, hero copy and announcement bar. Writes to the
@@ -36,6 +37,8 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
           receipt_items: form.receipt_items,
           receipt_resold_gbp: form.receipt_resold_gbp,
           receipt_note: form.receipt_note,
+          founder_portrait_url: form.founder_portrait_url,
+          media_headshot_url: form.media_headshot_url,
         })
         .eq("id", 1);
       if (error) throw error;
@@ -72,6 +75,34 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
           {field("Calendly link", "calendly_url", "url")}
           {field("Instagram handle", "instagram_handle")}
           {field("TikTok handle", "tiktok_handle")}
+        </div>
+      </section>
+
+      <section className="rounded-card border border-line p-6">
+        <h3>Brand photos</h3>
+        <p className="mt-1 text-sm text-muted">
+          Used on the About page and the Media/press page. Upload once here
+          and both stay in sync everywhere they appear.
+        </p>
+        <div className="mt-4 grid gap-6 sm:grid-cols-2">
+          <div>
+            <label className="label mb-2 block">Founder portrait (About page, wide 16:9)</label>
+            <ImageUploader
+              value={form.founder_portrait_url}
+              onChange={(url) => set("founder_portrait_url", url || null)}
+              folder="brand"
+              aspect="aspect-video"
+            />
+          </div>
+          <div>
+            <label className="label mb-2 block">Media headshot (press page)</label>
+            <ImageUploader
+              value={form.media_headshot_url}
+              onChange={(url) => set("media_headshot_url", url || null)}
+              folder="brand"
+              aspect="aspect-square"
+            />
+          </div>
         </div>
       </section>
 

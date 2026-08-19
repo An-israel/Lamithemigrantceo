@@ -162,6 +162,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   ],
   receipt_resold_gbp: 640,
   receipt_note: "Her actual first order, 2021.",
+  founder_portrait_url: null,
+  media_headshot_url: null,
 };
 
 // --- Query helpers ---------------------------------------------------------

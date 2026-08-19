@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
+import { getSettings } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "The Story Behind The Migrant CEO",
@@ -31,17 +32,27 @@ const PULL_QUOTES = [
   "Business ownership is the beginning. Wealth and legacy are the destination.",
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const settings = await getSettings();
+
   return (
     <>
       <Section background="peach" className="!pb-10 md:!pb-16">
         <p className="label text-clay">About Lami</p>
         <h1 className="mt-3">The Story Behind The Migrant CEO</h1>
         <div className="mt-8 aspect-video w-full overflow-hidden rounded-card bg-peach-deep">
-          {/* TODO(lami): wide 16:9 founder portrait. */}
-          <div className="flex h-full items-center justify-center text-ink/50">
-            Founder portrait
-          </div>
+          {settings.founder_portrait_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={settings.founder_portrait_url}
+              alt="Lami the Migrant CEO"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-ink/50">
+              Founder portrait
+            </div>
+          )}
         </div>
       </Section>
 

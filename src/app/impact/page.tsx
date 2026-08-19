@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { TestimonialCard } from "@/components/TestimonialCard";
+import { ProofGallery } from "@/components/ProofGallery";
 import { getTestimonials } from "@/lib/data";
 import { getImpactStats } from "@/lib/content";
 
@@ -64,14 +65,20 @@ export default async function ImpactPage() {
       <Section background="peach">
         <h2>In their words.</h2>
         <p className="mt-2 text-sm text-muted">
-          {/* TODO(lami): add real testimonials, screenshots and video clips. */}
-          Placeholder stories — replace with real testimonials, message
-          screenshots and video before launch.
+          Real businesses. Real sales. Real results.
         </p>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
             <TestimonialCard key={t.id} t={t} />
           ))}
+        </div>
+
+        <h3 className="mt-14">The real messages.</h3>
+        <p className="mt-2 text-sm text-muted">
+          Unedited proof, straight from the community.
+        </p>
+        <div className="mt-6">
+          <ProofGallery />
         </div>
       </Section>
 
