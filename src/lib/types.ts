@@ -232,6 +232,8 @@ export interface SiteSettings {
   receipt_items: ReceiptItem[] | null;
   receipt_resold_gbp: number | null;
   receipt_note: string | null;
+  founder_portrait_url: string | null;
+  media_headshot_url: string | null;
 }
 
 type Row<T> = T;

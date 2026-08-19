@@ -31,6 +31,16 @@ export default async function MediaPage() {
       </Section>
 
       <Section background="peach" className="!pt-0">
+        {settings.media_headshot_url && (
+          <div className="mb-8 aspect-square w-full max-w-[220px] overflow-hidden rounded-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={settings.media_headshot_url}
+              alt="Lami the Migrant CEO — approved press headshot"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
         <div className="grid gap-8 md:grid-cols-2">
           <div className="card p-6">
             <h3>Approved name &amp; title</h3>
@@ -68,9 +78,9 @@ export default async function MediaPage() {
           <div className="card p-6">
             <h3>Headshots &amp; logos</h3>
             <p className="mt-2 text-sm text-muted">
-              {/* TODO(lami): upload approved headshots + logos (zip) and link here. */}
-              Approved headshots and logos are being finalised — for now, request
-              them directly.
+              {settings.media_headshot_url
+                ? "The approved headshot is above. Logos and additional assets are being finalised — request them directly."
+                : "Approved headshots and logos are being finalised — for now, request them directly."}
             </p>
             <ButtonLink href="/contact?type=media" variant="secondary" className="mt-4 text-sm">
               Request brand assets

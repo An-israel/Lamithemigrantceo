@@ -104,8 +104,7 @@ export default async function SpeakingPage() {
         <Section background="shell">
           <h2>What audiences say.</h2>
           <p className="mt-2 text-sm text-muted">
-            {/* TODO(lami): replace with real event testimonials + video clips. */}
-            Placeholder testimonials — swap for real event feedback before launch.
+            Real results from the people Lami has taught and mentored.
           </p>
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {testimonials.slice(0, 3).map((t) => (

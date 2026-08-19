@@ -207,6 +207,20 @@ export default async function HomePage() {
             See the impact
           </ButtonLink>
         </div>
+        <div className="mt-8 grid grid-cols-3 gap-4 border-y border-line py-6">
+          {[
+            ["30", "units sold out"],
+            ["£1,000+", "first-revenue milestone"],
+            ["50", "products sold"],
+          ].map(([figure, label]) => (
+            <div key={label} className="text-center">
+              <p className="font-display text-2xl font-bold text-clay md:text-3xl">
+                {figure}
+              </p>
+              <p className="label mt-1 text-muted">{label}</p>
+            </div>
+          ))}
+        </div>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {testimonials.slice(0, 3).map((t) => (
             <TestimonialCard key={t.id} t={t} />
