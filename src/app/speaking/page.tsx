@@ -30,7 +30,7 @@ export default async function SpeakingPage() {
         <div className="max-w-3xl">
           <p className="label text-gold-soft">Speaking</p>
           <h1 className="mt-3 text-shell">
-            Book Lami to Inspire Action, not Just Applause.
+            Book Lami to <span className="text-gold-soft">Inspire Action</span>, not Just Applause.
           </h1>
           <p className="mt-4 text-shell/80">
             A credible speaker with a real story and practical expertise, for

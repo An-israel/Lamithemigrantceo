@@ -53,7 +53,9 @@ export default function StartHerePage() {
     <Section background="shell">
       <div className="mx-auto max-w-3xl text-center">
         <p className="label text-clay">Start Here</p>
-        <h1 className="mt-3">What are you here to build?</h1>
+        <h1 className="mt-3">
+          What are you here to <span className="text-clay">build</span>?
+        </h1>
         <p className="mt-4 text-muted">
           One simple question so you never feel lost. Pick what fits you and
           I&rsquo;ll point you to the right next step.

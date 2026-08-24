@@ -15,7 +15,9 @@ export default async function GalleryPage() {
   return (
     <Section background="shell">
       <p className="label text-clay">Gallery</p>
-      <h1 className="mt-3">Moments from the build.</h1>
+      <h1 className="mt-3">
+        Moments <span className="text-clay">from the build</span>.
+      </h1>
       <p className="mt-4 max-w-prose text-muted">
         Events, the warehouse, and life behind the scenes.
       </p>

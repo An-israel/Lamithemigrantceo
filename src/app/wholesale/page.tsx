@@ -16,7 +16,9 @@ export default async function WholesalePage() {
     <>
       <Section background="ink">
         <div className="max-w-prose">
-          <h1 className="text-shell">Buy the stock. Sell it on.</h1>
+          <h1 className="text-shell">
+            Buy the stock. <span className="text-gold-soft">Sell it on.</span>
+          </h1>
           <p className="mt-4 text-shell/80">
             Wholesale bundles of jewelry and accessories, vetted to sell. Every
             bundle shows the typical resale value up front, so you know your

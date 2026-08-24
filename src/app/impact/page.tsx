@@ -30,7 +30,9 @@ export default async function ImpactPage() {
       <Section background="ink">
         <div className="max-w-prose">
           <p className="label text-gold-soft">Impact</p>
-          <h1 className="mt-3 text-shell">The proof behind the story.</h1>
+          <h1 className="mt-3 text-shell">
+            The <span className="text-gold-soft">proof</span> behind the story.
+          </h1>
           <p className="mt-4 text-shell/80">
             Numbers matter, but so do the people behind them. Over 500 people
             directly supported, with total impact approaching 1,000.

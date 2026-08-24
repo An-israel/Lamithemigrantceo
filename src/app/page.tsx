@@ -86,7 +86,7 @@ export default async function HomePage() {
               <h1 className="mt-4 max-w-4xl">
                 Build the Business.{" "}
                 <span className="text-clay">Build the Wealth.</span>{" "}
-                Build the Legacy.
+                <span className="text-gold">Build the Legacy.</span>
               </h1>
               <p className="prose-measure mt-6 text-lg text-muted">
                 Helping African women transform ambition into thriving businesses,
@@ -175,7 +175,7 @@ export default async function HomePage() {
       <Section background="shell">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2>One founder. A whole ecosystem.</h2>
+            <h2>One founder. <span className="text-clay">A whole ecosystem.</span></h2>
             <p className="mt-3 max-w-prose text-muted">
               Education, wholesale, community and live events, built to move you
               from income to ownership.
@@ -187,7 +187,7 @@ export default async function HomePage() {
         </div>
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
           {ECOSYSTEM.map((e) => (
-            <div key={e.name} className="card p-6">
+            <div key={e.name} className="card border-t-4 border-t-clay p-6">
               <h3>{e.name}</h3>
               <p className="mt-2 text-muted">{e.body}</p>
               <Link href={e.href} className="mt-4 inline-block font-bold text-clay">

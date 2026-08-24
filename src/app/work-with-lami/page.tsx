@@ -50,7 +50,9 @@ export default async function WorkWithLamiPage() {
       <Section background="ink">
         <div className="max-w-prose">
           <p className="label text-gold-soft">Work With Lami</p>
-          <h1 className="mt-3 text-shell">Let&rsquo;s build something worth building.</h1>
+          <h1 className="mt-3 text-shell">
+            Let&rsquo;s build something <span className="text-gold-soft">worth building</span>.
+          </h1>
           <p className="mt-4 text-shell/80">
             Founder-level experience across business, migration and community,
             available for the right speaking, advisory and partnership work.
