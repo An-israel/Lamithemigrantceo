@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/Section";
+import { EventWaitlist } from "@/components/EventWaitlist";
 import { formatGBP } from "@/lib/format";
 import { getEvents, isEventOver } from "@/lib/events";
+import { getSettings } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -22,6 +24,7 @@ function formatWhen(iso: string | null) {
 
 export default async function EventsPage() {
   const events = await getEvents();
+  const settings = await getSettings();
 
   return (
     <Section background="shell">
@@ -40,35 +43,45 @@ export default async function EventsPage() {
             (e.status === "sold_out" ||
               (e.capacity != null && e.tickets_sold >= e.capacity));
           return (
-            <Link
-              key={e.id}
-              href={`/events/${e.slug}`}
-              className="card overflow-hidden no-underline transition-colors hover:border-clay"
-            >
-              <div className="flex aspect-[16/9] items-center justify-center bg-peach-deep">
-                {e.cover_image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={e.cover_image} alt={e.name} className="h-full w-full object-cover" />
-                ) : (
-                  <span className="font-display text-2xl text-ink/40">{e.name}</span>
-                )}
-              </div>
-              <div className="p-6">
-                <h3 className="text-ink">{e.name}</h3>
-                <p className="mt-1 text-sm text-muted">{formatWhen(e.starts_at)}{e.location ? ` · ${e.location}` : ""}</p>
-                <p className="mt-3 text-muted">{e.tagline}</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="price">{formatGBP(e.price_gbp)}</span>
-                  {isPast ? (
-                    <span className="pill bg-line text-muted">Past event</span>
-                  ) : soldOut ? (
-                    <span className="pill bg-jade text-shell">Sold out</span>
+            <div key={e.id} className="card overflow-hidden">
+              <Link
+                href={`/events/${e.slug}`}
+                className="block no-underline transition-colors hover:opacity-90"
+              >
+                <div className="flex aspect-[16/9] items-center justify-center bg-peach-deep">
+                  {e.cover_image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={e.cover_image} alt={e.name} className="h-full w-full object-cover" />
                   ) : (
-                    <span className="font-bold text-clay">Get tickets →</span>
+                    <span className="font-display text-2xl text-ink/40">{e.name}</span>
                   )}
                 </div>
-              </div>
-            </Link>
+                <div className="p-6 pb-0">
+                  <h3 className="text-ink">{e.name}</h3>
+                  <p className="mt-1 text-sm text-muted">{formatWhen(e.starts_at)}{e.location ? ` · ${e.location}` : ""}</p>
+                  <p className="mt-3 text-muted">{e.tagline}</p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="price">{formatGBP(e.price_gbp)}</span>
+                    {isPast ? (
+                      <span className="pill bg-line text-muted">Past event</span>
+                    ) : soldOut ? (
+                      <span className="pill bg-jade text-shell">Sold out</span>
+                    ) : (
+                      <span className="font-bold text-clay">Get tickets →</span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+              {(isPast || soldOut) && (
+                <div className="p-6 pt-4">
+                  <EventWaitlist
+                    eventId={e.id}
+                    eventName={e.name}
+                    locations={settings.waitlist_locations}
+                  />
+                </div>
+              )}
+            </div>
           );
         })}
       </div>

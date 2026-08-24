@@ -185,7 +185,7 @@ export function OrdersManager({ initial }: { initial: Order[] }) {
             </div>
 
             <dl className="mt-4 space-y-2 text-sm">
-              <Row label="Customer" value={selected.name || "—"} />
+              <Row label="Customer" value={selected.name || "None"} />
               <Row label="Email" value={selected.email} />
               <Row label="Amount" value={formatGBP(selected.amount_gbp)} />
               <Row label="Payment" value={selected.status} />

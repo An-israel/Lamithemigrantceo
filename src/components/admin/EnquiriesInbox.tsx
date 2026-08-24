@@ -28,6 +28,8 @@ export function EnquiriesInbox({ initial }: { initial: Enquiry[] }) {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Enquiry | null>(null);
   const [notes, setNotes] = useState("");
+  const [reply, setReply] = useState("");
+  const [replyState, setReplyState] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -62,7 +64,32 @@ export function EnquiriesInbox({ initial }: { initial: Enquiry[] }) {
   function open(enquiry: Enquiry) {
     setSelected(enquiry);
     setNotes(enquiry.admin_notes || "");
+    setReply("");
+    setReplyState("idle");
     if (enquiry.status === "new") updateStatus(enquiry, "read");
+  }
+
+  async function sendReply(enquiry: Enquiry) {
+    if (!reply.trim()) return;
+    setReplyState("sending");
+    try {
+      const res = await fetch("/api/admin/reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: enquiry.email,
+          name: enquiry.name,
+          message: reply,
+          subject: "Re: your message to Lami",
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setReplyState("sent");
+      setReply("");
+      updateStatus(enquiry, "replied");
+    } catch {
+      setReplyState("error");
+    }
   }
 
   return (
@@ -185,23 +212,44 @@ export function EnquiriesInbox({ initial }: { initial: Enquiry[] }) {
               </div>
             </dl>
 
-            <div className="mt-6 flex flex-wrap gap-2">
-              <a
-                href={`mailto:${selected.email}?subject=Re: your message to Lami`}
-                className="btn btn-primary text-sm"
-              >
-                Reply by email
-              </a>
-              {selected.whatsapp && (
-                <a
-                  href={`https://wa.me/${selected.whatsapp.replace(/[^0-9]/g, "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-secondary text-sm"
+            <div className="mt-6">
+              <label className="label mb-2 block">Reply by email</label>
+              <textarea
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                rows={4}
+                placeholder={`Write your reply to ${selected.name.split(" ")[0]}…`}
+                className="field resize-y"
+              />
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => sendReply(selected)}
+                  disabled={replyState === "sending" || !reply.trim()}
+                  className="btn btn-primary text-sm"
                 >
-                  Message on WhatsApp
+                  {replyState === "sending" ? "Sending…" : "Send reply"}
+                </button>
+                {replyState === "sent" && <span className="text-sm text-jade">Sent.</span>}
+                {replyState === "error" && (
+                  <span className="text-sm text-clay">Could not send. Try again.</span>
+                )}
+                <a
+                  href={`mailto:${selected.email}?subject=Re: your message to Lami`}
+                  className="text-sm text-clay underline"
+                >
+                  Open in email app instead
                 </a>
-              )}
+                {selected.whatsapp && (
+                  <a
+                    href={`https://wa.me/${selected.whatsapp.replace(/[^0-9]/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-clay underline"
+                  >
+                    Message on WhatsApp
+                  </a>
+                )}
+              </div>
             </div>
 
             <div className="mt-6">

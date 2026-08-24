@@ -24,7 +24,7 @@ const PATHS = [
   },
   {
     q: "I want community and collaboration",
-    to: "African Women Builds — build alongside others.",
+    to: "African Women Builds: build alongside others.",
     href: "/movement",
     cta: "Join the Movement",
   },

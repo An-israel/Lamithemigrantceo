@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 export default function CheckoutCancelledPage({
   searchParams,
 }: {
-  searchParams: { program?: string };
+  searchParams: { product?: string };
 }) {
-  const backHref = searchParams.program
-    ? `/programs/${searchParams.program}`
-    : "/programs";
+  const backHref = searchParams.product
+    ? `/products/${searchParams.product}`
+    : "/products";
 
   return (
     <Section background="shell">
@@ -25,7 +25,7 @@ export default function CheckoutCancelledPage({
           Whenever you are ready, your place is still here.
         </p>
         <div className="mt-8 flex justify-center">
-          <ButtonLink href={backHref}>Back to the program</ButtonLink>
+          <ButtonLink href={backHref}>Back to the product</ButtonLink>
         </div>
       </div>
     </Section>

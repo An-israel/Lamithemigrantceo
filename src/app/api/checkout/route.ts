@@ -5,7 +5,7 @@ import { isEventOver } from "@/lib/events";
 
 /**
  * Creates a Stripe Checkout Session in GBP for either:
- *   - a single program purchase  { type: "program", programId }
+ *   - a single product purchase  { type: "product", productId }
  *   - a wholesale cart           { type: "wholesale", items: [{id, quantity}] }
  *
  * Prices are always read from the database, never trusted from the request.
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
   let body: {
     type?: string;
-    programId?: string;
+    productId?: string;
     eventId?: string;
     items?: { id: string; quantity: number }[];
   };
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
             price_data: {
               currency: "gbp",
               unit_amount: Math.round(event.price_gbp * 100),
-              product_data: { name: `${event.name} — ticket` },
+              product_data: { name: `${event.name} ticket` },
             },
           },
         ],
@@ -77,19 +77,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ url: session.url });
     }
 
-    // --- Program checkout -------------------------------------------------
-    if (body.type === "program" && body.programId) {
-      const { data: program, error } = await supabase
-        .from("programs")
+    // --- Product checkout ---------------------------------------------------
+    if (body.type === "product" && body.productId) {
+      const { data: product, error } = await supabase
+        .from("products")
         .select("id, name, price_gbp, slug, status")
-        .eq("id", body.programId)
+        .eq("id", body.productId)
         .single();
 
-      if (error || !program) {
-        return NextResponse.json({ error: "Program not found." }, { status: 404 });
+      if (error || !product) {
+        return NextResponse.json({ error: "Product not found." }, { status: 404 });
       }
-      if (program.status === "sold_out") {
-        return NextResponse.json({ error: "This program is sold out." }, { status: 409 });
+      if (product.status === "sold_out") {
+        return NextResponse.json({ error: "This product is sold out." }, { status: 409 });
       }
 
       const session = await stripe.checkout.sessions.create({
@@ -100,14 +100,14 @@ export async function POST(request: Request) {
             quantity: 1,
             price_data: {
               currency: "gbp",
-              unit_amount: Math.round(program.price_gbp * 100),
-              product_data: { name: program.name },
+              unit_amount: Math.round(product.price_gbp * 100),
+              product_data: { name: product.name },
             },
           },
         ],
-        metadata: { item_type: "program", item_id: program.id },
+        metadata: { item_type: "product", item_id: product.id },
         success_url: `${siteUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${siteUrl}/checkout-cancelled?program=${program.slug}`,
+        cancel_url: `${siteUrl}/checkout-cancelled?product=${product.slug}`,
       });
 
       return NextResponse.json({ url: session.url });

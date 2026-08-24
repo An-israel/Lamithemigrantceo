@@ -20,6 +20,7 @@ export function ResourcesManager({ initial }: { initial: Resource[] }) {
         title: r.title,
         description: r.description,
         file_url: r.file_url,
+        video_url: r.video_url,
         requires_email: r.requires_email,
         active: r.active,
         sort_order: r.sort_order,
@@ -98,6 +99,16 @@ export function ResourcesManager({ initial }: { initial: Resource[] }) {
                   aspect="aspect-[4/3]"
                 />
               )}
+            </div>
+            <div className="mt-3">
+              <label className="label mb-1 block">Video link (optional)</label>
+              <input
+                value={r.video_url || ""}
+                onChange={(e) => update(r.id, { video_url: e.target.value || null })}
+                onBlur={() => persist(r)}
+                placeholder="https://youtube.com/watch?v=..."
+                className="field"
+              />
             </div>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-4">

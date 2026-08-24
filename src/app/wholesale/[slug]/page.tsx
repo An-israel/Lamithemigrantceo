@@ -139,7 +139,7 @@ export default async function WholesaleDetailPage({
                 items={[
                   {
                     title: "Shipping and returns",
-                    body: "UK shipping is calculated at checkout. Bundles are wholesale stock for resale — see our terms for the returns policy.",
+                    body: "UK shipping is calculated at checkout. Bundles are wholesale stock for resale; see our terms for the returns policy.",
                   },
                   {
                     title: "Sizing and materials",

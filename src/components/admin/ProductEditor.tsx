@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { MultiImageUploader } from "@/components/admin/MultiImageUploader";
 import { RepeatableRows } from "@/components/admin/RepeatableRows";
-import type { Program, ProgramFormat, ProgramStatus } from "@/lib/types";
+import type { Product, ProductFormat, ProductStatus } from "@/lib/types";
 
 function slugify(s: string) {
   return s
@@ -14,14 +15,14 @@ function slugify(s: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-export function ProgramEditor({ program }: { program: Program }) {
-  const [form, setForm] = useState<Program>(program);
+export function ProductEditor({ product }: { product: Product }) {
+  const [form, setForm] = useState<Product>(product);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
   const [slugTouched, setSlugTouched] = useState(true);
   const dirty = useRef(false);
   const firstRun = useRef(true);
 
-  function set<K extends keyof Program>(key: K, value: Program[K]) {
+  function set<K extends keyof Product>(key: K, value: Product[K]) {
     dirty.current = true;
     setForm((f) => ({ ...f, [key]: value }));
   }
@@ -31,13 +32,14 @@ export function ProgramEditor({ program }: { program: Program }) {
     setSaveState("saving");
     const supabase = createClient();
     const { error } = await supabase
-      .from("programs")
+      .from("products")
       .update({
         name: form.name,
         slug: form.slug || slugify(form.name),
         short_description: form.short_description,
         full_description: form.full_description,
         cover_image: form.cover_image || null,
+        gallery_images: form.gallery_images,
         price_gbp: Number(form.price_gbp) || 0,
         compare_at_gbp: form.compare_at_gbp ? Number(form.compare_at_gbp) : null,
         format: form.format,
@@ -76,7 +78,7 @@ export function ProgramEditor({ program }: { program: Program }) {
   return (
     <div className="mt-4 max-w-2xl space-y-8 pb-16">
       <div className="flex items-center justify-between">
-        <h1>Edit program</h1>
+        <h1>Edit product</h1>
         <div className="flex items-center gap-3">
           {saveState === "saving" && (
             <span className="text-sm text-muted">Saving…</span>
@@ -85,7 +87,7 @@ export function ProgramEditor({ program }: { program: Program }) {
             <span className="text-sm text-jade">Saved</span>
           )}
           <a
-            href={`/programs/${form.slug}`}
+            href={`/products/${form.slug}`}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-secondary text-sm"
@@ -139,7 +141,15 @@ export function ProgramEditor({ program }: { program: Program }) {
         <ImageUploader
           value={form.cover_image}
           onChange={(url) => set("cover_image", url || null)}
-          folder="programs"
+          folder="products"
+        />
+      </Field>
+
+      <Field label="Gallery images (shown below the cover on the product page)">
+        <MultiImageUploader
+          images={form.gallery_images}
+          onChange={(imgs) => set("gallery_images", imgs)}
+          folder="products"
         />
       </Field>
 
@@ -168,7 +178,7 @@ export function ProgramEditor({ program }: { program: Program }) {
         <Field label="Format">
           <select
             value={form.format}
-            onChange={(e) => set("format", e.target.value as ProgramFormat)}
+            onChange={(e) => set("format", e.target.value as ProductFormat)}
             className="field"
           >
             <option value="live_cohort">Live cohort</option>
@@ -211,7 +221,7 @@ export function ProgramEditor({ program }: { program: Program }) {
       <Field label="Status">
         <select
           value={form.status}
-          onChange={(e) => set("status", e.target.value as ProgramStatus)}
+          onChange={(e) => set("status", e.target.value as ProductStatus)}
           className="field max-w-xs"
         >
           <option value="draft">Draft (hidden)</option>

@@ -11,7 +11,17 @@ export function AnnouncementBar({ settings }: { settings: SiteSettings }) {
   }
 
   const content = (
-    <span className="text-shell">{settings.announcement_message}</span>
+    <span className="inline-flex items-center gap-2 text-shell">
+      {settings.announcement_image_url && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={settings.announcement_image_url}
+          alt=""
+          className="h-5 w-5 shrink-0 rounded-full object-cover"
+        />
+      )}
+      {settings.announcement_message}
+    </span>
   );
 
   return (

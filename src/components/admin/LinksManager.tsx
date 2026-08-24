@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import type { BioLink } from "@/lib/types";
 
 export function LinksManager({ initial }: { initial: BioLink[] }) {
@@ -19,6 +20,7 @@ export function LinksManager({ initial }: { initial: BioLink[] }) {
         label: link.label,
         url: link.url,
         description: link.description,
+        image_url: link.image_url,
         active: link.active,
         sort_order: link.sort_order,
       })
@@ -77,6 +79,18 @@ export function LinksManager({ initial }: { initial: BioLink[] }) {
                 onChange={(e) => update(link.id, { description: e.target.value })}
                 onBlur={() => persist(link)}
                 className="field"
+              />
+            </div>
+            <div className="mt-3">
+              <label className="label mb-1 block">Image (optional)</label>
+              <ImageUploader
+                value={link.image_url}
+                onChange={(url) => {
+                  update(link.id, { image_url: url || null });
+                  persist({ ...link, image_url: url || null });
+                }}
+                folder="bio-links"
+                aspect="aspect-square"
               />
             </div>
             <div className="mt-3 flex items-center justify-between">

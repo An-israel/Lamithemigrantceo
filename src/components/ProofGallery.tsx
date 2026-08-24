@@ -16,7 +16,7 @@ const PROOF = [
   {
     src: "/proof/fans-sold-out.jpg",
     alt: "Photo of portable fans with a caption about selling 30 of them",
-    caption: "30 fans sourced — sold out within a week",
+    caption: "30 fans sourced, sold out within a week",
   },
   {
     src: "/proof/first-1000.jpg",

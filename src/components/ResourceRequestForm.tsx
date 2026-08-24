@@ -1,21 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { toEmbedUrl } from "@/lib/embed";
+import type { Resource } from "@/lib/types";
 
 /**
- * Inline "get this free" capture for a resource that doesn't have an
- * uploaded file yet. Records the request as an enquiry (topic "Resource")
- * with the resource's title in the message, so it shows up in
- * /admin/enquiries and Lami can see exactly which guide someone wants and
- * send it by hand until the file is uploaded.
+ * Email-gated access to a resource. Records the request as an enquiry
+ * (topic "Resource") so it shows up in /admin/enquiries, and unlocks the
+ * file/video immediately when one exists rather than waiting on Lami to send
+ * it by hand.
  */
-export function ResourceRequestForm({
-  resourceId,
-  resourceTitle,
-}: {
-  resourceId: string;
-  resourceTitle: string;
-}) {
+export function ResourceRequestForm({ resource }: { resource: Resource }) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">(
     "idle"
@@ -32,9 +27,9 @@ export function ResourceRequestForm({
           name: "Resource request",
           email,
           topic: "Resource",
-          message: `Requested: ${resourceTitle}`,
+          message: `Requested: ${resource.title}`,
           marketing_opt_in: true,
-          source_page: `/resources#${resourceId}`,
+          source_page: `/resources#${resource.id}`,
         }),
       });
       if (!res.ok) throw new Error();
@@ -45,9 +40,44 @@ export function ResourceRequestForm({
   }
 
   if (state === "done") {
+    if (resource.file_url) {
+      return (
+        <a
+          href={resource.file_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-secondary mt-4 w-fit text-sm"
+        >
+          Download now
+        </a>
+      );
+    }
+    if (resource.video_url) {
+      const embed = toEmbedUrl(resource.video_url);
+      return embed ? (
+        <div className="mt-4 aspect-video w-full overflow-hidden rounded-card">
+          <iframe
+            src={embed}
+            title={resource.title}
+            className="h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      ) : (
+        <a
+          href={resource.video_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-secondary mt-4 w-fit text-sm"
+        >
+          Watch now
+        </a>
+      );
+    }
     return (
       <p className="mt-4 text-sm text-jade">
-        Got it — Lami will send this to your inbox shortly.
+        Got it. Lami will send this to your inbox shortly.
       </p>
     );
   }
@@ -55,11 +85,11 @@ export function ResourceRequestForm({
   return (
     <form onSubmit={onSubmit} className="mt-4">
       <div className="flex gap-2">
-        <label htmlFor={`res-${resourceId}`} className="sr-only">
+        <label htmlFor={`res-${resource.id}`} className="sr-only">
           Email address
         </label>
         <input
-          id={`res-${resourceId}`}
+          id={`res-${resource.id}`}
           type="email"
           required
           value={email}

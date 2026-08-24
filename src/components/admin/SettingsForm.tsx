@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { MultiImageUploader } from "@/components/admin/MultiImageUploader";
 import type { SiteSettings, ReceiptItem } from "@/lib/types";
 
 /** Editable contact details, hero copy and announcement bar. Writes to the
@@ -38,7 +39,10 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
           receipt_resold_gbp: form.receipt_resold_gbp,
           receipt_note: form.receipt_note,
           founder_portrait_url: form.founder_portrait_url,
+          founder_gallery_urls: form.founder_gallery_urls,
           media_headshot_url: form.media_headshot_url,
+          announcement_image_url: form.announcement_image_url,
+          waitlist_locations: form.waitlist_locations,
         })
         .eq("id", 1);
       if (error) throw error;
@@ -103,6 +107,14 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
               aspect="aspect-square"
             />
           </div>
+        </div>
+        <div className="mt-6">
+          <label className="label mb-2 block">More photos of Lami (About page gallery)</label>
+          <MultiImageUploader
+            images={form.founder_gallery_urls}
+            onChange={(next) => set("founder_gallery_urls", next)}
+            folder="brand"
+          />
         </div>
       </section>
 
@@ -209,6 +221,60 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {field("Message", "announcement_message")}
           {field("Link (optional)", "announcement_link", "url")}
+        </div>
+        <div className="mt-4">
+          <label className="label mb-2 block">Icon/image (optional, small square)</label>
+          <div className="w-20">
+            <ImageUploader
+              value={form.announcement_image_url}
+              onChange={(url) => set("announcement_image_url", url || null)}
+              folder="brand"
+              aspect="aspect-square"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-card border border-line p-6">
+        <h3>Waitlist locations</h3>
+        <p className="mt-1 text-sm text-muted">
+          The cities people can vote for when they join a sold-out or past
+          event&rsquo;s waitlist.
+        </p>
+        <div className="mt-4 space-y-2">
+          {form.waitlist_locations.map((loc, i) => (
+            <div key={i} className="flex gap-2">
+              <input
+                value={loc}
+                onChange={(e) => {
+                  const next = [...form.waitlist_locations];
+                  next[i] = e.target.value;
+                  set("waitlist_locations", next);
+                }}
+                className="field"
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  set(
+                    "waitlist_locations",
+                    form.waitlist_locations.filter((_, idx) => idx !== i)
+                  )
+                }
+                className="shrink-0 rounded-input border border-line px-3 text-muted hover:border-clay"
+                aria-label="Remove city"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => set("waitlist_locations", [...form.waitlist_locations, ""])}
+            className="text-sm text-clay underline"
+          >
+            + Add city
+          </button>
         </div>
       </section>
 

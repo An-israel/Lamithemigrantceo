@@ -43,7 +43,7 @@ const GROUPS: Group[] = [
     id: "sell",
     label: "Sell & Events",
     items: [
-      { href: "/admin/programs", label: "Programs" },
+      { href: "/admin/products", label: "Products" },
       { href: "/admin/events", label: "Events" },
       { href: "/admin/wholesale", label: "Wholesale" },
       { href: "/admin/orders", label: "Orders" },
@@ -54,6 +54,7 @@ const GROUPS: Group[] = [
     label: "Ecosystem & Settings",
     items: [
       { href: "/admin/ventures", label: "Ventures" },
+      { href: "/admin/gallery", label: "Gallery" },
       { href: "/admin/settings", label: "Settings" },
     ],
   },
@@ -64,7 +65,7 @@ const MOBILE: Item[] = [
   { href: "/admin", label: "Home" },
   { href: "/admin/enquiries", label: "Enquiries" },
   { href: "/admin/orders", label: "Orders" },
-  { href: "/admin/programs", label: "Programs" },
+  { href: "/admin/products", label: "Products" },
   { href: "/admin/settings", label: "Settings" },
 ];
 

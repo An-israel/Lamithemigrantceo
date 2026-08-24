@@ -36,7 +36,7 @@ export default async function MediaPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={settings.media_headshot_url}
-              alt="Lami the Migrant CEO — approved press headshot"
+              alt="Lami the Migrant CEO, approved press headshot"
               className="h-full w-full object-cover"
             />
           </div>
@@ -46,7 +46,7 @@ export default async function MediaPage() {
             <h3>Approved name &amp; title</h3>
             <p className="mt-2 text-muted">
               <strong>Temitope Olamide Oni Mole</strong>, known publicly as{" "}
-              <strong>Lami the Migrant CEO</strong> — entrepreneur, educator and
+              <strong>Lami the Migrant CEO</strong>, entrepreneur, educator and
               speaker.
             </p>
           </div>
@@ -79,8 +79,8 @@ export default async function MediaPage() {
             <h3>Headshots &amp; logos</h3>
             <p className="mt-2 text-sm text-muted">
               {settings.media_headshot_url
-                ? "The approved headshot is above. Logos and additional assets are being finalised — request them directly."
-                : "Approved headshots and logos are being finalised — for now, request them directly."}
+                ? "The approved headshot is above. Logos and additional assets are being finalised. Request them directly."
+                : "Approved headshots and logos are being finalised. For now, request them directly."}
             </p>
             <ButtonLink href="/contact?type=media" variant="secondary" className="mt-4 text-sm">
               Request brand assets

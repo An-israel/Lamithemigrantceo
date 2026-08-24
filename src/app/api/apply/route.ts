@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
-/** Stores a programme application (§11 Phase 4). */
+/** Stores a product application (§11 Phase 4). */
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
   try {
@@ -21,13 +21,13 @@ export async function POST(request: Request) {
 
   try {
     const supabase = createServiceClient();
-    const programId =
-      typeof body.program_id === "string" && !body.program_id.startsWith("seed-")
-        ? body.program_id
+    const productId =
+      typeof body.product_id === "string" && !body.product_id.startsWith("seed-")
+        ? body.product_id
         : null;
     const { error } = await supabase.from("applications").insert({
-      program_id: programId,
-      program_name: body.program_name ? String(body.program_name) : null,
+      product_id: productId,
+      product_name: body.product_name ? String(body.product_name) : null,
       name,
       email,
       whatsapp: body.whatsapp ? String(body.whatsapp).trim() : null,

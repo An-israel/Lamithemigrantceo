@@ -8,7 +8,7 @@ export const SEED_BUNDLES: WholesaleProduct[] = [
     slug: "gold-starter-bundle",
     name: "Gold-tone Starter Bundle",
     description:
-      "A tested mix of gold-tone pieces that sell fast — the bundle most students start with.",
+      "A tested mix of gold-tone pieces that sell fast: the bundle most students start with.",
     whats_inside: "Necklaces, hoops, and stacking rings",
     unit_count: 24,
     price_gbp: 85,

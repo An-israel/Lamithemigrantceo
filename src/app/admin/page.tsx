@@ -69,8 +69,8 @@ export default async function AdminDashboard() {
         <StatCard label="New enquiries this week" value={String(newEnquiries)} />
         <StatCard label="Orders this month" value={String(ordersThisMonth.length)} />
         <StatCard label="Revenue this month" value={formatGBP(revenue)} />
-        <StatCard label="Active students" value="—" />
-        <StatCard label="Visitors this week" value="—" />
+        <StatCard label="Active students" value="N/A" />
+        <StatCard label="Visitors this week" value="N/A" />
         <StatCard label="Top page" value="Home" />
       </div>
 

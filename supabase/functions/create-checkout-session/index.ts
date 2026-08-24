@@ -1,5 +1,5 @@
 // Supabase Edge Function: create-checkout-session
-// Creates a Stripe Checkout Session in GBP for a program (or, later, a
+// Creates a Stripe Checkout Session in GBP for a product (or, later, a
 // wholesale cart). Price is looked up from the DB — never trusted from the
 // client. The Next.js /api/checkout route does the same thing for the web
 // app; this function exists for any non-web client and parity.
@@ -32,22 +32,22 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
   try {
-    const { programId } = await req.json();
-    if (!programId) {
-      return new Response(JSON.stringify({ error: "Missing programId" }), {
+    const { productId } = await req.json();
+    if (!productId) {
+      return new Response(JSON.stringify({ error: "Missing productId" }), {
         status: 400,
         headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
-    const { data: program, error } = await supabase
-      .from("programs")
+    const { data: product, error } = await supabase
+      .from("products")
       .select("id, name, price_gbp, slug, status")
-      .eq("id", programId)
+      .eq("id", productId)
       .single();
 
-    if (error || !program) {
-      return new Response(JSON.stringify({ error: "Program not found" }), {
+    if (error || !product) {
+      return new Response(JSON.stringify({ error: "Product not found" }), {
         status: 404,
         headers: { ...cors, "Content-Type": "application/json" },
       });
@@ -61,14 +61,14 @@ Deno.serve(async (req: Request) => {
           quantity: 1,
           price_data: {
             currency: "gbp",
-            unit_amount: Math.round(Number(program.price_gbp) * 100),
-            product_data: { name: program.name },
+            unit_amount: Math.round(Number(product.price_gbp) * 100),
+            product_data: { name: product.name },
           },
         },
       ],
-      metadata: { item_type: "program", item_id: program.id },
+      metadata: { item_type: "product", item_id: product.id },
       success_url: `${SITE_URL}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${SITE_URL}/checkout-cancelled?program=${program.slug}`,
+      cancel_url: `${SITE_URL}/checkout-cancelled?product=${product.slug}`,
     });
 
     return new Response(JSON.stringify({ url: session.url }), {

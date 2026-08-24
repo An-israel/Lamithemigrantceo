@@ -9,6 +9,8 @@ const STATUSES: ApplicationStatus[] = ["new", "reviewing", "accepted", "declined
 export function ApplicationsInbox({ initial }: { initial: Application[] }) {
   const [rows, setRows] = useState<Application[]>(initial);
   const [selected, setSelected] = useState<Application | null>(null);
+  const [reply, setReply] = useState("");
+  const [replyState, setReplyState] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   async function setStatus(a: Application, status: ApplicationStatus) {
     setRows((r) => r.map((x) => (x.id === a.id ? { ...x, status } : x)));
@@ -17,10 +19,38 @@ export function ApplicationsInbox({ initial }: { initial: Application[] }) {
     await supabase.from("applications").update({ status }).eq("id", a.id);
   }
 
+  function open(a: Application) {
+    setSelected(a);
+    setReply("");
+    setReplyState("idle");
+  }
+
+  async function sendReply() {
+    if (!selected || !reply.trim()) return;
+    setReplyState("sending");
+    try {
+      const res = await fetch("/api/admin/reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: selected.email,
+          name: selected.name,
+          message: reply,
+          subject: `Re: your application${selected.product_name ? ` for ${selected.product_name}` : ""}`,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setReplyState("sent");
+      setReply("");
+    } catch {
+      setReplyState("error");
+    }
+  }
+
   if (rows.length === 0) {
     return (
       <p className="rounded-card border border-line bg-peach p-6 text-sm text-muted">
-        No applications yet. They arrive here from the “Apply” option on program
+        No applications yet. They arrive here from the “Apply” option on product
         pages.
       </p>
     );
@@ -32,9 +62,9 @@ export function ApplicationsInbox({ initial }: { initial: Application[] }) {
         <table className="w-full text-left text-sm">
           <tbody className="divide-y divide-line">
             {rows.map((a) => (
-              <tr key={a.id} onClick={() => setSelected(a)} className="cursor-pointer hover:bg-peach/40">
+              <tr key={a.id} onClick={() => open(a)} className="cursor-pointer hover:bg-peach/40">
                 <td className="px-4 py-3 font-bold">{a.name}</td>
-                <td className="px-4 py-3 text-muted">{a.program_name || "—"}</td>
+                <td className="px-4 py-3 text-muted">{a.product_name || "None"}</td>
                 <td className="px-4 py-3 capitalize">{a.status}</td>
                 <td className="px-4 py-3 text-right text-muted">
                   {new Date(a.created_at).toLocaleDateString("en-GB")}
@@ -57,7 +87,7 @@ export function ApplicationsInbox({ initial }: { initial: Application[] }) {
               <button onClick={() => setSelected(null)} className="text-2xl leading-none text-muted" aria-label="Close">×</button>
             </div>
             <dl className="mt-4 space-y-2 text-sm">
-              <div><dt className="label">Programme</dt><dd>{selected.program_name || "—"}</dd></div>
+              <div><dt className="label">Product</dt><dd>{selected.product_name || "None"}</dd></div>
               {selected.whatsapp && <div><dt className="label">WhatsApp</dt><dd>{selected.whatsapp}</dd></div>}
               {selected.answers && (
                 <div>
@@ -68,9 +98,37 @@ export function ApplicationsInbox({ initial }: { initial: Application[] }) {
                 </div>
               )}
             </dl>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <a href={`mailto:${selected.email}`} className="btn btn-primary text-sm">Reply by email</a>
+
+            <div className="mt-6">
+              <label className="label mb-2 block">Reply by email</label>
+              <textarea
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                rows={4}
+                placeholder={`Write your reply to ${selected.name.split(" ")[0]}…`}
+                className="field resize-y"
+              />
+              <div className="mt-2 flex items-center gap-3">
+                <button
+                  onClick={sendReply}
+                  disabled={replyState === "sending" || !reply.trim()}
+                  className="btn btn-primary text-sm"
+                >
+                  {replyState === "sending" ? "Sending…" : "Send reply"}
+                </button>
+                {replyState === "sent" && <span className="text-sm text-jade">Sent.</span>}
+                {replyState === "error" && (
+                  <span className="text-sm text-clay">Could not send. Try again.</span>
+                )}
+                <a
+                  href={`mailto:${selected.email}`}
+                  className="text-sm text-clay underline"
+                >
+                  Open in email app instead
+                </a>
+              </div>
             </div>
+
             <div className="mt-6">
               <label className="label mb-2 block">Status</label>
               <div className="flex flex-wrap gap-2">

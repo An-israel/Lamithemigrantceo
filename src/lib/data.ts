@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Program, Testimonial, SiteSettings } from "@/lib/types";
+import type { Product, Testimonial, SiteSettings } from "@/lib/types";
 
 /**
  * Seed content. These render the site meaningfully before the Supabase tables
@@ -10,7 +10,7 @@ import type { Program, Testimonial, SiteSettings } from "@/lib/types";
  * before launch. See supabase/migrations/0002_seed.sql for the DB copies.
  */
 
-export const SEED_PROGRAMS: Program[] = [
+export const SEED_PRODUCTS: Product[] = [
   {
     id: "seed-build-her-empire",
     created_at: new Date().toISOString(),
@@ -21,6 +21,7 @@ export const SEED_PROGRAMS: Program[] = [
     full_description:
       "An eight-week live cohort. We build your first product line, your pricing, your first wholesale order and your first ten sales together, on calls, with feedback.",
     cover_image: null,
+    gallery_images: [],
     price_gbp: 497,
     compare_at_gbp: 697,
     format: "live_cohort",
@@ -52,6 +53,7 @@ export const SEED_PROGRAMS: Program[] = [
     full_description:
       "A self-paced programme that walks you from zero to your first order for under £200 in stock. Do it on your own time, in your own order.",
     cover_image: null,
+    gallery_images: [],
     price_gbp: 97,
     compare_at_gbp: null,
     format: "self_paced",
@@ -82,6 +84,7 @@ export const SEED_PROGRAMS: Program[] = [
     full_description:
       "One-to-one mentorship for women who are already selling and want to scale. Fortnightly private calls, direct access, and hands-on help with wholesale and systems.",
     cover_image: null,
+    gallery_images: [],
     price_gbp: 1200,
     compare_at_gbp: null,
     format: "live_cohort",
@@ -112,7 +115,7 @@ export const SEED_TESTIMONIALS: Testimonial[] = [
     photo: null,
     quote: "I sold out my first bundle in a weekend. I could not believe it.",
     result_figure: "£1,200 in her first month",
-    program_id: "seed-200-starter",
+    product_id: "seed-200-starter",
     sort_order: 1,
     archived: false,
   },
@@ -123,7 +126,7 @@ export const SEED_TESTIMONIALS: Testimonial[] = [
     photo: null,
     quote: "Lami showed me the maths. Now I actually know my margins.",
     result_figure: "£3,400 in three months",
-    program_id: "seed-build-her-empire",
+    product_id: "seed-build-her-empire",
     sort_order: 2,
     archived: false,
   },
@@ -134,7 +137,7 @@ export const SEED_TESTIMONIALS: Testimonial[] = [
     photo: null,
     quote: "I left my agency shift last month. This is my income now.",
     result_figure: "£5,100 in her best month",
-    program_id: "seed-build-her-empire",
+    product_id: "seed-build-her-empire",
     sort_order: 3,
     archived: false,
   },
@@ -149,10 +152,11 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   tiktok_handle: "lamithemigrantceo",
   hero_headline: "I started with £200.",
   hero_paragraph:
-    "I help African migrant women in the UK start a profitable product business on a small budget — with the exact steps I used, not theory.",
+    "I help African migrant women in the UK start a profitable product business on a small budget, using the exact steps I used, not theory.",
   announcement_enabled: false,
   announcement_message: null,
   announcement_link: null,
+  announcement_image_url: null,
   receipt_items: [
     { label: "Mixed jewelry bundle", value: 85 },
     { label: "Packaging and labels", value: 22 },
@@ -163,42 +167,44 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   receipt_resold_gbp: 640,
   receipt_note: "Her actual first order, 2021.",
   founder_portrait_url: null,
+  founder_gallery_urls: [],
   media_headshot_url: null,
+  waitlist_locations: ["Liverpool", "London", "Manchester", "Birmingham"],
 };
 
 // --- Query helpers ---------------------------------------------------------
 
-export async function getPrograms(): Promise<Program[]> {
+export async function getProducts(): Promise<Product[]> {
   try {
     const supabase = createClient();
     const { data } = await supabase
-      .from("programs")
+      .from("products")
       .select("*")
       .neq("status", "draft")
       .order("sort_order", { ascending: true });
-    if (data && data.length > 0) return data as Program[];
+    if (data && data.length > 0) return data as Product[];
   } catch {
     // fall through to seed
   }
-  return SEED_PROGRAMS;
+  return SEED_PRODUCTS;
 }
 
-export async function getProgramBySlug(slug: string): Promise<Program | null> {
+export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
     const supabase = createClient();
     const { data } = await supabase
-      .from("programs")
+      .from("products")
       .select("*")
       .eq("slug", slug)
       .single();
-    if (data) return data as Program;
+    if (data) return data as Product;
   } catch {
     // fall through to seed
   }
-  return SEED_PROGRAMS.find((p) => p.slug === slug) ?? null;
+  return SEED_PRODUCTS.find((p) => p.slug === slug) ?? null;
 }
 
-export async function getTestimonials(programId?: string): Promise<Testimonial[]> {
+export async function getTestimonials(productId?: string): Promise<Testimonial[]> {
   try {
     const supabase = createClient();
     let query = supabase
@@ -206,14 +212,14 @@ export async function getTestimonials(programId?: string): Promise<Testimonial[]
       .select("*")
       .eq("archived", false)
       .order("sort_order", { ascending: true });
-    if (programId) query = query.eq("program_id", programId);
+    if (productId) query = query.eq("product_id", productId);
     const { data } = await query;
     if (data && data.length > 0) return data as Testimonial[];
   } catch {
     // fall through to seed
   }
-  return programId
-    ? SEED_TESTIMONIALS.filter((t) => t.program_id === programId)
+  return productId
+    ? SEED_TESTIMONIALS.filter((t) => t.product_id === productId)
     : SEED_TESTIMONIALS;
 }
 
