@@ -29,7 +29,9 @@ export default async function EventsPage() {
   return (
     <Section background="shell">
       <p className="label text-clay">Events</p>
-      <h1 className="mt-3">Build in the room.</h1>
+      <h1 className="mt-3">
+        Build <span className="text-clay">in the room</span>.
+      </h1>
       <p className="mt-4 max-w-prose text-muted">
         In-person experiences where African women build businesses, wealth and
         community together.

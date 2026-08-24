@@ -47,7 +47,9 @@ export default async function EcosystemPage() {
       <Section background="ink">
         <div className="max-w-prose">
           <p className="label text-gold-soft">The Ecosystem</p>
-          <h1 className="mt-3 text-shell">One founder. A whole ecosystem.</h1>
+          <h1 className="mt-3 text-shell">
+            One founder. <span className="text-gold-soft">A whole ecosystem.</span>
+          </h1>
           <p className="mt-4 text-shell/80">
             Education, wholesale, community and live events: connected pieces
             built to move African women from income to ownership.

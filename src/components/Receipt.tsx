@@ -83,7 +83,7 @@ export function Receipt({
         boxShadow: "0 10px 30px -12px rgba(42, 27, 20, 0.35)",
       }}
     >
-      <div className="border border-line px-6 pb-10 pt-6">
+      <div className="border border-line border-t-4 border-t-gold px-6 pb-10 pt-6">
         <p className="label text-center">Starting stock · Receipt</p>
         <div className="my-4 border-t border-dashed border-line" />
 

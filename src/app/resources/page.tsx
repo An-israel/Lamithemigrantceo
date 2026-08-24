@@ -19,7 +19,9 @@ export default async function ResourcesPage() {
       <Section background="peach">
         <div className="max-w-prose">
           <p className="label text-clay">Resources</p>
-          <h1 className="mt-3">Free tools to help you build.</h1>
+          <h1 className="mt-3">
+            Free tools to <span className="text-clay">help you build</span>.
+          </h1>
           <p className="mt-4 text-muted">
             Practical guides you can use today, plus The Build Letter for
             ongoing insights. Grab what you need.

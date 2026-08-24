@@ -62,7 +62,9 @@ export default async function ContactPage({
   return (
     <Section background="shell">
       <p className="label text-clay">Contact</p>
-      <h1 className="mt-3">Let&rsquo;s talk.</h1>
+      <h1 className="mt-3">
+        Let&rsquo;s <span className="text-clay">talk</span>.
+      </h1>
       <p className="mt-4 max-w-prose text-muted">
         Choose the right route below and I&rsquo;ll make sure your message
         reaches the right place. I aim to reply within one working day.
