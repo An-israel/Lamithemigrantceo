@@ -9,19 +9,25 @@ import { clsx } from "@/lib/clsx";
  */
 export function BuyButton({
   productId,
+  productName,
   label,
   className,
+  whatsappNumber,
 }: {
   productId: string;
+  productName?: string;
   label: string;
   className?: string;
+  whatsappNumber?: string | null;
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checkoutUnavailable, setCheckoutUnavailable] = useState(false);
 
   async function checkout() {
     setLoading(true);
     setError(null);
+    setCheckoutUnavailable(false);
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -30,6 +36,7 @@ export function BuyButton({
       });
       const data = await res.json();
       if (!res.ok || !data.url) {
+        if (res.status === 503) setCheckoutUnavailable(true);
         throw new Error(data.error || "Checkout is not available yet.");
       }
       window.location.href = data.url;
@@ -41,6 +48,13 @@ export function BuyButton({
     }
   }
 
+  const waHref =
+    checkoutUnavailable && whatsappNumber
+      ? `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+          `Hi Lami, I'd like to enrol${productName ? ` in ${productName}` : ""}.`
+        )}`
+      : null;
+
   return (
     <div>
       <button
@@ -51,6 +65,16 @@ export function BuyButton({
         {loading ? "Taking you to checkout…" : label}
       </button>
       {error && <p className="mt-2 text-sm text-clay">{error}</p>}
+      {waHref && (
+        <a
+          href={waHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 block text-sm text-clay underline"
+        >
+          Enrol on WhatsApp instead →
+        </a>
+      )}
     </div>
   );
 }

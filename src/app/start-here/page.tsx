@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 const PATHS = [
   {
     q: "I want to start a business",
-    to: "Beginner resources and the right programme or waitlist.",
-    href: "/resources",
-    cta: "Explore resources",
+    to: "Start Your Product Biz: the self-paced route from nothing to your first paid order.",
+    href: "/products/the-200-starter",
+    cta: "Start Your Product Biz",
   },
   {
     q: "I already run a product business",

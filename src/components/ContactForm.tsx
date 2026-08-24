@@ -14,13 +14,19 @@ const BUDGETS = [
 
 const MAX_MESSAGE = 1000;
 
-export function ContactForm({ initialType }: { initialType?: string }) {
+export function ContactForm({
+  initialType,
+  initialMessage,
+}: {
+  initialType?: string;
+  initialMessage?: string;
+}) {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
   const [error, setError] = useState<string | null>(null);
   const [topic, setTopic] = useState(initialType || TYPES[0]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(initialMessage || "");
   // Honeypot for basic spam protection.
   const [company, setCompany] = useState("");
 
