@@ -2,31 +2,31 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import type { ProgramModule } from "@/lib/types";
+import type { ProductModule } from "@/lib/types";
 
 /**
  * Manages the real module content students see at /my/[slug] once they've
  * paid — title, body copy, an optional video link and an optional
- * downloadable file. While a programme has zero modules, /my/[slug] falls
+ * downloadable file. While a product has zero modules, /my/[slug] falls
  * back to a placeholder derived from "What you get" so nothing breaks.
  */
-export function ProgramModulesManager({
-  programId,
+export function ProductModulesManager({
+  productId,
   initial,
 }: {
-  programId: string;
-  initial: ProgramModule[];
+  productId: string;
+  initial: ProductModule[];
 }) {
-  const [rows, setRows] = useState<ProgramModule[]>(initial);
+  const [rows, setRows] = useState<ProductModule[]>(initial);
 
-  function update(id: string, patch: Partial<ProgramModule>) {
+  function update(id: string, patch: Partial<ProductModule>) {
     setRows((r) => r.map((x) => (x.id === id ? { ...x, ...patch } : x)));
   }
 
-  async function persist(m: ProgramModule) {
+  async function persist(m: ProductModule) {
     const supabase = createClient();
     await supabase
-      .from("program_modules")
+      .from("product_modules")
       .update({
         title: m.title,
         body: m.body,
@@ -40,20 +40,20 @@ export function ProgramModulesManager({
   async function add() {
     const supabase = createClient();
     const { data } = await supabase
-      .from("program_modules")
+      .from("product_modules")
       .insert({
-        program_id: programId,
+        product_id: productId,
         title: `Module ${rows.length + 1}`,
         sort_order: rows.length + 1,
       })
       .select("*")
       .single();
-    if (data) setRows((r) => [...r, data as ProgramModule]);
+    if (data) setRows((r) => [...r, data as ProductModule]);
   }
 
   async function remove(id: string) {
     const supabase = createClient();
-    await supabase.from("program_modules").delete().eq("id", id);
+    await supabase.from("product_modules").delete().eq("id", id);
     setRows((r) => r.filter((x) => x.id !== id));
   }
 
@@ -67,7 +67,7 @@ export function ProgramModulesManager({
     const supabase = createClient();
     await Promise.all(
       [withOrder[i], withOrder[j]].map((m) =>
-        supabase.from("program_modules").update({ sort_order: m.sort_order }).eq("id", m.id)
+        supabase.from("product_modules").update({ sort_order: m.sort_order }).eq("id", m.id)
       )
     );
   }
@@ -157,7 +157,7 @@ export function ProgramModulesManager({
         ))}
         {rows.length === 0 && (
           <p className="rounded-card border border-line bg-peach p-4 text-sm text-muted">
-            No modules yet — students see a placeholder until you add some.
+            No modules yet. Students see a placeholder until you add some.
           </p>
         )}
       </div>

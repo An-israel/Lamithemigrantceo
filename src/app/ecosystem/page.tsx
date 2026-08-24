@@ -13,14 +13,14 @@ const PARTS = [
   {
     id: "wholesale",
     name: "GBG Wholesale Hub",
-    body: "Wholesale inventory and product opportunities for resellers and product-business owners. Buy stock, know your margin, and sell it on.",
+    body: "Vetted stock for resellers and product-business owners. Know your margin before you buy.",
     cta: "Visit the Wholesale Hub",
     href: "/wholesale",
   },
   {
     id: "movement",
     name: "African Women Builds",
-    body: "A community and movement helping African women build businesses, wealth and legacy — together, not in isolation.",
+    body: "A community and movement helping African women build businesses, wealth and legacy, together, not in isolation.",
     cta: "Join the Movement",
     href: "/movement",
   },
@@ -28,8 +28,8 @@ const PARTS = [
     id: "academy",
     name: "GBG Academy",
     body: "Practical business education for people starting and growing product businesses. Real steps from someone who has done it.",
-    cta: "Explore Programmes",
-    href: "/programs",
+    cta: "Explore Products",
+    href: "/products",
   },
   {
     id: "build-her-empire",
@@ -49,7 +49,7 @@ export default async function EcosystemPage() {
           <p className="label text-gold-soft">The Ecosystem</p>
           <h1 className="mt-3 text-shell">One founder. A whole ecosystem.</h1>
           <p className="mt-4 text-shell/80">
-            Education, wholesale, community and live events — connected pieces
+            Education, wholesale, community and live events: connected pieces
             built to move African women from income to ownership.
           </p>
         </div>

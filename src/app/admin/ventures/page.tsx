@@ -22,7 +22,7 @@ export default async function AdminVenturesPage() {
       <h1>Future ventures</h1>
       <p className="mt-2 text-sm text-muted">
         New businesses and projects shown on the Ecosystem page. Keep drafts
-        unpublished — don&rsquo;t reveal confidential concepts too early.
+        unpublished. Don&rsquo;t reveal confidential concepts too early.
       </p>
 
       {!dbReady && (

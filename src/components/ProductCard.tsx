@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { ButtonLink } from "@/components/Button";
-import { ProgramWaitlist } from "@/components/ProgramWaitlist";
+import { ProductWaitlist } from "@/components/ProductWaitlist";
 import { formatGBP } from "@/lib/format";
-import type { Program } from "@/lib/types";
+import type { Product } from "@/lib/types";
 
 function CoverPlaceholder({ name }: { name: string }) {
   return (
@@ -12,38 +11,38 @@ function CoverPlaceholder({ name }: { name: string }) {
   );
 }
 
-export function ProgramCard({
-  program,
+export function ProductCard({
+  product,
   showBullets = false,
 }: {
-  program: Program;
+  product: Product;
   showBullets?: boolean;
 }) {
-  const soldOut = program.status === "sold_out";
+  const soldOut = product.status === "sold_out";
   const formatLabel =
-    program.format === "live_cohort" ? "Live cohort" : "Self-paced";
+    product.format === "live_cohort" ? "Live cohort" : "Self-paced";
 
   return (
     <article className="card flex flex-col overflow-hidden">
-      {program.cover_image ? (
+      {product.cover_image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={program.cover_image}
-          alt={`${program.name} cover`}
+          src={product.cover_image}
+          alt={`${product.name} cover`}
           className="aspect-[4/3] w-full object-cover"
         />
       ) : (
-        <CoverPlaceholder name={program.name} />
+        <CoverPlaceholder name={product.name} />
       )}
 
       <div className="flex flex-1 flex-col p-6">
         <span className="pill w-fit bg-peach text-ink">{formatLabel}</span>
-        <h3 className="mt-3">{program.name}</h3>
-        <p className="mt-2 text-muted">{program.short_description}</p>
+        <h3 className="mt-3">{product.name}</h3>
+        <p className="mt-2 text-muted">{product.short_description}</p>
 
-        {showBullets && program.what_you_get.length > 0 && (
+        {showBullets && product.what_you_get.length > 0 && (
           <ul className="mt-4 space-y-2">
-            {program.what_you_get.slice(0, 3).map((item) => (
+            {product.what_you_get.slice(0, 3).map((item) => (
               <li key={item} className="flex gap-2 text-[15px]">
                 <span className="text-clay" aria-hidden>
                   ✓
@@ -56,12 +55,12 @@ export function ProgramCard({
 
         <div className="mt-6 flex items-center justify-between gap-4">
           <div>
-            {program.compare_at_gbp && (
+            {product.compare_at_gbp && (
               <span className="mr-2 text-muted line-through">
-                {formatGBP(program.compare_at_gbp)}
+                {formatGBP(product.compare_at_gbp)}
               </span>
             )}
-            <span className="price">{formatGBP(program.price_gbp)}</span>
+            <span className="price">{formatGBP(product.price_gbp)}</span>
           </div>
         </div>
 
@@ -69,11 +68,11 @@ export function ProgramCard({
           {soldOut ? (
             <div className="space-y-2">
               <span className="pill bg-jade text-shell">Next cohort soon</span>
-              <ProgramWaitlist programId={program.id} programName={program.name} />
+              <ProductWaitlist productId={product.id} productName={product.name} />
             </div>
           ) : (
             <ButtonLink
-              href={`/programs/${program.slug}`}
+              href={`/products/${product.slug}`}
               fullWidthMobile
               className="w-full"
             >

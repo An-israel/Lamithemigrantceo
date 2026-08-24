@@ -6,11 +6,12 @@ import { BuyButton } from "@/components/BuyButton";
 import { ApplyForm } from "@/components/ApplyForm";
 import { Accordion } from "@/components/Accordion";
 import { TestimonialCard } from "@/components/TestimonialCard";
-import { ProgramWaitlist } from "@/components/ProgramWaitlist";
+import { ProductWaitlist } from "@/components/ProductWaitlist";
 import {
-  getProgramBySlug,
-  getPrograms,
+  getProductBySlug,
+  getProducts,
   getTestimonials,
+  getSettings,
   formatGBP,
 } from "@/lib/data";
 
@@ -19,44 +20,47 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const program = await getProgramBySlug(params.slug);
-  if (!program) return { title: "Program not found" };
+  const product = await getProductBySlug(params.slug);
+  if (!product) return { title: "Product not found" };
   return {
-    title: program.name,
-    description: program.short_description,
-    alternates: { canonical: `/programs/${program.slug}` },
+    title: product.name,
+    description: product.short_description,
+    alternates: { canonical: `/products/${product.slug}` },
     openGraph: {
-      title: program.name,
-      description: program.short_description,
-      images: program.cover_image ? [program.cover_image] : undefined,
+      title: product.name,
+      description: product.short_description,
+      images: product.cover_image ? [product.cover_image] : undefined,
     },
   };
 }
 
 export async function generateStaticParams() {
-  const programs = await getPrograms();
-  return programs.map((p) => ({ slug: p.slug }));
+  const products = await getProducts();
+  return products.map((p) => ({ slug: p.slug }));
 }
 
-export default async function ProgramDetailPage({
+export default async function ProductDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const program = await getProgramBySlug(params.slug);
-  if (!program) notFound();
+  const product = await getProductBySlug(params.slug);
+  if (!product) notFound();
 
-  const testimonials = await getTestimonials(program.id);
-  const soldOut = program.status === "sold_out";
+  const [testimonials, settings] = await Promise.all([
+    getTestimonials(product.id),
+    getSettings(),
+  ]);
+  const soldOut = product.status === "sold_out";
   const formatLabel =
-    program.format === "live_cohort" ? "Live cohort" : "Self-paced";
+    product.format === "live_cohort" ? "Live cohort" : "Self-paced";
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Course",
-    name: program.name,
-    description: program.short_description,
+    name: product.name,
+    description: product.short_description,
     provider: {
       "@type": "Organization",
       name: "Lami the Migrant CEO",
@@ -65,12 +69,12 @@ export default async function ProgramDetailPage({
     offers: {
       "@type": "Offer",
       category: formatLabel,
-      price: program.price_gbp,
+      price: product.price_gbp,
       priceCurrency: "GBP",
       availability: soldOut
         ? "https://schema.org/SoldOut"
         : "https://schema.org/InStock",
-      url: `${siteUrl}/programs/${program.slug}`,
+      url: `${siteUrl}/products/${product.slug}`,
     },
   };
 
@@ -81,19 +85,19 @@ export default async function ProgramDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Section background="shell" className="!pb-10">
-        <Link href="/programs" className="text-sm text-muted no-underline hover:text-clay">
-          ← All programs
+        <Link href="/products" className="text-sm text-muted no-underline hover:text-clay">
+          ← All products
         </Link>
 
         <div className="mt-6 grid gap-10 md:grid-cols-[3fr_2fr]">
           {/* Left: details */}
           <div>
-            <h1>{program.name}</h1>
-            <p className="mt-4 text-muted">{program.full_description}</p>
+            <h1>{product.name}</h1>
+            <p className="mt-4 text-muted">{product.full_description}</p>
 
             <h3 className="mt-10">What you get</h3>
             <ul className="mt-4 space-y-3">
-              {program.what_you_get.map((item) => (
+              {product.what_you_get.map((item) => (
                 <li key={item} className="flex gap-3">
                   <span className="text-clay" aria-hidden>
                     ✓
@@ -110,13 +114,13 @@ export default async function ProgramDetailPage({
               </div>
               <div>
                 <dt className="label">Duration</dt>
-                <dd className="mt-1">{program.duration || "See details"}</dd>
+                <dd className="mt-1">{product.duration || "See details"}</dd>
               </div>
               <div>
                 <dt className="label">Starts</dt>
                 <dd className="mt-1">
-                  {program.start_date
-                    ? new Date(program.start_date).toLocaleDateString("en-GB", {
+                  {product.start_date
+                    ? new Date(product.start_date).toLocaleDateString("en-GB", {
                         day: "numeric",
                         month: "long",
                         year: "numeric",
@@ -126,44 +130,61 @@ export default async function ProgramDetailPage({
               </div>
               <div>
                 <dt className="label">Who it is for</dt>
-                <dd className="mt-1">{program.who_for[0]}</dd>
+                <dd className="mt-1">{product.who_for[0]}</dd>
               </div>
             </dl>
+
+            {product.gallery_images.length > 0 && (
+              <>
+                <h3 className="mt-10">Gallery</h3>
+                <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {product.gallery_images.map((src) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={src}
+                      src={src}
+                      alt={product.name}
+                      className="aspect-square w-full rounded-input object-cover"
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Right: sticky buy card */}
           <div>
             <div className="rounded-card border border-line bg-peach-deep p-6 md:sticky md:top-24">
               <div className="mb-4 aspect-[4/3] w-full overflow-hidden rounded-input bg-peach">
-                {program.cover_image ? (
+                {product.cover_image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={program.cover_image}
-                    alt={program.name}
+                    src={product.cover_image}
+                    alt={product.name}
                     className="h-full w-full object-cover"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center font-display text-3xl text-ink/40">
-                    {program.name.charAt(0)}
+                    {product.name.charAt(0)}
                   </div>
                 )}
               </div>
 
               <div className="flex items-baseline gap-3">
-                {program.compare_at_gbp && (
+                {product.compare_at_gbp && (
                   <span className="text-muted line-through">
-                    {formatGBP(program.compare_at_gbp)}
+                    {formatGBP(product.compare_at_gbp)}
                   </span>
                 )}
                 <span className="price !text-[32px]">
-                  {formatGBP(program.price_gbp)}
+                  {formatGBP(product.price_gbp)}
                 </span>
               </div>
 
-              {program.start_date && (
+              {product.start_date && (
                 <p className="mt-1 text-sm text-muted">
                   Next start{" "}
-                  {new Date(program.start_date).toLocaleDateString("en-GB", {
+                  {new Date(product.start_date).toLocaleDateString("en-GB", {
                     day: "numeric",
                     month: "long",
                   })}
@@ -176,22 +197,32 @@ export default async function ProgramDetailPage({
                     <span className="pill bg-jade text-shell">
                       Next cohort soon
                     </span>
-                    <ProgramWaitlist
-                      programId={program.id}
-                      programName={program.name}
+                    <ProductWaitlist
+                      productId={product.id}
+                      productName={product.name}
                     />
                   </div>
                 ) : (
                   <BuyButton
-                    programId={program.id}
-                    label={`Join for ${formatGBP(program.price_gbp)}`}
+                    productId={product.id}
+                    label={`Join for ${formatGBP(product.price_gbp)}`}
                   />
                 )}
               </div>
               <p className="mt-3 text-[13px] text-muted">
                 Secure card payment. Instant access by email.
               </p>
-              <ApplyForm programId={program.id} programName={program.name} />
+              <ApplyForm productId={product.id} productName={product.name} />
+              {settings.calendly_url && (
+                <a
+                  href={settings.calendly_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 block text-sm text-clay underline"
+                >
+                  Or book a 1:1 call to ask questions first →
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -202,7 +233,7 @@ export default async function ProgramDetailPage({
         <h2>What we cover.</h2>
         <div className="mt-8 max-w-prose">
           <Accordion
-            items={program.what_you_get.map((w, i) => ({
+            items={product.what_you_get.map((w, i) => ({
               title: `Module ${i + 1}`,
               body: w,
             }))}
@@ -210,10 +241,10 @@ export default async function ProgramDetailPage({
         </div>
       </Section>
 
-      {/* Testimonials for this program */}
+      {/* Testimonials for this product */}
       {testimonials.length > 0 && (
         <Section background="shell">
-          <h2>Women who did this program.</h2>
+          <h2>Women who did this.</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {testimonials.map((t) => (
               <TestimonialCard key={t.id} t={t} />
@@ -249,9 +280,9 @@ export default async function ProgramDetailPage({
       {!soldOut && (
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-shell p-4 md:hidden">
           <div className="flex items-center justify-between gap-4">
-            <span className="price">{formatGBP(program.price_gbp)}</span>
+            <span className="price">{formatGBP(product.price_gbp)}</span>
             <BuyButton
-              programId={program.id}
+              productId={product.id}
               label="Join now"
               className="flex-1"
             />

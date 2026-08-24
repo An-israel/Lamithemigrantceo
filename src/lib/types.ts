@@ -4,14 +4,14 @@
  * once the CLI is linked to the project if you prefer generated types.
  */
 
-export type ProgramFormat = "live_cohort" | "self_paced";
-export type ProgramStatus = "draft" | "live" | "sold_out";
+export type ProductFormat = "live_cohort" | "self_paced";
+export type ProductStatus = "draft" | "live" | "sold_out";
 export type EnquiryStatus = "new" | "read" | "replied";
 export type OrderStatus = "pending" | "paid" | "refunded" | "failed";
 export type FulfilmentStatus = "none" | "new" | "packed" | "shipped" | "delivered";
 export type UserRole = "student" | "admin";
 
-export interface Program {
+export interface Product {
   id: string;
   created_at: string;
   slug: string;
@@ -19,14 +19,15 @@ export interface Program {
   short_description: string;
   full_description: string;
   cover_image: string | null;
+  gallery_images: string[];
   price_gbp: number;
   compare_at_gbp: number | null;
-  format: ProgramFormat;
+  format: ProductFormat;
   start_date: string | null;
   duration: string | null;
   who_for: string[];
   what_you_get: string[];
-  status: ProgramStatus;
+  status: ProductStatus;
   sort_order: number;
 }
 
@@ -37,7 +38,7 @@ export interface Testimonial {
   photo: string | null;
   quote: string;
   result_figure: string | null;
-  program_id: string | null;
+  product_id: string | null;
   sort_order: number;
   archived: boolean;
 }
@@ -81,6 +82,7 @@ export interface BioLink {
   label: string;
   url: string;
   description: string | null;
+  image_url: string | null;
   sort_order: number;
   active: boolean;
   clicks: number;
@@ -92,6 +94,7 @@ export interface Resource {
   title: string;
   description: string;
   file_url: string | null;
+  video_url: string | null;
   requires_email: boolean;
   sort_order: number;
   active: boolean;
@@ -116,6 +119,7 @@ export interface EventItem {
   tagline: string;
   description: string;
   cover_image: string | null;
+  gallery_images: string[];
   location: string | null;
   starts_at: string | null;
   ends_at: string | null;
@@ -140,8 +144,8 @@ export interface Membership {
 export interface Application {
   id: string;
   created_at: string;
-  program_id: string | null;
-  program_name: string | null;
+  product_id: string | null;
+  product_name: string | null;
   name: string;
   email: string;
   whatsapp: string | null;
@@ -184,7 +188,7 @@ export interface Order {
   stripe_session_id: string | null;
   email: string;
   name: string | null;
-  item_type: "program" | "wholesale" | "event";
+  item_type: "product" | "program" | "wholesale" | "event";
   item_id: string | null;
   amount_gbp: number;
   status: OrderStatus;
@@ -193,14 +197,24 @@ export interface Order {
   shipping_address: Record<string, unknown> | null;
 }
 
-export interface ProgramModule {
+export interface ProductModule {
   id: string;
   created_at: string;
-  program_id: string;
+  product_id: string;
   title: string;
   body: string;
   video_url: string | null;
   file_url: string | null;
+  sort_order: number;
+}
+
+export interface GalleryImage {
+  id: string;
+  created_at: string;
+  image_url: string;
+  caption: string | null;
+  category: string;
+  taken_on: string | null;
   sort_order: number;
 }
 
@@ -229,11 +243,14 @@ export interface SiteSettings {
   announcement_enabled: boolean;
   announcement_message: string | null;
   announcement_link: string | null;
+  announcement_image_url: string | null;
   receipt_items: ReceiptItem[] | null;
   receipt_resold_gbp: number | null;
   receipt_note: string | null;
   founder_portrait_url: string | null;
+  founder_gallery_urls: string[];
   media_headshot_url: string | null;
+  waitlist_locations: string[];
 }
 
 type Row<T> = T;
@@ -251,7 +268,7 @@ export interface Database {
   public: {
     Tables: {
       users: TableDef<AppUser>;
-      programs: TableDef<Program>;
+      products: TableDef<Product>;
       testimonials: TableDef<Testimonial>;
       enquiries: TableDef<Enquiry>;
       wholesale_products: TableDef<WholesaleProduct>;

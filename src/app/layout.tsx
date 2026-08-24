@@ -29,7 +29,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Lami the Migrant CEO — Build the Business. Build the Wealth. Build the Legacy.",
+    default: "Lami the Migrant CEO: Build the Business. Build the Wealth. Build the Legacy.",
     template: "%s · Lami the Migrant CEO",
   },
   description:

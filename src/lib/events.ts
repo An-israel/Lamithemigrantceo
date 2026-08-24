@@ -22,8 +22,9 @@ export const SEED_EVENTS: EventItem[] = [
     tagline:
       "The flagship in-person experience for ambitious African women business owners.",
     description:
-      "A full day of practical business building, community and momentum with Lami and guests. Come with a business idea or a business — leave with a plan, a network and a next step.",
+      "A full day of practical business building, community and momentum with Lami and guests. Come with a business idea or a business, and leave with a plan, a network and a next step.",
     cover_image: null,
+    gallery_images: [],
     location: "Liverpool, UK",
     starts_at: "2026-08-15T09:00:00.000Z",
     ends_at: null,

@@ -1,13 +1,13 @@
 import type { MetadataRoute } from "next";
-import { getPrograms } from "@/lib/data";
+import { getProducts } from "@/lib/data";
 import { getBundles } from "@/lib/wholesale";
 import { getJournalPosts } from "@/lib/content";
 import { getEvents } from "@/lib/events";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const [programs, bundles, posts, events] = await Promise.all([
-    getPrograms(),
+  const [products, bundles, posts, events] = await Promise.all([
+    getProducts(),
     getBundles(),
     getJournalPosts(),
     getEvents(),
@@ -23,20 +23,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/speaking",
     "/events",
     "/impact",
+    "/gallery",
     "/resources",
     "/journal",
     "/media",
     "/contact",
     "/start",
     "/wholesale",
-    "/programs",
+    "/products",
     "/privacy",
     "/cookies",
     "/terms",
   ].map((path) => ({ url: `${base}${path}`, lastModified: new Date() }));
 
-  const programRoutes = programs.map((p) => ({
-    url: `${base}/programs/${p.slug}`,
+  const productRoutes = products.map((p) => ({
+    url: `${base}/products/${p.slug}`,
     lastModified: new Date(),
   }));
   const bundleRoutes = bundles.map((b) => ({
@@ -54,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticRoutes,
-    ...programRoutes,
+    ...productRoutes,
     ...bundleRoutes,
     ...journalRoutes,
     ...eventRoutes,

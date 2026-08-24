@@ -48,7 +48,7 @@ export async function POST(request: Request) {
             text: [
               `Hi ${(order.name || "there").split(" ")[0]},`,
               ``,
-              `Good news — your order has shipped.`,
+              `Good news, your order has shipped.`,
               tracking_number ? `Tracking number: ${tracking_number}` : "",
               ``,
               `Lami`,

@@ -21,7 +21,7 @@ export default async function AdminApplicationsPage() {
     <>
       <h1>Applications</h1>
       <p className="mt-2 text-sm text-muted">
-        Programme applications from people who applied instead of buying
+        Product applications from people who applied instead of buying
         instantly.
       </p>
 

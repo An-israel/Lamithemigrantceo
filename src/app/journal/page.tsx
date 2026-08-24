@@ -6,7 +6,7 @@ import { getJournalPosts } from "@/lib/content";
 export const metadata: Metadata = {
   title: "The Build Journal",
   description:
-    "Articles on business, migration, wealth and legacy — and behind-the-scenes thought leadership.",
+    "Articles on business, migration, wealth and legacy, plus behind-the-scenes thought leadership.",
 };
 
 export default async function JournalPage() {

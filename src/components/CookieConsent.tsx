@@ -35,7 +35,7 @@ export function CookieConsent() {
     <div className="fixed inset-x-0 bottom-0 z-[60] p-4">
       <div className="mx-auto flex max-w-content flex-col gap-3 rounded-card border border-line bg-shell p-4 shadow-buy sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted">
-          We use essential storage and privacy-friendly, cookieless analytics —
+          We use essential storage and privacy-friendly, cookieless analytics,
           no tracking cookies. See our{" "}
           <Link href="/cookies" className="underline">cookie policy</Link>.
         </p>

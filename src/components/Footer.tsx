@@ -7,7 +7,9 @@ const EXPLORE = [
   ["/about", "About Lami"],
   ["/movement", "The Movement"],
   ["/ecosystem", "The Ecosystem"],
+  ["/products", "Products"],
   ["/impact", "Impact"],
+  ["/gallery", "Gallery"],
 ];
 
 const WORK = [

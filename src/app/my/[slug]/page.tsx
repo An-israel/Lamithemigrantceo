@@ -3,37 +3,16 @@ import Link from "next/link";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { createClient } from "@/lib/supabase/server";
-import { getProgramBySlug } from "@/lib/data";
-import type { ProgramModule } from "@/lib/types";
-
-/** youtu.be/vimeo/youtube links → an embeddable player URL. Anything else
- *  (Loom, Drive, etc.) is left as a plain link instead of an iframe. */
-function toEmbedUrl(url: string): string | null {
-  try {
-    const u = new URL(url);
-    if (u.hostname.includes("youtu.be")) {
-      return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
-    }
-    if (u.hostname.includes("youtube.com")) {
-      const id = u.searchParams.get("v");
-      return id ? `https://www.youtube.com/embed/${id}` : null;
-    }
-    if (u.hostname.includes("vimeo.com")) {
-      const id = u.pathname.split("/").filter(Boolean).pop();
-      return id ? `https://player.vimeo.com/video/${id}` : null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
+import { getProductBySlug } from "@/lib/data";
+import { toEmbedUrl } from "@/lib/embed";
+import type { ProductModule } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Program",
+  title: "Product",
   robots: { index: false },
 };
 
-export default async function MyProgramPage({
+export default async function MyProductPage({
   params,
 }: {
   params: { slug: string };
@@ -43,17 +22,17 @@ export default async function MyProgramPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const program = await getProgramBySlug(params.slug);
+  const product = await getProductBySlug(params.slug);
 
-  // Does this user have a paid order for this program?
+  // Does this user have a paid order for this product?
   let hasAccess = false;
-  if (program && user?.email) {
+  if (product && user?.email) {
     try {
       const { data } = await supabase
         .from("orders")
         .select("id")
         .eq("email", user.email)
-        .eq("item_id", program.id)
+        .eq("item_id", product.id)
         .eq("status", "paid")
         .limit(1);
       hasAccess = !!data && data.length > 0;
@@ -62,12 +41,12 @@ export default async function MyProgramPage({
     }
   }
 
-  if (!program) {
+  if (!product) {
     return (
       <Section background="shell">
-        <h1>Program not found.</h1>
+        <h1>Product not found.</h1>
         <div className="mt-6">
-          <ButtonLink href="/my">Back to my programs</ButtonLink>
+          <ButtonLink href="/my">Back to my products</ButtonLink>
         </div>
       </Section>
     );
@@ -78,14 +57,14 @@ export default async function MyProgramPage({
       <Section background="shell">
         <div className="rounded-card border border-line bg-peach p-8">
           <p className="font-display text-2xl">
-            You do not have access to this program yet.
+            You do not have access to this product yet.
           </p>
           <p className="mt-2 text-muted">
-            Join {program.name} to unlock the modules and materials.
+            Join {product.name} to unlock the modules and materials.
           </p>
           <div className="mt-6">
-            <ButtonLink href={`/programs/${program.slug}`}>
-              See {program.name}
+            <ButtonLink href={`/products/${product.slug}`}>
+              See {product.name}
             </ButtonLink>
           </div>
         </div>
@@ -95,14 +74,14 @@ export default async function MyProgramPage({
 
   // Real modules once the admin has added them; otherwise fall back to a
   // placeholder built from "What you get" so the page is never empty.
-  let realModules: ProgramModule[] = [];
+  let realModules: ProductModule[] = [];
   try {
     const { data } = await supabase
-      .from("program_modules")
+      .from("product_modules")
       .select("*")
-      .eq("program_id", program.id)
+      .eq("product_id", product.id)
       .order("sort_order", { ascending: true });
-    realModules = (data as ProgramModule[]) || [];
+    realModules = (data as ProductModule[]) || [];
   } catch {
     realModules = [];
   }
@@ -116,7 +95,7 @@ export default async function MyProgramPage({
           video_url: m.video_url,
           file_url: m.file_url,
         }))
-      : program.what_you_get.map((title, i) => ({
+      : product.what_you_get.map((title, i) => ({
           id: String(i),
           title,
           description: "Materials for this module will appear here.",
@@ -127,9 +106,9 @@ export default async function MyProgramPage({
   return (
     <Section background="shell">
       <Link href="/my" className="text-sm text-muted no-underline hover:text-clay">
-        ← My programs
+        ← My products
       </Link>
-      <h1 className="mt-4">{program.name}</h1>
+      <h1 className="mt-4">{product.name}</h1>
 
       {/* Progress bar */}
       <div className="mt-6 h-2 w-full overflow-hidden rounded-pill bg-line">

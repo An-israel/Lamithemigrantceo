@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ProgramCard } from "@/components/ProgramCard";
+import { ProductCard } from "@/components/ProductCard";
 import { clsx } from "@/lib/clsx";
-import type { Program } from "@/lib/types";
+import type { Product } from "@/lib/types";
 
 type Filter = "all" | "live_cohort" | "self_paced";
 
@@ -13,13 +13,13 @@ const FILTERS: { key: Filter; label: string }[] = [
   { key: "self_paced", label: "Self-paced" },
 ];
 
-export function ProgramFilter({ programs }: { programs: Program[] }) {
+export function ProductFilter({ products }: { products: Product[] }) {
   const [filter, setFilter] = useState<Filter>("all");
 
   const shown =
     filter === "all"
-      ? programs
-      : programs.filter((p) => p.format === filter);
+      ? products
+      : products.filter((p) => p.format === filter);
 
   return (
     <>
@@ -43,7 +43,7 @@ export function ProgramFilter({ programs }: { programs: Program[] }) {
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         {shown.map((p) => (
-          <ProgramCard key={p.id} program={p} showBullets />
+          <ProductCard key={p.id} product={p} showBullets />
         ))}
       </div>
     </>

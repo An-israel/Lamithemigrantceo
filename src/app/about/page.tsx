@@ -6,7 +6,7 @@ import { getSettings } from "@/lib/data";
 export const metadata: Metadata = {
   title: "The Story Behind The Migrant CEO",
   description:
-    "Temitope Olamide Oni Mole — known publicly as Lami the Migrant CEO — entrepreneur, educator, speaker and community builder.",
+    "Temitope Olamide Oni Mole, known publicly as Lami the Migrant CEO, is an entrepreneur, educator, speaker and community builder.",
 };
 
 // §6.2 timeline
@@ -66,24 +66,24 @@ export default async function AboutPage() {
           <p className="mt-6 text-muted">
             Her entrepreneurial life began in Nigeria, where she built and ran
             businesses and learned the real work of sales, sourcing, marketing
-            and looking after customers. It was hands-on, practical experience —
-            not theory.
+            and looking after customers: hands-on, practical experience, not
+            theory.
           </p>
 
           <PullQuote>{PULL_QUOTES[0]}</PullQuote>
 
           <p className="text-muted">
-            In 2022 she moved to the United Kingdom. Migration meant rebuilding
-            identity, income and opportunity from the ground up. She started her
-            UK business journey with less than £200 — and treated that
-            constraint as a starting line, not a ceiling.
+            In 2022 she moved to the United Kingdom and rebuilt her identity,
+            income and opportunity from the ground up, starting her UK business
+            journey with less than £200 and treating that constraint as a
+            starting line, not a ceiling.
           </p>
 
           <p className="mt-4 text-muted">
             From there she built product businesses, taught other entrepreneurs,
-            formed communities and moved into a physical warehouse operation in
-            Liverpool. Along the way, helping African women build wealth became
-            bigger than business coaching.
+            formed communities and opened a warehouse in Liverpool. Along the
+            way, helping African women build wealth became bigger than business
+            coaching.
           </p>
 
           <PullQuote>{PULL_QUOTES[1]}</PullQuote>
@@ -97,6 +97,22 @@ export default async function AboutPage() {
 
           <PullQuote>{PULL_QUOTES[2]}</PullQuote>
         </div>
+
+        {settings.founder_gallery_urls.length > 0 && (
+          <div className="mx-auto mt-16 max-w-4xl">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {settings.founder_gallery_urls.map((img, i) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={i}
+                  src={img}
+                  alt={`Lami the Migrant CEO ${i + 1}`}
+                  className="aspect-square w-full rounded-card object-cover"
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Timeline */}
         <div className="mx-auto mt-16 max-w-prose border-l border-line pl-6">

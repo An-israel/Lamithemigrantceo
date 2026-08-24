@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 
-/** "Tell me when the next cohort opens" capture for a sold-out program. */
-export function ProgramWaitlist({
-  programId,
-  programName,
+/** "Tell me when the next cohort opens" capture for a sold-out product. */
+export function ProductWaitlist({
+  productId,
+  productName,
 }: {
-  programId: string;
-  programName: string;
+  productId: string;
+  productName: string;
 }) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -21,12 +21,12 @@ export function ProgramWaitlist({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: "Programme waitlist",
+          name: "Product waitlist",
           email,
-          topic: "Programme waitlist",
-          message: `Waitlist request: ${programName}`,
+          topic: "Product waitlist",
+          message: `Waitlist request: ${productName}`,
           marketing_opt_in: true,
-          source_page: `/programs#${programId}`,
+          source_page: `/products#${productId}`,
         }),
       });
     } catch {

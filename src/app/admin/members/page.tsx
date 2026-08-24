@@ -49,7 +49,7 @@ export default async function AdminMembersPage() {
                   <td className="px-4 py-3">
                     <a href={`mailto:${m.email}`} className="underline">{m.email}</a>
                   </td>
-                  <td className="px-4 py-3 text-muted">{m.reason || "—"}</td>
+                  <td className="px-4 py-3 text-muted">{m.reason || "None"}</td>
                   <td className="px-4 py-3 text-muted">
                     {new Date(m.created_at).toLocaleDateString("en-GB")}
                   </td>

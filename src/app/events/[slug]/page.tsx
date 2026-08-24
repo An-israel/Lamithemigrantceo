@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { TicketButton } from "@/components/TicketButton";
+import { EventWaitlist } from "@/components/EventWaitlist";
 import { formatGBP } from "@/lib/format";
 import { getEventBySlug, getEvents, isEventOver } from "@/lib/events";
+import { getSettings } from "@/lib/data";
 
 export async function generateMetadata({
   params,
@@ -53,6 +55,7 @@ export default async function EventDetailPage({
     !isPast &&
     (event.status === "sold_out" ||
       (event.capacity != null && event.tickets_sold >= event.capacity));
+  const settings = isPast || soldOut ? await getSettings() : null;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -101,6 +104,22 @@ export default async function EventDetailPage({
                 <p key={i}>{p}</p>
               ))}
             </div>
+            {event.gallery_images.length > 0 && (
+              <div className="mt-10">
+                <h3>Gallery.</h3>
+                <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {event.gallery_images.map((img, i) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={i}
+                      src={img}
+                      alt={`${event.name} ${i + 1}`}
+                      className="aspect-square w-full rounded-card object-cover"
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
@@ -124,6 +143,15 @@ export default async function EventDetailPage({
                   <TicketButton eventId={event.id} label={`Get your ticket · ${formatGBP(event.price_gbp)}`} />
                 )}
               </div>
+              {(isPast || soldOut) && settings && (
+                <div className="mt-4">
+                  <EventWaitlist
+                    eventId={event.id}
+                    eventName={event.name}
+                    locations={settings.waitlist_locations}
+                  />
+                </div>
+              )}
               <p className="mt-3 text-[13px] text-muted">
                 Secure card payment. Your ticket and joining details arrive by email.
               </p>

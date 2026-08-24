@@ -37,7 +37,7 @@ export function NewsletterForm({
   if (state === "done") {
     return (
       <p className={theme === "dark" ? "text-gold-soft" : "text-jade"}>
-        You&rsquo;re in — check your inbox to confirm.
+        You&rsquo;re in. Check your inbox to confirm.
       </p>
     );
   }

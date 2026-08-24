@@ -22,7 +22,7 @@ export default async function AdminImpactPage() {
       <h1>Impact statistics</h1>
       <p className="mt-2 text-sm text-muted">
         The figures shown on the Impact page and authority strips. Keep to the
-        brief&rsquo;s wording — &ldquo;over 500 directly supported&rdquo;,
+        brief&rsquo;s wording: &ldquo;over 500 directly supported&rdquo;,
         &ldquo;impact approaching 1,000&rdquo;.
       </p>
 

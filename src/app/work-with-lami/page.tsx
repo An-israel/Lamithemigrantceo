@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
+import { getSettings } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Work With Lami",
@@ -42,7 +43,8 @@ const WAYS = [
   },
 ];
 
-export default function WorkWithLamiPage() {
+export default async function WorkWithLamiPage() {
+  const settings = await getSettings();
   return (
     <>
       <Section background="ink">
@@ -50,7 +52,7 @@ export default function WorkWithLamiPage() {
           <p className="label text-gold-soft">Work With Lami</p>
           <h1 className="mt-3 text-shell">Let&rsquo;s build something worth building.</h1>
           <p className="mt-4 text-shell/80">
-            Founder-level experience across business, migration and community —
+            Founder-level experience across business, migration and community,
             available for the right speaking, advisory and partnership work.
           </p>
         </div>
@@ -65,6 +67,16 @@ export default function WorkWithLamiPage() {
               <Link href={w.href} className="mt-4 font-bold text-clay no-underline">
                 {w.cta} →
               </Link>
+              {w.h === "Business strategy" && settings.calendly_url && (
+                <a
+                  href={settings.calendly_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 text-sm text-muted underline"
+                >
+                  Or book a 1:1 call on Calendly →
+                </a>
+              )}
             </div>
           ))}
         </div>

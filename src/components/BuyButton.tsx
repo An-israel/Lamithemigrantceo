@@ -4,15 +4,15 @@ import { useState } from "react";
 import { clsx } from "@/lib/clsx";
 
 /**
- * Starts a Stripe Checkout session for a single program. The price is looked
+ * Starts a Stripe Checkout session for a single product. The price is looked
  * up server-side from the database — never trust a price from the browser.
  */
 export function BuyButton({
-  programId,
+  productId,
   label,
   className,
 }: {
-  programId: string;
+  productId: string;
   label: string;
   className?: string;
 }) {
@@ -26,7 +26,7 @@ export function BuyButton({
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "program", programId }),
+        body: JSON.stringify({ type: "product", productId }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) {

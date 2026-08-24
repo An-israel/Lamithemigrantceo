@@ -3,15 +3,15 @@
 import { useState } from "react";
 
 /**
- * Programme application. Shown on program detail pages as an alternative to
- * instant checkout — useful for higher-touch or application-gated programmes.
+ * Product application. Shown on product detail pages as an alternative to
+ * instant checkout, useful for higher-touch or application-gated products.
  */
 export function ApplyForm({
-  programId,
-  programName,
+  productId,
+  productName,
 }: {
-  programId: string;
-  programName: string;
+  productId: string;
+  productName: string;
 }) {
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -27,8 +27,8 @@ export function ApplyForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          program_id: programId,
-          program_name: programName,
+          product_id: productId,
+          product_name: productName,
           name: fd.get("name"),
           email: fd.get("email"),
           whatsapp: fd.get("whatsapp"),
@@ -49,7 +49,7 @@ export function ApplyForm({
   if (state === "done") {
     return (
       <p className="mt-4 rounded-input border border-jade bg-shell p-4 text-sm text-jade">
-        Application received. Lami will be in touch about {programName}.
+        Application received. Lami will be in touch about {productName}.
       </p>
     );
   }
@@ -64,7 +64,7 @@ export function ApplyForm({
 
   return (
     <form onSubmit={onSubmit} className="mt-4 space-y-3 rounded-input border border-line p-4">
-      <p className="label">Apply for {programName}</p>
+      <p className="label">Apply for {productName}</p>
       <input name="name" required placeholder="Full name" className="field" />
       <input name="email" type="email" required placeholder="Email" className="field" />
       <input name="whatsapp" placeholder="WhatsApp (optional)" className="field" />

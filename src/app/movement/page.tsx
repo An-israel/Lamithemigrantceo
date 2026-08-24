@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const BELIEFS = [
   {
     h: "Ownership is freedom",
-    b: "Business ownership is a route to choice and economic freedom — not just extra income.",
+    b: "Business ownership is a route to choice and economic freedom, not just extra income.",
   },
   {
     h: "Build together",

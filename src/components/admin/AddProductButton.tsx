@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-/** Creates a blank draft program and opens its editor. */
-export function AddProgramButton() {
+/** Creates a blank draft product and opens its editor. */
+export function AddProductButton() {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
 
@@ -14,9 +14,9 @@ export function AddProgramButton() {
     const supabase = createClient();
     const suffix = Math.random().toString(36).slice(2, 7);
     const { data, error } = await supabase
-      .from("programs")
+      .from("products")
       .insert({
-        name: "Untitled program",
+        name: "Untitled product",
         slug: `untitled-${suffix}`,
         status: "draft",
       })
@@ -24,13 +24,13 @@ export function AddProgramButton() {
       .single();
     setBusy(false);
     if (!error && data) {
-      router.push(`/admin/programs/${(data as { id: string }).id}`);
+      router.push(`/admin/products/${(data as { id: string }).id}`);
     }
   }
 
   return (
     <button onClick={add} disabled={busy} className="btn btn-primary text-sm">
-      {busy ? "Creating…" : "Add a program"}
+      {busy ? "Creating…" : "Add a product"}
     </button>
   );
 }

@@ -11,6 +11,14 @@ const supabaseHost = (() => {
 
 const nextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      { source: "/programs", destination: "/products", permanent: true },
+      { source: "/programs/:slug", destination: "/products/:slug", permanent: true },
+      { source: "/admin/programs", destination: "/admin/products", permanent: true },
+      { source: "/admin/programs/:id", destination: "/admin/products/:id", permanent: true },
+    ];
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

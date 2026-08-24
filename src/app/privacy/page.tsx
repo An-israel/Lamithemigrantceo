@@ -14,20 +14,20 @@ export default function PrivacyPage() {
         <p className="mt-2 text-sm text-muted">
           {/* TODO(lami): replace this placeholder with copy from a solicitor
               or a UK-compliant template service before launch. */}
-          Placeholder — to be reviewed by a solicitor before launch.
+          Placeholder. To be reviewed by a solicitor before launch.
         </p>
 
         <h3 className="mt-8">What we collect</h3>
         <p className="mt-2 text-muted">
-          When you contact us or buy a program we collect your name, email, and
+          When you contact us or buy a product we collect your name, email, and
           any details you choose to share. Payments are handled by Stripe; we do
           not store your card details.
         </p>
 
         <h3 className="mt-8">How we use it</h3>
         <p className="mt-2 text-muted">
-          To reply to you, deliver what you bought, and — only if you opt in —
-          send occasional emails about new programs. You can unsubscribe at any
+          To reply to you, deliver what you bought, and, only if you opt in,
+          send occasional emails about new products. You can unsubscribe at any
           time.
         </p>
 

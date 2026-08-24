@@ -8,7 +8,7 @@ import { getResources } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Resources",
   description:
-    "Free guides and The Build Letter — practical business, wealth and legacy insights.",
+    "Free guides and The Build Letter: practical business, wealth and legacy insights.",
 };
 
 export default async function ResourcesPage() {
@@ -33,18 +33,7 @@ export default async function ResourcesPage() {
             <div key={r.id} className="card flex flex-col p-6">
               <h3>{r.title}</h3>
               <p className="mt-2 flex-1 text-muted">{r.description}</p>
-              {r.file_url ? (
-                <a
-                  href={r.file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-secondary mt-4 w-fit text-sm"
-                >
-                  Download
-                </a>
-              ) : (
-                <ResourceRequestForm resourceId={r.id} resourceTitle={r.title} />
-              )}
+              <ResourceRequestForm resource={r} />
             </div>
           ))}
         </div>
@@ -57,7 +46,7 @@ export default async function ResourcesPage() {
           <h2 className="mt-3 text-shell">Get the guides and the insights.</h2>
           <p className="mt-4 text-shell/80">
             Join The Build Letter and I&rsquo;ll send practical business, wealth
-            and legacy insights — and the free resources above.
+            and legacy insights, plus the free resources above.
           </p>
           <div className="mx-auto mt-8 max-w-md">
             <NewsletterForm cta="Join The Build Letter" />

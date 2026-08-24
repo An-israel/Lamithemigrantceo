@@ -3,16 +3,16 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ImageUploader } from "@/components/admin/ImageUploader";
-import type { Testimonial, Program } from "@/lib/types";
+import type { Testimonial, Product } from "@/lib/types";
 
 type Draft = Partial<Testimonial>;
 
 export function TestimonialsManager({
   initial,
-  programs,
+  products,
 }: {
   initial: Testimonial[];
-  programs: Pick<Program, "id" | "name">[];
+  products: Pick<Product, "id" | "name">[];
 }) {
   const [rows, setRows] = useState<Testimonial[]>(initial);
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -28,7 +28,7 @@ export function TestimonialsManager({
           quote: draft.quote,
           result_figure: draft.result_figure || null,
           photo: draft.photo || null,
-          program_id: draft.program_id || null,
+          product_id: draft.product_id || null,
         })
         .eq("id", draft.id)
         .select("*")
@@ -42,7 +42,7 @@ export function TestimonialsManager({
           quote: draft.quote,
           result_figure: draft.result_figure || null,
           photo: draft.photo || null,
-          program_id: draft.program_id || null,
+          product_id: draft.product_id || null,
           sort_order: rows.length + 1,
         })
         .select("*")
@@ -142,14 +142,14 @@ export function TestimonialsManager({
                 />
               </div>
               <div>
-                <label className="label mb-2 block">Which program</label>
+                <label className="label mb-2 block">Which product</label>
                 <select
-                  value={draft.program_id || ""}
-                  onChange={(e) => setDraft({ ...draft, program_id: e.target.value || null })}
+                  value={draft.product_id || ""}
+                  onChange={(e) => setDraft({ ...draft, product_id: e.target.value || null })}
                   className="field"
                 >
-                  <option value="">— None —</option>
-                  {programs.map((p) => (
+                  <option value="">None</option>
+                  {products.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name}
                     </option>

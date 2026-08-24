@@ -6,7 +6,7 @@ import { getSettings } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Speaking, media, partnerships, consulting or general enquiries — reach Lami the right way.",
+    "Speaking, media, partnerships, consulting or general enquiries: reach Lami the right way.",
 };
 
 const TYPE_LABELS: Record<string, string> = {

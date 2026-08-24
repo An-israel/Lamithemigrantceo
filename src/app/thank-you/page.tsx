@@ -10,34 +10,34 @@ export const metadata: Metadata = {
 };
 
 const COPY: Record<
-  "program" | "wholesale" | "unknown",
+  "product" | "wholesale" | "unknown",
   { badge: string; title: string; body: string; primary: { href: string; label: string } }
 > = {
-  program: {
+  product: {
     badge: "Payment received",
     title: "You are in.",
-    body: "Your place is confirmed. Check your email for your receipt and joining details — if you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
-    primary: { href: "/my", label: "Go to my programme" },
+    body: "Your place is confirmed. Check your email for your receipt and joining details. If you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
+    primary: { href: "/my", label: "Go to my product" },
   },
   wholesale: {
     badge: "Order confirmed",
     title: "Your order is in.",
-    body: "Your payment went through and your bundle is being packed. Check your email for your receipt — tracking details follow once it ships.",
+    body: "Your payment went through and your bundle is being packed. Check your email for your receipt; tracking details follow once it ships.",
     primary: { href: "/wholesale", label: "Keep browsing" },
   },
   unknown: {
     badge: "Payment received",
     title: "You are in.",
-    body: "Your place is confirmed. Check your email for your receipt and joining details — if you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
-    primary: { href: "/my", label: "Go to my programs" },
+    body: "Your place is confirmed. Check your email for your receipt and joining details. If you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
+    primary: { href: "/my", label: "Go to my products" },
   },
 };
 
-// Event orders share the "program" shape of copy but point back at events.
+// Event orders share the "product" shape of copy but point back at events.
 const EVENT_COPY = {
   badge: "Ticket confirmed",
   title: "Your ticket is booked.",
-  body: "Your payment went through and your place is booked. Check your email for your ticket and joining details — if you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
+  body: "Your payment went through and your place is booked. Check your email for your ticket and joining details. If you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
   primary: { href: "/events", label: "See other events" },
 };
 
@@ -68,9 +68,11 @@ export default async function ThankYouPage({
   const copy =
     itemType === "event"
       ? EVENT_COPY
-      : itemType === "program" || itemType === "wholesale"
-        ? COPY[itemType]
-        : COPY.unknown;
+      : itemType === "product" || itemType === "program"
+        ? COPY.product
+        : itemType === "wholesale"
+          ? COPY.wholesale
+          : COPY.unknown;
 
   return (
     <Section background="peach">

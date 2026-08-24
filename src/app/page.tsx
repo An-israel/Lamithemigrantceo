@@ -59,7 +59,7 @@ const ECOSYSTEM = [
     name: "GBG Academy",
     body: "Practical business education for people starting and growing product businesses.",
     href: "/ecosystem#academy",
-    cta: "Explore Programmes",
+    cta: "Explore Products",
   },
   {
     name: "Build Her Empire Live",
@@ -82,7 +82,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-content px-5 py-16 md:px-10 md:py-24">
           <div className="grid items-center gap-14 lg:grid-cols-[3fr_2fr]">
             <div>
-              <p className="label text-clay">Lami — The Migrant CEO</p>
+              <p className="label text-clay">Lami, The Migrant CEO</p>
               <h1 className="mt-4 max-w-4xl">
                 Build the Business.{" "}
                 <span className="text-clay">Build the Wealth.</span>{" "}
@@ -93,11 +93,10 @@ export default async function HomePage() {
                 financial freedom and generational wealth.
               </p>
               <p className="prose-measure mt-4 text-muted">
-                I&rsquo;m Lami, The Migrant CEO — entrepreneur, educator, speaker and
+                I&rsquo;m Lami, The Migrant CEO: entrepreneur, educator, speaker and
                 founder of African Women Builds. After rebuilding my life and
-                businesses in the UK, I&rsquo;ve dedicated my work to helping African
-                women create businesses that change not only their income, but their
-                family&rsquo;s future.
+                businesses in the UK, I now help African women build businesses
+                that change not just their income, but their family&rsquo;s future.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <ButtonLink href="/start-here" fullWidthMobile>
@@ -109,7 +108,7 @@ export default async function HomePage() {
               </div>
               <p className="mt-6">
                 <Link href="/about" className="text-clay underline underline-offset-4">
-                  Watch my story →
+                  About me →
                 </Link>
               </p>
             </div>
@@ -133,10 +132,10 @@ export default async function HomePage() {
           <h2>I rebuilt my life, so you can build yours.</h2>
           <p className="mt-6 text-muted">
             I built and ran businesses in Nigeria for years. In 2022 I moved to
-            the United Kingdom and started again — new country, new rules, and
-            less than £200 to my name. I rebuilt from there into product
-            businesses, a wholesale operation with a physical warehouse, an
-            education programme and a community of women doing the same.
+            the United Kingdom and started again: new country, new rules, and
+            less than £200 to my name. From there I built product businesses, a
+            warehouse wholesale operation, an education programme and a
+            community of women doing the same.
           </p>
           <p className="mt-4 text-muted">
             From starting again to building an ecosystem. Business ownership is
@@ -178,7 +177,7 @@ export default async function HomePage() {
           <div>
             <h2>One founder. A whole ecosystem.</h2>
             <p className="mt-3 max-w-prose text-muted">
-              Education, wholesale, community and live events — built to move you
+              Education, wholesale, community and live events, built to move you
               from income to ownership.
             </p>
           </div>
@@ -235,7 +234,7 @@ export default async function HomePage() {
             <p className="label text-gold-soft">Watch my story</p>
             <h2 className="mt-3 text-shell">From starting again to building an ecosystem.</h2>
             <p className="mt-4 text-shell/80">
-              A short introduction to the journey — migration, rebuilding, and
+              A short introduction to the journey: migration, rebuilding, and
               the movement it became.
             </p>
           </div>

@@ -5,10 +5,10 @@ import { ButtonLink } from "@/components/Button";
 import { SignOutButton } from "@/components/SignOutButton";
 import { createClient } from "@/lib/supabase/server";
 import { formatGBP } from "@/lib/data";
-import type { Order, Program } from "@/lib/types";
+import type { Order, Product } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "My programs",
+  title: "My products",
   robots: { index: false },
 };
 
@@ -26,7 +26,7 @@ export default async function MyPage() {
 
   // Orders for this user's email.
   let orders: Order[] = [];
-  let programs: Program[] = [];
+  let products: Product[] = [];
   try {
     const { data: orderRows } = await supabase
       .from("orders")
@@ -36,15 +36,15 @@ export default async function MyPage() {
       .order("created_at", { ascending: false });
     orders = (orderRows as Order[]) || [];
 
-    const programIds = orders
-      .filter((o) => o.item_type === "program" && o.item_id)
+    const productIds = orders
+      .filter((o) => (o.item_type === "product" || o.item_type === "program") && o.item_id)
       .map((o) => o.item_id!);
-    if (programIds.length > 0) {
-      const { data: progRows } = await supabase
-        .from("programs")
+    if (productIds.length > 0) {
+      const { data: prodRows } = await supabase
+        .from("products")
         .select("*")
-        .in("id", programIds);
-      programs = (progRows as Program[]) || [];
+        .in("id", productIds);
+      products = (prodRows as Product[]) || [];
     }
   } catch {
     // Tables may not be populated yet; show the empty state.
@@ -57,21 +57,21 @@ export default async function MyPage() {
         <SignOutButton />
       </div>
 
-      {programs.length === 0 ? (
+      {products.length === 0 ? (
         <div className="mt-10 rounded-card border border-line bg-peach p-8 text-center">
           <p className="font-display text-2xl">Nothing here yet.</p>
           <p className="mt-2 text-muted">
-            When you join a program it shows up here with all your materials.
+            When you join a product it shows up here with all your materials.
           </p>
           <div className="mt-6 flex justify-center">
-            <ButtonLink href="/programs">See the programs</ButtonLink>
+            <ButtonLink href="/products">See the products</ButtonLink>
           </div>
         </div>
       ) : (
         <>
-          <h2 className="mt-10">Your programs</h2>
+          <h2 className="mt-10">Your products</h2>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
-            {programs.map((p) => (
+            {products.map((p) => (
               <Link
                 key={p.id}
                 href={`/my/${p.slug}`}
@@ -99,7 +99,7 @@ export default async function MyPage() {
                     {new Date(o.created_at).toLocaleDateString("en-GB")}
                   </td>
                   <td className="py-3">
-                    {programs.find((p) => p.id === o.item_id)?.name ||
+                    {products.find((p) => p.id === o.item_id)?.name ||
                       o.item_type}
                   </td>
                   <td className="py-3 tabular-nums">

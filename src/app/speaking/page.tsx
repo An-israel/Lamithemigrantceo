@@ -6,7 +6,7 @@ import { getTestimonials } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Speaking",
   description:
-    "Book Lami to inspire action — not just applause. Keynotes on migration, rebuilding, business, wealth and legacy.",
+    "Book Lami to inspire action, not just applause. Keynotes on migration, rebuilding, business, wealth and legacy.",
 };
 
 // §6.7 speaking topics
@@ -29,7 +29,7 @@ export default async function SpeakingPage() {
         <div className="max-w-3xl">
           <p className="label text-gold-soft">Speaking</p>
           <h1 className="mt-3 text-shell">
-            Book Lami to Inspire Action — not Just Applause.
+            Book Lami to Inspire Action, not Just Applause.
           </h1>
           <p className="mt-4 text-shell/80">
             A credible speaker with a real story and practical expertise, for

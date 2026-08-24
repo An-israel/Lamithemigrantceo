@@ -190,7 +190,7 @@ export function ContactForm({ initialType }: { initialType?: string }) {
       <label className="flex items-start gap-3">
         <input type="checkbox" name="marketing_opt_in" className="mt-1 h-4 w-4 accent-clay" />
         <span className="text-sm text-muted">
-          Send me The Build Letter — occasional business, wealth and legacy insights
+          Send me The Build Letter: occasional business, wealth and legacy insights
         </span>
       </label>
 

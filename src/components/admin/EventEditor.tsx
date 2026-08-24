@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { MultiImageUploader } from "@/components/admin/MultiImageUploader";
 import type { EventItem, EventStatus } from "@/lib/types";
 
 function slugify(s: string) {
@@ -39,6 +40,7 @@ export function EventEditor({ event }: { event: EventItem }) {
         tagline: form.tagline,
         description: form.description,
         cover_image: form.cover_image || null,
+        gallery_images: form.gallery_images,
         location: form.location,
         starts_at: form.starts_at,
         price_gbp: Number(form.price_gbp) || 0,
@@ -91,6 +93,14 @@ export function EventEditor({ event }: { event: EventItem }) {
       <div>
         <label className="label mb-2 block">Cover image</label>
         <ImageUploader value={form.cover_image} onChange={(url) => set("cover_image", url || null)} folder="events" aspect="aspect-[16/9]" />
+      </div>
+      <div>
+        <label className="label mb-2 block">Gallery images (first is the card/cover design)</label>
+        <MultiImageUploader
+          images={form.gallery_images}
+          onChange={(next) => set("gallery_images", next)}
+          folder="events"
+        />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
