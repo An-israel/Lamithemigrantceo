@@ -55,7 +55,7 @@ export default async function EventDetailPage({
     !isPast &&
     (event.status === "sold_out" ||
       (event.capacity != null && event.tickets_sold >= event.capacity));
-  const settings = isPast || soldOut ? await getSettings() : null;
+  const settings = await getSettings();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -140,7 +140,12 @@ export default async function EventDetailPage({
                 ) : soldOut ? (
                   <span className="pill bg-jade text-shell">Sold out</span>
                 ) : (
-                  <TicketButton eventId={event.id} label={`Get your ticket · ${formatGBP(event.price_gbp)}`} />
+                  <TicketButton
+                    eventId={event.id}
+                    eventName={event.name}
+                    label={`Get your ticket · ${formatGBP(event.price_gbp)}`}
+                    whatsappNumber={settings.whatsapp_number}
+                  />
                 )}
               </div>
               {(isPast || soldOut) && settings && (

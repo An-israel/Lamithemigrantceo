@@ -15,10 +15,12 @@ export function SiteFrame({
   header,
   footer,
   children,
+  whatsappNumber,
 }: {
   header: React.ReactNode;
   footer: React.ReactNode;
   children: React.ReactNode;
+  whatsappNumber: string | null;
 }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
@@ -34,7 +36,7 @@ export function SiteFrame({
       {header}
       <main className="flex-1">{children}</main>
       {footer}
-      <CartDrawer />
+      <CartDrawer whatsappNumber={whatsappNumber} />
       <CookieConsent />
     </CartProvider>
   );

@@ -47,7 +47,7 @@ export const SEED_PRODUCTS: Product[] = [
     id: "seed-200-starter",
     created_at: new Date().toISOString(),
     slug: "the-200-starter",
-    name: "The £200 Starter",
+    name: "Start Your Product Biz",
     short_description:
       "The self-paced route from nothing to your first paid order.",
     full_description:

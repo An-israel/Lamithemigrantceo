@@ -63,6 +63,7 @@ export default async function RootLayout({
             </>
           }
           footer={<Footer settings={settings} />}
+          whatsappNumber={settings.whatsapp_number}
         >
           {children}
         </SiteFrame>

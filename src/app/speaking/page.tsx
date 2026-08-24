@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { getTestimonials } from "@/lib/data";
@@ -61,7 +62,17 @@ export default async function SpeakingPage() {
           {TOPICS.map((t, i) => (
             <div key={t} className="card flex gap-4 p-6">
               <span className="label text-clay">{String(i + 1).padStart(2, "0")}</span>
-              <p className="font-display text-lg">{t}</p>
+              <div>
+                <p className="font-display text-lg">{t}</p>
+                <Link
+                  href={`/contact?type=speaking&note=${encodeURIComponent(
+                    `I'd like to request a recording of a past talk: "${t}".`
+                  )}`}
+                  className="mt-2 inline-block text-sm text-clay no-underline hover:underline"
+                >
+                  Request a recording →
+                </Link>
+              </div>
             </div>
           ))}
         </div>

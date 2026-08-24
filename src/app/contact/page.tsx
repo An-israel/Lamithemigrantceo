@@ -49,7 +49,7 @@ function ContactRow({
 export default async function ContactPage({
   searchParams,
 }: {
-  searchParams: { type?: string };
+  searchParams: { type?: string; note?: string };
 }) {
   const settings = await getSettings();
   const waDigits = (settings.whatsapp_number || "").replace(/[^0-9]/g, "");
@@ -57,6 +57,7 @@ export default async function ContactPage({
     searchParams.type && TYPE_LABELS[searchParams.type]
       ? TYPE_LABELS[searchParams.type]
       : undefined;
+  const initialMessage = searchParams.note || undefined;
 
   return (
     <Section background="shell">
@@ -68,7 +69,7 @@ export default async function ContactPage({
       </p>
 
       <div className="mt-10 grid gap-10 md:grid-cols-2">
-        <ContactForm initialType={initialType} />
+        <ContactForm initialType={initialType} initialMessage={initialMessage} />
 
         <div className="rounded-card border border-line bg-peach p-6">
           <p className="label">Or reach me directly</p>

@@ -205,7 +205,9 @@ export default async function ProductDetailPage({
                 ) : (
                   <BuyButton
                     productId={product.id}
+                    productName={product.name}
                     label={`Join for ${formatGBP(product.price_gbp)}`}
+                    whatsappNumber={settings.whatsapp_number}
                   />
                 )}
               </div>
@@ -283,8 +285,10 @@ export default async function ProductDetailPage({
             <span className="price">{formatGBP(product.price_gbp)}</span>
             <BuyButton
               productId={product.id}
+              productName={product.name}
               label="Join now"
               className="flex-1"
+              whatsappNumber={settings.whatsapp_number}
             />
           </div>
         </div>

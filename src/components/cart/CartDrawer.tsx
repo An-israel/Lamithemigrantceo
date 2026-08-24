@@ -4,15 +4,21 @@ import { useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { formatGBP } from "@/lib/format";
 
-export function CartDrawer() {
+export function CartDrawer({
+  whatsappNumber,
+}: {
+  whatsappNumber: string | null;
+}) {
   const { lines, subtotal, open, setOpen, setQuantity, remove, count } =
     useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checkoutUnavailable, setCheckoutUnavailable] = useState(false);
 
   async function checkout() {
     setLoading(true);
     setError(null);
+    setCheckoutUnavailable(false);
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -24,6 +30,7 @@ export function CartDrawer() {
       });
       const data = await res.json();
       if (!res.ok || !data.url) {
+        if (res.status === 503) setCheckoutUnavailable(true);
         throw new Error(data.error || "Checkout is not available yet.");
       }
       window.location.href = data.url;
@@ -32,6 +39,15 @@ export function CartDrawer() {
       setLoading(false);
     }
   }
+
+  const orderSummary = lines
+    .map((l) => `${l.quantity} x ${l.name}`)
+    .join(", ");
+  const waHref = whatsappNumber
+    ? `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+        `Hi Lami, I'd like to enrol: ${orderSummary} (subtotal ${formatGBP(subtotal)}).`
+      )}`
+    : null;
 
   if (!open) return null;
 
@@ -121,6 +137,16 @@ export function CartDrawer() {
             <span className="price">{formatGBP(subtotal)}</span>
           </div>
           {error && <p className="mb-3 text-sm text-clay">{error}</p>}
+          {checkoutUnavailable && waHref && (
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary mb-3 w-full"
+            >
+              Enrol on WhatsApp
+            </a>
+          )}
           <button
             className="btn btn-primary shadow-buy w-full"
             disabled={lines.length === 0 || loading}
