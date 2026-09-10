@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createServiceClient } from "@/lib/supabase/server";
 import { isEventOver } from "@/lib/events";
+import { rateLimit, clientIp } from "@/lib/rateLimit";
 
 /**
  * Creates a Stripe Checkout Session in GBP for either:
@@ -11,6 +12,13 @@ import { isEventOver } from "@/lib/events";
  * Prices are always read from the database, never trusted from the request.
  */
 export async function POST(request: Request) {
+  if (!rateLimit(`checkout:${clientIp(request)}`, 10, 60_000)) {
+    return NextResponse.json(
+      { error: "Too many attempts. Wait a minute and try again." },
+      { status: 429 }
+    );
+  }
+
   const secret = process.env.STRIPE_SECRET_KEY;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
