@@ -26,7 +26,7 @@ export default async function JournalPage() {
           <Link
             key={p.id}
             href={`/journal/${p.slug}`}
-            className="card overflow-hidden no-underline transition-colors hover:border-clay"
+            className="group overflow-hidden rounded-card border border-clay bg-clay no-underline transition-colors hover:border-gold hover:bg-gold"
           >
             <div className="flex aspect-[16/9] items-center justify-center bg-peach-deep">
               {p.cover_image ? (
@@ -37,9 +37,9 @@ export default async function JournalPage() {
               )}
             </div>
             <div className="p-6">
-              <span className="label text-clay">{p.category}</span>
-              <h3 className="mt-2 text-ink">{p.title}</h3>
-              <p className="mt-2 text-sm text-muted">{p.excerpt}</p>
+              <span className="label text-gold-soft group-hover:text-clay">{p.category}</span>
+              <h3 className="mt-2 text-shell group-hover:text-ink">{p.title}</h3>
+              <p className="mt-2 text-sm text-shell/70 group-hover:text-ink/70">{p.excerpt}</p>
             </div>
           </Link>
         ))}

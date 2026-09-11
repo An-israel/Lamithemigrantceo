@@ -40,7 +40,7 @@ export function Accordion({
               </span>
             </button>
             {isOpen && (
-              <p className={clsx("pb-4", dark ? "text-shell/70" : "text-muted")}>
+              <p className={clsx("pb-4", dark ? "text-shell/70" : "text-ink/70")}>
                 {item.body}
               </p>
             )}

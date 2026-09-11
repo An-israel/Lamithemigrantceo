@@ -22,7 +22,7 @@ export default async function ResourcesPage() {
           <h1 className="mt-3">
             Free tools to <span className="text-clay">help you build</span>.
           </h1>
-          <p className="mt-4 text-muted">
+          <p className="mt-4 text-ink/75">
             Practical guides you can use today, plus The Build Letter for
             ongoing insights. Grab what you need.
           </p>
