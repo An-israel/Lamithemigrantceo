@@ -67,13 +67,15 @@ export default function StartHerePage() {
           <Link
             key={p.q}
             href={p.href}
-            className="card flex items-center justify-between gap-4 p-6 no-underline transition-colors hover:border-clay"
+            className="group flex items-center justify-between gap-4 rounded-card border border-clay bg-clay p-6 no-underline transition-colors hover:border-gold hover:bg-gold"
           >
             <div>
-              <p className="font-display text-xl text-ink">{p.q}</p>
-              <p className="mt-1 text-sm text-muted">{p.to}</p>
+              <p className="font-display text-xl text-shell group-hover:text-ink">{p.q}</p>
+              <p className="mt-1 text-sm text-shell/70 group-hover:text-ink/70">{p.to}</p>
             </div>
-            <span className="shrink-0 font-bold text-clay">{p.cta} →</span>
+            <span className="shrink-0 font-bold text-gold-soft group-hover:text-clay">
+              {p.cta} →
+            </span>
           </Link>
         ))}
       </div>

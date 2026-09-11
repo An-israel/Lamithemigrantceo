@@ -87,7 +87,7 @@ export default async function WorkWithLamiPage() {
       <Section background="gold">
         <div className="mx-auto max-w-prose text-center">
           <h2>Have something specific in mind?</h2>
-          <p className="mt-4 text-muted">
+          <p className="mt-4 text-ink/75">
             Tell me what you&rsquo;re planning and I&rsquo;ll come back with the
             right next step.
           </p>

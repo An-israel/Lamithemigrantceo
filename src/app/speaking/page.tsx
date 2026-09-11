@@ -60,15 +60,20 @@ export default async function SpeakingPage() {
         <h2>Signature talks.</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {TOPICS.map((t, i) => (
-            <div key={t} className="card flex gap-4 p-6">
-              <span className="label text-clay">{String(i + 1).padStart(2, "0")}</span>
+            <div
+              key={t}
+              className="group flex gap-4 rounded-card border border-clay bg-clay p-6 transition-colors hover:border-gold hover:bg-gold"
+            >
+              <span className="label text-gold-soft group-hover:text-clay">
+                {String(i + 1).padStart(2, "0")}
+              </span>
               <div>
-                <p className="font-display text-lg">{t}</p>
+                <p className="font-display text-lg text-shell group-hover:text-ink">{t}</p>
                 <Link
                   href={`/contact?type=speaking&note=${encodeURIComponent(
                     `I'd like to request a recording of a past talk: "${t}".`
                   )}`}
-                  className="mt-2 inline-block text-sm text-clay no-underline hover:underline"
+                  className="mt-2 inline-block text-sm text-gold-soft no-underline hover:underline group-hover:text-clay"
                 >
                   Request a recording →
                 </Link>
@@ -83,7 +88,7 @@ export default async function SpeakingPage() {
         <div className="grid gap-10 md:grid-cols-2">
           <div>
             <h2>Experience.</h2>
-            <ul className="mt-6 space-y-3 text-muted">
+            <ul className="mt-6 space-y-3 text-ink/75">
               <li className="flex gap-3">
                 <span className="text-clay" aria-hidden>✓</span>
                 Speaker at Enry Live and Direct in Birmingham, organised by OREP Limited.
@@ -100,7 +105,7 @@ export default async function SpeakingPage() {
           </div>
           <div>
             <h2>Right for audiences of.</h2>
-            <ul className="mt-6 space-y-3 text-muted">
+            <ul className="mt-6 space-y-3 text-ink/75">
               <li className="flex gap-3"><span className="text-clay" aria-hidden>✓</span>African women migrants and diaspora communities</li>
               <li className="flex gap-3"><span className="text-clay" aria-hidden>✓</span>Aspiring and early-stage founders</li>
               <li className="flex gap-3"><span className="text-clay" aria-hidden>✓</span>Universities, councils and entrepreneurship programmes</li>

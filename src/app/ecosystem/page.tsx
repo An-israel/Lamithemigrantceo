@@ -60,12 +60,14 @@ export default async function EcosystemPage() {
       {PARTS.map((part, i) => {
         const rowBg = (["shell", "clay", "shell", "gold"] as const)[i % 4];
         const dark = rowBg === "clay";
+        const bodyClass =
+          rowBg === "clay" ? "mt-4 text-shell/70" : rowBg === "gold" ? "mt-4 text-ink/75" : "mt-4 text-muted";
         return (
         <Section key={part.id} id={part.id} background={rowBg}>
           <div className="grid items-center gap-8 md:grid-cols-2">
             <div className={i % 2 === 0 ? "" : "md:order-2"}>
               <h2>{part.name}</h2>
-              <p className={dark ? "mt-4 text-shell/70" : "mt-4 text-muted"}>{part.body}</p>
+              <p className={bodyClass}>{part.body}</p>
               <ButtonLink
                 href={part.href}
                 className={dark ? "mt-6 border-gold bg-gold text-ink hover:bg-gold-soft hover:border-gold-soft" : "mt-6"}

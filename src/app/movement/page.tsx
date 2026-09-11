@@ -45,7 +45,7 @@ export default function MovementPage() {
           <h1 className="mt-3">
             African Women Build <span className="text-clay">More Than Businesses</span>
           </h1>
-          <p className="mt-4 text-muted">
+          <p className="mt-4 text-ink/75">
             This is the bigger idea behind the brand and African Women Builds. A
             manifesto, not a sales page.
           </p>
@@ -83,7 +83,7 @@ export default function MovementPage() {
       <Section background="gold" id="join">
         <div className="mx-auto max-w-prose text-center">
           <h2>Build with us.</h2>
-          <p className="mt-4 text-muted">
+          <p className="mt-4 text-ink/75">
             African Women Builds is where this happens together. Add your name
             and I&rsquo;ll tell you the next step.
           </p>

@@ -37,8 +37,8 @@ export default async function AboutPage() {
 
   return (
     <>
-      <Section background="gold" className="!pb-10 md:!pb-16">
-        <p className="label text-clay">About Lami</p>
+      <Section background="clay" className="!pb-10 md:!pb-16">
+        <p className="label text-gold-soft">About Lami</p>
         <h1 className="mt-3">The Story Behind The Migrant CEO</h1>
         <div className="mt-8 aspect-video w-full overflow-hidden rounded-card bg-peach-deep">
           {settings.founder_portrait_url ? (
