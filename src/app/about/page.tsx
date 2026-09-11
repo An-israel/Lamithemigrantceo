@@ -37,7 +37,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <Section background="peach" className="!pb-10 md:!pb-16">
+      <Section background="gold" className="!pb-10 md:!pb-16">
         <p className="label text-clay">About Lami</p>
         <h1 className="mt-3">The Story Behind The Migrant CEO</h1>
         <div className="mt-8 aspect-video w-full overflow-hidden rounded-card bg-peach-deep">
@@ -146,12 +146,21 @@ export default async function AboutPage() {
         </p>
       </Section>
 
-      <Section background="shell">
+      <Section background="clay">
         <div className="mx-auto max-w-prose text-center">
           <h2>Your next chapter can start here.</h2>
           <div className="mt-8 flex justify-center gap-3">
-            <ButtonLink href="/start-here">Start Here</ButtonLink>
-            <ButtonLink href="/work-with-lami" variant="secondary">
+            <ButtonLink
+              href="/start-here"
+              className="border-gold bg-gold text-ink hover:bg-gold-soft hover:border-gold-soft"
+            >
+              Start Here
+            </ButtonLink>
+            <ButtonLink
+              href="/work-with-lami"
+              variant="secondary"
+              className="border-shell text-shell hover:bg-shell hover:text-ink"
+            >
               Work With Me
             </ButtonLink>
           </div>

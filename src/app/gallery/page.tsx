@@ -13,22 +13,24 @@ export default async function GalleryPage() {
   const images = await getGalleryImages();
 
   return (
-    <Section background="shell">
-      <p className="label text-clay">Gallery</p>
-      <h1 className="mt-3">
-        Moments <span className="text-clay">from the build</span>.
-      </h1>
-      <p className="mt-4 max-w-prose text-muted">
-        Events, the warehouse, and life behind the scenes.
-      </p>
+    <>
+      <Section background="gold">
+        <p className="label text-ink/60">Gallery</p>
+        <h1 className="mt-3">
+          Moments <span className="text-clay">from the build</span>.
+        </h1>
+        <p className="mt-4 max-w-prose text-ink/75">
+          Events, the warehouse, and life behind the scenes.
+        </p>
+      </Section>
 
-      <div className="mt-10">
-        {images.length === 0 ? (
+      {images.length === 0 ? (
+        <Section background="shell">
           <p className="text-muted">Photos are coming soon.</p>
-        ) : (
-          <GalleryFilter images={images} />
-        )}
-      </div>
-    </Section>
+        </Section>
+      ) : (
+        <GalleryFilter images={images} />
+      )}
+    </>
   );
 }

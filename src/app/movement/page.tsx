@@ -39,7 +39,7 @@ const BELIEFS = [
 export default function MovementPage() {
   return (
     <>
-      <Section background="peach">
+      <Section background="gold">
         <div className="max-w-3xl">
           <p className="label text-clay">The Movement</p>
           <h1 className="mt-3">
@@ -80,7 +80,7 @@ export default function MovementPage() {
         </div>
       </Section>
 
-      <Section background="shell" id="join">
+      <Section background="gold" id="join">
         <div className="mx-auto max-w-prose text-center">
           <h2>Build with us.</h2>
           <p className="mt-4 text-muted">

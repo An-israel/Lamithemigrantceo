@@ -231,10 +231,11 @@ export default async function ProductDetailPage({
       </Section>
 
       {/* Curriculum */}
-      <Section background="peach">
-        <h2>What we cover.</h2>
+      <Section background="clay">
+        <h2 className="text-shell">What we cover.</h2>
         <div className="mt-8 max-w-prose">
           <Accordion
+            theme="dark"
             items={product.what_you_get.map((w, i) => ({
               title: `Module ${i + 1}`,
               body: w,
@@ -243,7 +244,9 @@ export default async function ProductDetailPage({
         </div>
       </Section>
 
-      {/* Testimonials for this product */}
+      {/* Testimonials for this product. Conditionally rendered, but the
+          curriculum (clay) and FAQ (gold) sections on either side never
+          match, so skipping this never creates an adjacent-color repeat. */}
       {testimonials.length > 0 && (
         <Section background="shell">
           <h2>Women who did this.</h2>
@@ -256,7 +259,7 @@ export default async function ProductDetailPage({
       )}
 
       {/* FAQ */}
-      <Section background="peach">
+      <Section background="gold">
         <h2>Questions before you join.</h2>
         <div className="mt-8 max-w-prose">
           <Accordion

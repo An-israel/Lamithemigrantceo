@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/Button";
 import { Section } from "@/components/Section";
-import { TestimonialCard } from "@/components/TestimonialCard";
+import { TestimonialsSlider } from "@/components/TestimonialsSlider";
 import { AuthorityStrip } from "@/components/AuthorityStrip";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { Receipt } from "@/components/Receipt";
@@ -127,17 +127,17 @@ export default async function HomePage() {
       <AuthorityStrip />
 
       {/* 3. SHORT STORY */}
-      <Section background="shell">
+      <Section background="gold">
         <div className="mx-auto max-w-prose">
           <h2>I rebuilt my life, so you can build yours.</h2>
-          <p className="mt-6 text-muted">
+          <p className="mt-6 text-ink/75">
             I built and ran businesses in Nigeria for years. In 2022 I moved to
             the United Kingdom and started again: new country, new rules, and
             less than £200 to my name. From there I built product businesses, a
             warehouse wholesale operation, an education programme and a
             community of women doing the same.
           </p>
-          <p className="mt-4 text-muted">
+          <p className="mt-4 text-ink/75">
             From starting again to building an ecosystem. Business ownership is
             the beginning. Wealth and legacy are the destination.
           </p>
@@ -150,9 +150,9 @@ export default async function HomePage() {
       </Section>
 
       {/* 4. CHOOSE YOUR PATH */}
-      <Section background="peach">
+      <Section background="clay">
         <h2>What are you here to build?</h2>
-        <p className="mt-3 max-w-prose text-muted">
+        <p className="mt-3 max-w-prose text-shell/75">
           Pick the path that fits where you are. Each one points you to the
           right next step.
         </p>
@@ -199,48 +199,50 @@ export default async function HomePage() {
       </Section>
 
       {/* 6. IMPACT */}
-      <Section background="peach">
+      <Section background="ink">
         <div className="flex items-end justify-between gap-4">
           <h2>Real people. Real businesses.</h2>
-          <ButtonLink href="/impact" variant="secondary" className="hidden sm:inline-flex">
+          <ButtonLink
+            href="/impact"
+            variant="secondary"
+            className="hidden border-shell/40 text-shell hover:bg-shell hover:text-ink sm:inline-flex"
+          >
             See the impact
           </ButtonLink>
         </div>
-        <div className="mt-8 grid grid-cols-3 gap-4 border-y border-line py-6">
+        <div className="mt-8 grid grid-cols-3 gap-4 border-y border-shell/15 py-6">
           {[
             ["30", "units sold out"],
             ["£1,000+", "first-revenue milestone"],
             ["50", "products sold"],
           ].map(([figure, label]) => (
             <div key={label} className="text-center">
-              <p className="font-display text-2xl font-bold text-clay md:text-3xl">
+              <p className="font-display text-2xl font-bold text-gold-soft md:text-3xl">
                 {figure}
               </p>
-              <p className="label mt-1 text-muted">{label}</p>
+              <p className="label mt-1 text-shell/70">{label}</p>
             </div>
           ))}
         </div>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {testimonials.slice(0, 3).map((t) => (
-            <TestimonialCard key={t.id} t={t} />
-          ))}
+        <div className="mt-10">
+          <TestimonialsSlider testimonials={testimonials} />
         </div>
       </Section>
 
       {/* 7. FEATURED STORY / VIDEO */}
-      <Section background="ink">
+      <Section background="gold">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
-            <p className="label text-gold-soft">Watch my story</p>
-            <h2 className="mt-3 text-shell">From starting again to building an ecosystem.</h2>
-            <p className="mt-4 text-shell/80">
+            <p className="label text-ink/60">Watch my story</p>
+            <h2 className="mt-3">From starting again to building an ecosystem.</h2>
+            <p className="mt-4 text-ink/75">
               A short introduction to the journey: migration, rebuilding, and
               the movement it became.
             </p>
           </div>
-          <div className="aspect-video w-full overflow-hidden rounded-card bg-shell/10">
+          <div className="aspect-video w-full overflow-hidden rounded-card bg-ink/10">
             {/* TODO(lami): embed the 60–120s brand-story video (YouTube/Vimeo/Mux). */}
-            <div className="flex h-full items-center justify-center text-shell/50">
+            <div className="flex h-full items-center justify-center text-ink/50">
               Brand story video (60–120s)
             </div>
           </div>
@@ -274,29 +276,35 @@ export default async function HomePage() {
       </Section>
 
       {/* 9. THE BUILD LETTER */}
-      <Section background="peach">
+      <Section background="clay">
         <div className="mx-auto max-w-prose text-center">
           <h2>The Build Letter.</h2>
-          <p className="mt-4 text-muted">
+          <p className="mt-4 text-shell/75">
             Practical business, wealth and legacy insights, straight to your
             inbox. No fluff, no filler.
           </p>
           <div className="mx-auto mt-8 max-w-md">
-            <NewsletterForm theme="light" />
+            <NewsletterForm
+              theme="dark"
+              buttonClassName="border-gold bg-gold text-ink hover:bg-gold-soft hover:border-gold-soft"
+            />
           </div>
         </div>
       </Section>
 
-      {/* 10. FINAL CTA */}
-      <Section background="ink">
+      {/* 10. FINAL CTA — ivory, so it doesn't repeat the footer's black right after it */}
+      <Section background="shell">
         <div className="mx-auto max-w-prose text-center">
-          <h2 className="text-shell">Your next chapter can start here.</h2>
-          <div className="mt-8 flex justify-center">
+          <h2>Your next chapter can start here.</h2>
+          <div className="mt-8 flex justify-center gap-3">
             <ButtonLink
               href="/start-here"
               className="border-gold bg-gold text-ink hover:bg-gold-soft hover:border-gold-soft"
             >
               Start Here
+            </ButtonLink>
+            <ButtonLink href="/work-with-lami" variant="secondary">
+              Work With Me
             </ButtonLink>
           </div>
         </div>

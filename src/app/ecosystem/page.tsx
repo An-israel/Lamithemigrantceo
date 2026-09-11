@@ -57,13 +57,19 @@ export default async function EcosystemPage() {
         </div>
       </Section>
 
-      {PARTS.map((part, i) => (
-        <Section key={part.id} id={part.id} background={i % 2 === 0 ? "shell" : "peach"}>
+      {PARTS.map((part, i) => {
+        const rowBg = (["shell", "clay", "shell", "gold"] as const)[i % 4];
+        const dark = rowBg === "clay";
+        return (
+        <Section key={part.id} id={part.id} background={rowBg}>
           <div className="grid items-center gap-8 md:grid-cols-2">
             <div className={i % 2 === 0 ? "" : "md:order-2"}>
               <h2>{part.name}</h2>
-              <p className="mt-4 text-muted">{part.body}</p>
-              <ButtonLink href={part.href} className="mt-6">
+              <p className={dark ? "mt-4 text-shell/70" : "mt-4 text-muted"}>{part.body}</p>
+              <ButtonLink
+                href={part.href}
+                className={dark ? "mt-6 border-gold bg-gold text-ink hover:bg-gold-soft hover:border-gold-soft" : "mt-6"}
+              >
                 {part.cta}
               </ButtonLink>
             </div>
@@ -79,7 +85,8 @@ export default async function EcosystemPage() {
             </div>
           </div>
         </Section>
-      ))}
+        );
+      })}
 
       {/* Future ventures — do not publish confidential concepts early (§6.5) */}
       <Section background="shell">

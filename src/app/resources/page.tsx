@@ -16,7 +16,7 @@ export default async function ResourcesPage() {
 
   return (
     <>
-      <Section background="peach">
+      <Section background="gold">
         <div className="max-w-prose">
           <p className="label text-clay">Resources</p>
           <h1 className="mt-3">

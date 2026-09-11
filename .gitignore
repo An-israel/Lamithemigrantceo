@@ -42,3 +42,6 @@ supabase/.temp
 .idea
 .vscode/*
 !.vscode/extensions.json
+
+# Claude Code agent worktrees (temporary, per-session)
+.claude/
