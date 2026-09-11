@@ -8,6 +8,7 @@ export async function getGalleryImages(): Promise<GalleryImage[]> {
     const { data } = await supabase
       .from("gallery_images")
       .select("*")
+      .neq("image_url", "")
       .order("sort_order", { ascending: true });
     if (data) return data as GalleryImage[];
   } catch {
