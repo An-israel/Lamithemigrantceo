@@ -79,7 +79,7 @@ export default async function SpeakingPage() {
       </Section>
 
       {/* Experience + audience */}
-      <Section background="peach">
+      <Section background="gold">
         <div className="grid gap-10 md:grid-cols-2">
           <div>
             <h2>Experience.</h2>

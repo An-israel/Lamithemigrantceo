@@ -64,9 +64,9 @@ export default async function ImpactPage() {
       </Section>
 
       {/* Human stories */}
-      <Section background="peach">
+      <Section background="clay">
         <h2>In their words.</h2>
-        <p className="mt-2 text-sm text-muted">
+        <p className="mt-2 text-sm text-shell/70">
           Real businesses. Real sales. Real results.
         </p>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -76,7 +76,7 @@ export default async function ImpactPage() {
         </div>
 
         <h3 className="mt-14">The real messages.</h3>
-        <p className="mt-2 text-sm text-muted">
+        <p className="mt-2 text-sm text-shell/70">
           Unedited proof, straight from the community.
         </p>
         <div className="mt-6">

@@ -24,6 +24,7 @@ const config: Config = {
         line: "var(--line)",
         gold: "var(--gold)",
         "gold-soft": "var(--gold-soft)",
+        "gold-bg": "var(--gold-bg)",
       },
       fontFamily: {
         display: ["var(--font-fraunces)", "Georgia", "serif"],

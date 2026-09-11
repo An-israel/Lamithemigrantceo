@@ -16,9 +16,9 @@ export function TestimonialCard({ t }: { t: Testimonial }) {
             {t.name.charAt(0)}
           </div>
         )}
-        <figcaption className="font-bold">{t.name}</figcaption>
+        <figcaption className="font-bold text-ink">{t.name}</figcaption>
       </div>
-      <blockquote className="mt-4 flex-1 text-[15px]">
+      <blockquote className="mt-4 flex-1 text-[15px] text-ink/80">
         “{t.quote}”
       </blockquote>
       {t.result_figure && (

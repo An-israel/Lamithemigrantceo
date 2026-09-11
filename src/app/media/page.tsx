@@ -30,7 +30,7 @@ export default async function MediaPage() {
         </p>
       </Section>
 
-      <Section background="peach" className="!pt-0">
+      <Section background="gold" className="!pt-0">
         {settings.media_headshot_url && (
           <div className="mb-8 aspect-square w-full max-w-[220px] overflow-hidden rounded-card">
             {/* eslint-disable-next-line @next/next/no-img-element */}

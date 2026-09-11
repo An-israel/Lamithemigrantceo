@@ -8,9 +8,14 @@ import { clsx } from "@/lib/clsx";
 export function NewsletterForm({
   theme = "dark",
   cta = "Get The Build Letter",
+  buttonClassName,
 }: {
   theme?: "dark" | "light";
   cta?: string;
+  /** Override the submit button's colors — needed when the surrounding
+   *  section is itself clay/emerald, so the primary button doesn't blend
+   *  into the background. */
+  buttonClassName?: string;
 }) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">(
@@ -64,7 +69,7 @@ export function NewsletterForm({
       <button
         type="submit"
         disabled={state === "sending"}
-        className="btn btn-primary shrink-0"
+        className={clsx("btn btn-primary shrink-0", buttonClassName)}
       >
         {state === "sending" ? "Sending…" : cta}
       </button>

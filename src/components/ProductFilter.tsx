@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductsSlider } from "@/components/ProductsSlider";
 import { clsx } from "@/lib/clsx";
 import type { Product } from "@/lib/types";
 
@@ -41,10 +41,8 @@ export function ProductFilter({ products }: { products: Product[] }) {
         ))}
       </div>
 
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
-        {shown.map((p) => (
-          <ProductCard key={p.id} product={p} showBullets />
-        ))}
+      <div className="mt-8">
+        <ProductsSlider products={shown} />
       </div>
     </>
   );

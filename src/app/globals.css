@@ -27,6 +27,7 @@
   --line: #e5ddcb; /* hairline borders and dividers */
   --gold: #b4893c; /* rich gold accent — used sparingly */
   --gold-soft: #cba85c; /* softer gold for large figures on dark */
+  --gold-bg: #c99a49; /* full-bleed gold section background */
 }
 
 @layer base {
