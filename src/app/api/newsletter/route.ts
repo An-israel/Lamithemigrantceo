@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { rateLimit, clientIp } from "@/lib/rateLimit";
 
 /**
  * Footer "free starter list" capture. Stored as an enquiry with topic
@@ -7,6 +8,10 @@ import { createServiceClient } from "@/lib/supabase/server";
  * already checks. Kept deliberately simple.
  */
 export async function POST(request: Request) {
+  if (!rateLimit(`newsletter:${clientIp(request)}`, 5, 60_000)) {
+    return NextResponse.json({ error: "Too many attempts. Wait a minute and try again." }, { status: 429 });
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();

@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { rateLimit, clientIp } from "@/lib/rateLimit";
 
 /** Captures a restock-alert email for a sold-out wholesale bundle. */
 export async function POST(request: Request) {
+  if (!rateLimit(`restock:${clientIp(request)}`, 5, 60_000)) {
+    return NextResponse.json({ error: "Too many attempts. Wait a minute and try again." }, { status: 429 });
+  }
+
   try {
     const { productId, email } = await request.json();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || ""))) {

@@ -190,6 +190,20 @@ export function OrdersManager({ initial }: { initial: Order[] }) {
               <Row label="Amount" value={formatGBP(selected.amount_gbp)} />
               <Row label="Payment" value={selected.status} />
               <Row label="Type" value={selected.item_type} />
+              {selected.items && selected.items.length > 0 && (
+                <div>
+                  <dt className="label">What to pack</dt>
+                  <dd>
+                    <ul className="mt-1 space-y-0.5">
+                      {selected.items.map((it, i) => (
+                        <li key={i}>
+                          {it.quantity} × {it.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              )}
               {selected.stripe_session_id && (
                 <Row label="Stripe session" value={selected.stripe_session_id} />
               )}

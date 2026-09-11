@@ -144,6 +144,7 @@ export async function POST(request: Request) {
       }
 
       const line_items = [];
+      const orderedItems: { i: string; q: number }[] = [];
       for (const item of body.items) {
         const product = products.find((p: { id: string }) => p.id === item.id);
         if (!product) continue;
@@ -173,6 +174,7 @@ export async function POST(request: Request) {
             },
           },
         });
+        orderedItems.push({ i: product.id, q: qty });
       }
 
       if (line_items.length === 0) {
@@ -185,7 +187,10 @@ export async function POST(request: Request) {
         line_items,
         shipping_address_collection: { allowed_countries: ["GB"] },
         phone_number_collection: { enabled: true },
-        metadata: { item_type: "wholesale" },
+        // Compact {id, quantity} pairs so the webhook can decrement stock
+        // and record what was bought, without hitting Stripe's 500-char
+        // per-value metadata limit.
+        metadata: { item_type: "wholesale", items: JSON.stringify(orderedItems) },
         success_url: `${siteUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${siteUrl}/wholesale`,
       });

@@ -86,6 +86,31 @@ Deno.serve(async (req: Request) => {
       .maybeSingle();
 
     if (!existing) {
+      // Wholesale orders carry a compact {i: product_id, q: quantity}[] list
+      // in metadata (set at checkout creation) instead of a single item_id,
+      // since a cart can hold several different bundles.
+      let wholesaleItems: { i: string; q: number }[] = [];
+      if (session.metadata?.item_type === "wholesale" && session.metadata?.items) {
+        try {
+          wholesaleItems = JSON.parse(session.metadata.items);
+        } catch {
+          wholesaleItems = [];
+        }
+      }
+
+      let orderItemsForRecord: { id: string; name: string; quantity: number }[] | null = null;
+      if (wholesaleItems.length > 0) {
+        const { data: bundles } = await supabase
+          .from("wholesale_products")
+          .select("id, name")
+          .in("id", wholesaleItems.map((it) => it.i));
+        orderItemsForRecord = wholesaleItems.map((it) => ({
+          id: it.i,
+          name: bundles?.find((b: { id: string }) => b.id === it.i)?.name ?? "Unknown bundle",
+          quantity: it.q,
+        }));
+      }
+
       await supabase.from("orders").insert({
         stripe_session_id: session.id,
         email,
@@ -95,12 +120,22 @@ Deno.serve(async (req: Request) => {
         amount_gbp: amount,
         status: "paid",
         shipping_address: (session as any).shipping_details?.address ?? null,
+        items: orderItemsForRecord,
       });
 
       // For event tickets, increment the sold count so capacity stays live.
       if (session.metadata?.item_type === "event" && session.metadata?.item_id) {
         await supabase.rpc("increment_tickets_sold", {
           event_id: session.metadata.item_id,
+        });
+      }
+
+      // For wholesale orders, decrement each bundle's stock so it reflects
+      // real sales (checkout-time checks alone don't do this).
+      for (const it of wholesaleItems) {
+        await supabase.rpc("decrement_wholesale_stock", {
+          product_id: it.i,
+          qty: it.q,
         });
       }
 

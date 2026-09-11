@@ -195,6 +195,7 @@ export interface Order {
   fulfilment_status: FulfilmentStatus;
   tracking_number: string | null;
   shipping_address: Record<string, unknown> | null;
+  items: { id: string; name: string; quantity: number }[] | null;
 }
 
 export interface ProductModule {
