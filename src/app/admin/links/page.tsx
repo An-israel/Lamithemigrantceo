@@ -1,18 +1,26 @@
 import { createClient } from "@/lib/supabase/server";
 import { LinksManager } from "@/components/admin/LinksManager";
-import type { BioLink } from "@/lib/types";
+import type { BioLink, Product, Resource } from "@/lib/types";
 
 export default async function AdminLinksPage() {
   let links: BioLink[] = [];
+  let products: Product[] = [];
+  let resources: Resource[] = [];
   let dbReady = true;
   try {
     const supabase = createClient();
-    const { data, error } = await supabase
-      .from("bio_links")
-      .select("*")
-      .order("sort_order", { ascending: true });
-    if (error) dbReady = false;
-    links = (data as BioLink[]) || [];
+    const [linksRes, productsRes, resourcesRes] = await Promise.all([
+      supabase
+        .from("bio_links")
+        .select("*, product:products(*), resource:resources(*)")
+        .order("sort_order", { ascending: true }),
+      supabase.from("products").select("*").order("sort_order", { ascending: true }),
+      supabase.from("resources").select("*").order("sort_order", { ascending: true }),
+    ]);
+    if (linksRes.error) dbReady = false;
+    links = (linksRes.data as unknown as BioLink[]) || [];
+    products = (productsRes.data as Product[]) || [];
+    resources = (resourcesRes.data as Resource[]) || [];
   } catch {
     dbReady = false;
   }
@@ -32,7 +40,7 @@ export default async function AdminLinksPage() {
       )}
 
       <div className="mt-6">
-        <LinksManager initial={links} />
+        <LinksManager initial={links} products={products} resources={resources} />
       </div>
     </>
   );

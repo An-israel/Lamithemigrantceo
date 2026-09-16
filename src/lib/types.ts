@@ -76,6 +76,8 @@ export interface JournalPost {
   sort_order: number;
 }
 
+export type BioLinkStyle = "simple" | "product" | "resource" | "banner";
+
 export interface BioLink {
   id: string;
   created_at: string;
@@ -86,6 +88,14 @@ export interface BioLink {
   sort_order: number;
   active: boolean;
   clicks: number;
+  style: BioLinkStyle;
+  product_id: string | null;
+  resource_id: string | null;
+  button_label: string | null;
+  /** Joined live from `products` when `product_id` is set (see getBioLinks). */
+  product?: Product | null;
+  /** Joined live from `resources` when `resource_id` is set. */
+  resource?: Resource | null;
 }
 
 export interface Resource {
@@ -95,6 +105,7 @@ export interface Resource {
   description: string;
   file_url: string | null;
   video_url: string | null;
+  image_url: string | null;
   requires_email: boolean;
   sort_order: number;
   active: boolean;

@@ -32,7 +32,7 @@ export default async function ResourcesPage() {
       <Section background="shell">
         <div className="grid gap-6 md:grid-cols-2">
           {resources.map((r) => (
-            <div key={r.id} className="card flex flex-col p-6">
+            <div key={r.id} id={r.id} className="card flex scroll-mt-24 flex-col p-6">
               <h3>{r.title}</h3>
               <p className="mt-2 flex-1 text-muted">{r.description}</p>
               <ResourceRequestForm resource={r} />

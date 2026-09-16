@@ -21,6 +21,7 @@ export function ResourcesManager({ initial }: { initial: Resource[] }) {
         description: r.description,
         file_url: r.file_url,
         video_url: r.video_url,
+        image_url: r.image_url,
         requires_email: r.requires_email,
         active: r.active,
         sort_order: r.sort_order,
@@ -99,6 +100,21 @@ export function ResourcesManager({ initial }: { initial: Resource[] }) {
                   aspect="aspect-[4/3]"
                 />
               )}
+            </div>
+            <div className="mt-3">
+              <label className="label mb-1 block">Card image (optional)</label>
+              <p className="mb-2 text-xs text-muted">
+                Shown on the link-in-bio page. Not cropped there — any shape works.
+              </p>
+              <ImageUploader
+                value={r.image_url}
+                onChange={(url) => {
+                  update(r.id, { image_url: url || null });
+                  persist({ ...r, image_url: url || null });
+                }}
+                folder="resources"
+                aspect="aspect-[4/3]"
+              />
             </div>
             <div className="mt-3">
               <label className="label mb-1 block">Video link (optional)</label>
