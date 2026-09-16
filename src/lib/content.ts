@@ -41,11 +41,11 @@ export async function getImpactStats(): Promise<ImpactStat[]> {
 
 // --- Resources / lead magnets ---------------------------------------------
 export const SEED_RESOURCES: Resource[] = [
-  { id: "r1", created_at: "", title: "UK product-business starter checklist", description: "The first steps to launch a product business in the UK.", file_url: null, video_url: null, requires_email: true, sort_order: 1, active: true },
-  { id: "r2", created_at: "", title: "Product sourcing checklist", description: "How to find and vet suppliers without getting burned.", file_url: null, video_url: null, requires_email: true, sort_order: 2, active: true },
-  { id: "r3", created_at: "", title: "How to validate a product before buying stock", description: "Test demand before you spend money on inventory.", file_url: null, video_url: null, requires_email: true, sort_order: 3, active: true },
-  { id: "r4", created_at: "", title: "Business systems starter guide", description: "Simple systems so your business runs without you.", file_url: null, video_url: null, requires_email: true, sort_order: 4, active: true },
-  { id: "r5", created_at: "", title: "Migration and business reinvention guide", description: "Rebuilding your business identity in a new country.", file_url: null, video_url: null, requires_email: true, sort_order: 5, active: true },
+  { id: "r1", created_at: "", title: "UK product-business starter checklist", description: "The first steps to launch a product business in the UK.", file_url: null, video_url: null, image_url: null, requires_email: true, sort_order: 1, active: true },
+  { id: "r2", created_at: "", title: "Product sourcing checklist", description: "How to find and vet suppliers without getting burned.", file_url: null, video_url: null, image_url: null, requires_email: true, sort_order: 2, active: true },
+  { id: "r3", created_at: "", title: "How to validate a product before buying stock", description: "Test demand before you spend money on inventory.", file_url: null, video_url: null, image_url: null, requires_email: true, sort_order: 3, active: true },
+  { id: "r4", created_at: "", title: "Business systems starter guide", description: "Simple systems so your business runs without you.", file_url: null, video_url: null, image_url: null, requires_email: true, sort_order: 4, active: true },
+  { id: "r5", created_at: "", title: "Migration and business reinvention guide", description: "Rebuilding your business identity in a new country.", file_url: null, video_url: null, image_url: null, requires_email: true, sort_order: 5, active: true },
 ];
 
 export async function getResources(): Promise<Resource[]> {
@@ -129,22 +129,26 @@ export async function getJournalPost(slug: string): Promise<JournalPost | null> 
 
 // --- Bio links (link-in-bio) ----------------------------------------------
 export const SEED_BIO_LINKS: BioLink[] = [
-  { id: "b1", created_at: "", label: "Start Here", url: "/start-here", description: "Find your path", image_url: null, sort_order: 1, active: true, clicks: 0 },
-  { id: "b2", created_at: "", label: "GBG Wholesale Hub", url: "/wholesale", description: "Buy stock, sell it on", image_url: null, sort_order: 2, active: true, clicks: 0 },
-  { id: "b3", created_at: "", label: "Join African Women Builds", url: "/movement", description: "The community", image_url: null, sort_order: 3, active: true, clicks: 0 },
-  { id: "b4", created_at: "", label: "Book Lami to speak", url: "/speaking", description: "Speaking enquiries", image_url: null, sort_order: 4, active: true, clicks: 0 },
-  { id: "b5", created_at: "", label: "The Build Letter", url: "/resources", description: "Free insights + guides", image_url: null, sort_order: 5, active: true, clicks: 0 },
+  { id: "b1", created_at: "", label: "Start Here", url: "/start-here", description: "Find your path", image_url: null, sort_order: 1, active: true, clicks: 0, style: "simple", product_id: null, resource_id: null, button_label: null },
+  { id: "b2", created_at: "", label: "GBG Wholesale Hub", url: "/wholesale", description: "Buy stock, sell it on", image_url: null, sort_order: 2, active: true, clicks: 0, style: "simple", product_id: null, resource_id: null, button_label: null },
+  { id: "b3", created_at: "", label: "Join African Women Builds", url: "/movement", description: "The community", image_url: null, sort_order: 3, active: true, clicks: 0, style: "simple", product_id: null, resource_id: null, button_label: null },
+  { id: "b4", created_at: "", label: "Book Lami to speak", url: "/speaking", description: "Speaking enquiries", image_url: null, sort_order: 4, active: true, clicks: 0, style: "simple", product_id: null, resource_id: null, button_label: null },
+  { id: "b5", created_at: "", label: "The Build Letter", url: "/resources", description: "Free insights + guides", image_url: null, sort_order: 5, active: true, clicks: 0, style: "simple", product_id: null, resource_id: null, button_label: null },
 ];
 
+/**
+ * Bio links can wrap a real Product or Resource — join them live so price,
+ * duration and image always match the catalog, never a stale copy.
+ */
 export async function getBioLinks(): Promise<BioLink[]> {
   try {
     const supabase = createClient();
     const { data } = await supabase
       .from("bio_links")
-      .select("*")
+      .select("*, product:products(*), resource:resources(*)")
       .eq("active", true)
       .order("sort_order", { ascending: true });
-    if (data && data.length > 0) return data as BioLink[];
+    if (data && data.length > 0) return data as unknown as BioLink[];
   } catch {
     /* fall through */
   }
