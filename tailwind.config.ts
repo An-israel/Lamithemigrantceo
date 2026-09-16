@@ -13,18 +13,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        shell: "var(--shell)",
-        peach: "var(--peach)",
-        "peach-deep": "var(--peach-deep)",
-        clay: "var(--clay)",
-        "clay-deep": "var(--clay-deep)",
-        ink: "var(--ink)",
-        muted: "var(--muted)",
-        jade: "var(--jade)",
-        line: "var(--line)",
-        gold: "var(--gold)",
-        "gold-soft": "var(--gold-soft)",
-        "gold-bg": "var(--gold-bg)",
+        // rgb(var(--x-rgb) / <alpha-value>) lets Tailwind generate real
+        // opacity-modified utilities (text-shell/60, bg-ink/10, ...) — a
+        // bare var(--shell) reference can't take an alpha channel, so those
+        // utilities would otherwise silently produce no CSS at all.
+        shell: "rgb(var(--shell-rgb) / <alpha-value>)",
+        peach: "rgb(var(--peach-rgb) / <alpha-value>)",
+        "peach-deep": "rgb(var(--peach-deep-rgb) / <alpha-value>)",
+        clay: "rgb(var(--clay-rgb) / <alpha-value>)",
+        "clay-deep": "rgb(var(--clay-deep-rgb) / <alpha-value>)",
+        ink: "rgb(var(--ink-rgb) / <alpha-value>)",
+        muted: "rgb(var(--muted-rgb) / <alpha-value>)",
+        jade: "rgb(var(--jade-rgb) / <alpha-value>)",
+        line: "rgb(var(--line-rgb) / <alpha-value>)",
+        gold: "rgb(var(--gold-rgb) / <alpha-value>)",
+        "gold-soft": "rgb(var(--gold-soft-rgb) / <alpha-value>)",
+        "gold-bg": "rgb(var(--gold-bg-rgb) / <alpha-value>)",
       },
       fontFamily: {
         display: ["var(--font-fraunces)", "Georgia", "serif"],

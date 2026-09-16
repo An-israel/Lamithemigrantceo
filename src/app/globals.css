@@ -28,6 +28,24 @@
   --gold: #b4893c; /* rich gold accent — used sparingly */
   --gold-soft: #cba85c; /* softer gold for large figures on dark */
   --gold-bg: #c99a49; /* full-bleed gold section background */
+
+  /* Same colors as R G B channel triples, so Tailwind can generate real
+     opacity-modified utilities (text-shell/60 etc.) via rgb(var(...) / a).
+     A bare var(--shell) can't take an alpha channel, so without these the
+     "/NN" utilities silently produce no CSS and the element falls through
+     to an inherited color instead (e.g. clay-colored text inside a link). */
+  --shell-rgb: 248 246 240;
+  --peach-rgb: 239 232 218;
+  --peach-deep-rgb: 230 218 194;
+  --clay-rgb: 14 77 58;
+  --clay-deep-rgb: 10 58 43;
+  --ink-rgb: 23 20 14;
+  --muted-rgb: 110 102 88;
+  --jade-rgb: 47 110 82;
+  --line-rgb: 229 221 203;
+  --gold-rgb: 180 137 60;
+  --gold-soft-rgb: 203 168 92;
+  --gold-bg-rgb: 201 154 73;
 }
 
 @layer base {
