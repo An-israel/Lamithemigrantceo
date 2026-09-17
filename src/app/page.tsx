@@ -113,10 +113,10 @@ export default async function HomePage() {
             </div>
             <div className="mx-auto w-full max-w-sm pb-6 lg:pb-0">
               <div className="aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
-                {settings.founder_portrait_url ? (
+                {settings.hero_portrait_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={settings.founder_portrait_url}
+                    src={settings.hero_portrait_url}
                     alt="Lami the Migrant CEO"
                     className="h-full w-full object-cover"
                   />

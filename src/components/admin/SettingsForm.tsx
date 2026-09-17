@@ -41,6 +41,7 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
           founder_portrait_url: form.founder_portrait_url,
           founder_gallery_urls: form.founder_gallery_urls,
           media_headshot_url: form.media_headshot_url,
+          hero_portrait_url: form.hero_portrait_url,
           announcement_image_url: form.announcement_image_url,
           waitlist_locations: form.waitlist_locations,
         })
@@ -129,6 +130,17 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
               onChange={(e) => set("hero_paragraph", e.target.value)}
               rows={3}
               className="field resize-y"
+            />
+          </div>
+          <div>
+            <label className="label mb-2 block">
+              Hero photo (tall, 4:5) — different from the About page portrait
+            </label>
+            <ImageUploader
+              value={form.hero_portrait_url}
+              onChange={(url) => set("hero_portrait_url", url || null)}
+              folder="brand"
+              aspect="aspect-[4/5]"
             />
           </div>
         </div>

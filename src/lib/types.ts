@@ -262,6 +262,7 @@ export interface SiteSettings {
   founder_portrait_url: string | null;
   founder_gallery_urls: string[];
   media_headshot_url: string | null;
+  hero_portrait_url: string | null;
   waitlist_locations: string[];
 }
 

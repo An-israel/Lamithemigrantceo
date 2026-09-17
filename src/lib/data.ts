@@ -169,6 +169,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   founder_portrait_url: null,
   founder_gallery_urls: [],
   media_headshot_url: null,
+  hero_portrait_url: null,
   waitlist_locations: ["Liverpool", "London", "Manchester", "Birmingham"],
 };
 
