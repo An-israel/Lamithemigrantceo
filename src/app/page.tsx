@@ -4,7 +4,6 @@ import { Section } from "@/components/Section";
 import { TestimonialsSlider } from "@/components/TestimonialsSlider";
 import { AuthorityStrip } from "@/components/AuthorityStrip";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { Receipt } from "@/components/Receipt";
 import { getTestimonials, getSettings } from "@/lib/data";
 
 // §6.1 Choose your path
@@ -113,11 +112,20 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="mx-auto w-full max-w-sm pb-6 lg:pb-0">
-              <Receipt
-                items={settings.receipt_items ?? undefined}
-                resold={settings.receipt_resold_gbp ?? undefined}
-                note={settings.receipt_note ?? undefined}
-              />
+              <div className="aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
+                {settings.founder_portrait_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={settings.founder_portrait_url}
+                    alt="Lami the Migrant CEO"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-ink/50">
+                    Founder portrait
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
