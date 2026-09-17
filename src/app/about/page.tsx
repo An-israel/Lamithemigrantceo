@@ -99,8 +99,16 @@ export default async function AboutPage() {
         </div>
 
         {settings.founder_gallery_urls.length > 0 && (
-          <div className="mx-auto mt-16 max-w-4xl">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mx-auto mt-16 max-w-5xl">
+            <div
+              className={`grid gap-4 sm:gap-6 ${
+                settings.founder_gallery_urls.length === 1
+                  ? "grid-cols-1"
+                  : settings.founder_gallery_urls.length === 2
+                    ? "grid-cols-2"
+                    : "grid-cols-2 sm:grid-cols-3"
+              }`}
+            >
               {settings.founder_gallery_urls.map((img, i) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
