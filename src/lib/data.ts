@@ -168,6 +168,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   receipt_note: "Her actual first order, 2021.",
   founder_portrait_url: null,
   founder_gallery_urls: [],
+  founder_gallery_size: "medium",
   media_headshot_url: null,
   hero_portrait_url: null,
   waitlist_locations: ["Liverpool", "London", "Manchester", "Birmingham"],

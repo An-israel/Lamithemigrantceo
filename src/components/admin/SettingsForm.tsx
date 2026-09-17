@@ -40,6 +40,7 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
           receipt_note: form.receipt_note,
           founder_portrait_url: form.founder_portrait_url,
           founder_gallery_urls: form.founder_gallery_urls,
+          founder_gallery_size: form.founder_gallery_size,
           media_headshot_url: form.media_headshot_url,
           hero_portrait_url: form.hero_portrait_url,
           announcement_image_url: form.announcement_image_url,
@@ -116,6 +117,20 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
             onChange={(next) => set("founder_gallery_urls", next)}
             folder="brand"
           />
+          <div className="mt-4 max-w-xs">
+            <label className="label mb-2 block">Gallery photo size</label>
+            <select
+              value={form.founder_gallery_size}
+              onChange={(e) =>
+                set("founder_gallery_size", e.target.value as SiteSettings["founder_gallery_size"])
+              }
+              className="field"
+            >
+              <option value="large">Large (up to 2 per row)</option>
+              <option value="medium">Medium (up to 3 per row)</option>
+              <option value="small">Small (up to 4 per row)</option>
+            </select>
+          </div>
         </div>
       </section>
 
