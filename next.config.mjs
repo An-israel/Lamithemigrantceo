@@ -54,7 +54,13 @@ const nextConfig = {
     ];
   },
   images: {
-    formats: ["image/avif", "image/webp"],
+    // AVIF disabled: GHSA-2xp9-vwfh-vxw4 is a critical unauthenticated RCE in
+    // Next's Image Optimization API when AVIF output is enabled, fixed only
+    // in next@>=15.5.24 (we're on 14.2.35, the latest 14.x release — no
+    // patched 14.x exists). This avoids the vulnerable code path entirely
+    // until the app is upgraded to a patched major version; re-enable once
+    // that upgrade lands. webp still gets the same compression benefit.
+    formats: ["image/webp"],
     remotePatterns: [
       {
         protocol: "https",

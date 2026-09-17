@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { Accordion } from "@/components/Accordion";
@@ -54,10 +55,16 @@ export default async function WholesaleDetailPage({
         <div className="mt-6 grid gap-10 md:grid-cols-2">
           {/* Gallery */}
           <div className="space-y-4">
-            <div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-card bg-peach-deep">
+            <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-card bg-peach-deep">
               {cover ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={cover} alt={bundle.name} className="h-full w-full object-cover" />
+                <Image
+                  src={cover}
+                  alt={bundle.name}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  priority
+                  className="object-cover"
+                />
               ) : (
                 <span className="font-display text-5xl text-ink/40">
                   {bundle.name.charAt(0)}
@@ -67,13 +74,15 @@ export default async function WholesaleDetailPage({
             {bundle.images.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
                 {bundle.images.slice(0, 4).map((img, i) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={i}
-                    src={img}
-                    alt={`${bundle.name} ${i + 1}`}
-                    className="aspect-square w-full rounded-input object-cover"
-                  />
+                  <div key={i} className="relative aspect-square w-full">
+                    <Image
+                      src={img}
+                      alt={`${bundle.name} ${i + 1}`}
+                      fill
+                      sizes="12vw"
+                      className="rounded-input object-cover"
+                    />
+                  </div>
                 ))}
               </div>
             )}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink } from "@/components/Button";
 import { Section } from "@/components/Section";
@@ -112,13 +113,15 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="mx-auto w-full max-w-sm pb-6 lg:pb-0">
-              <div className="aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
                 {settings.hero_portrait_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={settings.hero_portrait_url}
                     alt="Lami the Migrant CEO"
-                    className="h-full w-full object-cover"
+                    fill
+                    sizes="(min-width: 1024px) 40vw, 100vw"
+                    priority
+                    className="object-cover"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-ink/50">
@@ -137,13 +140,14 @@ export default async function HomePage() {
       {/* 3. SHORT STORY */}
       <Section background="gold">
         <div className="grid items-center gap-14 lg:grid-cols-[2fr_3fr]">
-          <div className="aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
             {settings.founder_portrait_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={settings.founder_portrait_url}
                 alt="Lami the Migrant CEO"
-                className="h-full w-full object-cover"
+                fill
+                sizes="(min-width: 1024px) 35vw, 100vw"
+                className="object-cover"
               />
             ) : (
               <div className="flex h-full items-center justify-center text-ink/50">

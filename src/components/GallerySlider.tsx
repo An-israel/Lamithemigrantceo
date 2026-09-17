@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Slider } from "@/components/Slider";
 import type { GalleryImage } from "@/lib/types";
 
@@ -24,8 +25,13 @@ export function GallerySlider({ images }: { images: GalleryImage[] }) {
       keyFor={(img) => img.id}
       renderItem={(img) => (
         <div className="relative aspect-[16/7] w-full overflow-hidden rounded-card bg-shell/10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={img.image_url} alt={img.caption || img.category} className="h-full w-full object-cover" />
+          <Image
+            src={img.image_url}
+            alt={img.caption || img.category}
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
           {(img.caption || img.category) && (
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-8">
               <p className="label text-gold-soft">{img.category}</p>

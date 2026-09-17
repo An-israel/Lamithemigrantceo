@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Slider } from "@/components/Slider";
 import type { Testimonial } from "@/lib/types";
 
@@ -16,8 +17,13 @@ export function TestimonialsSlider({ testimonials }: { testimonials: Testimonial
         <figure className="flex h-full min-h-[220px] flex-col justify-between rounded-card border border-shell/15 bg-shell/[0.06] p-7">
           <div className="flex items-center gap-3">
             {t.photo ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={t.photo} alt={t.name} className="h-11 w-11 rounded-full object-cover" />
+              <Image
+                src={t.photo}
+                alt={t.name}
+                width={44}
+                height={44}
+                className="h-11 w-11 rounded-full object-cover"
+              />
             ) : (
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-shell/10 font-display text-shell/70">
                 {t.name.charAt(0)}

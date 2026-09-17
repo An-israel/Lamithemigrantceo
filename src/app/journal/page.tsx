@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { getJournalPosts } from "@/lib/content";
@@ -28,10 +29,15 @@ export default async function JournalPage() {
             href={`/journal/${p.slug}`}
             className="group overflow-hidden rounded-card border border-clay bg-clay no-underline transition-colors hover:border-gold hover:bg-gold"
           >
-            <div className="flex aspect-[16/9] items-center justify-center bg-peach-deep">
+            <div className="relative flex aspect-[16/9] items-center justify-center bg-peach-deep">
               {p.cover_image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={p.cover_image} alt={p.title} className="h-full w-full object-cover" />
+                <Image
+                  src={p.cover_image}
+                  alt={p.title}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                  className="object-cover"
+                />
               ) : (
                 <span className="font-display text-2xl text-ink/40">{p.category}</span>
               )}

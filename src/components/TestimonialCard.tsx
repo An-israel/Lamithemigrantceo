@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Testimonial } from "@/lib/types";
 
 export function TestimonialCard({ t }: { t: Testimonial }) {
@@ -5,10 +6,11 @@ export function TestimonialCard({ t }: { t: Testimonial }) {
     <figure className="card flex min-w-[280px] flex-col p-6 sm:min-w-0">
       <div className="flex items-center gap-3">
         {t.photo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={t.photo}
             alt={t.name}
+            width={48}
+            height={48}
             className="h-12 w-12 rounded-full object-cover"
           />
         ) : (

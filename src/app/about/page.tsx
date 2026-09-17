@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { getSettings } from "@/lib/data";
@@ -55,13 +56,15 @@ export default async function AboutPage() {
       <Section background="clay" className="!pb-10 md:!pb-16">
         <p className="label text-gold-soft">About Lami</p>
         <h1 className="mt-3">The Story Behind The Migrant CEO</h1>
-        <div className="mt-8 aspect-video w-full overflow-hidden rounded-card bg-peach-deep">
+        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-card bg-peach-deep">
           {settings.founder_portrait_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={settings.founder_portrait_url}
               alt="Lami the Migrant CEO"
-              className="h-full w-full object-cover"
+              fill
+              sizes="(min-width: 1024px) 1140px, 100vw"
+              priority
+              className="object-cover"
             />
           ) : (
             <div className="flex h-full items-center justify-center text-ink/50">
@@ -126,13 +129,15 @@ export default async function AboutPage() {
               }`}
             >
               {settings.founder_gallery_urls.map((img, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={i}
-                  src={img}
-                  alt={`Lami the Migrant CEO ${i + 1}`}
-                  className="aspect-square w-full rounded-card object-cover"
-                />
+                <div key={i} className="relative aspect-square w-full">
+                  <Image
+                    src={img}
+                    alt={`Lami the Migrant CEO ${i + 1}`}
+                    fill
+                    sizes="(min-width: 640px) 33vw, 50vw"
+                    className="rounded-card object-cover"
+                  />
+                </div>
               ))}
             </div>
           </div>

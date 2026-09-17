@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ButtonLink } from "@/components/Button";
 import { ProductWaitlist } from "@/components/ProductWaitlist";
 import { formatGBP } from "@/lib/format";
@@ -25,12 +26,15 @@ export function ProductCard({
   return (
     <article className="card flex flex-col overflow-hidden">
       {product.cover_image ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={product.cover_image}
-          alt={`${product.name} cover`}
-          className="aspect-[4/3] w-full object-cover"
-        />
+        <div className="relative aspect-[4/3] w-full">
+          <Image
+            src={product.cover_image}
+            alt={`${product.name} cover`}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover"
+          />
+        </div>
       ) : (
         <CoverPlaceholder name={product.name} />
       )}

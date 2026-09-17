@@ -23,9 +23,12 @@ export function EventWaitlist({
   const [location, setLocation] = useState(locations[0] || "");
   const [done, setDone] = useState(false);
   const [sending, setSending] = useState(false);
+  // Honeypot for basic spam protection.
+  const [company, setCompany] = useState("");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (company) return;
     setSending(true);
     try {
       const parts = [`Waitlist request: ${eventName}`];
@@ -41,6 +44,7 @@ export function EventWaitlist({
           message: parts.join("\n"),
           marketing_opt_in: true,
           source_page: `/events#${eventId}`,
+          company, // honeypot — a real visitor never fills this in
         }),
       });
     } catch {
@@ -111,6 +115,18 @@ export function EventWaitlist({
         rows={2}
         className="field resize-y text-sm"
       />
+      {/* Honeypot — hidden from users, catches bots */}
+      <div className="hidden" aria-hidden>
+        <label>
+          Company
+          <input
+            tabIndex={-1}
+            autoComplete="off"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+          />
+        </label>
+      </div>
       <button
         type="submit"
         disabled={sending}

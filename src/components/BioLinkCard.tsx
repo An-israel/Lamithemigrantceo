@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { formatGBP } from "@/lib/format";
 import { clsx } from "@/lib/clsx";
@@ -122,10 +123,11 @@ export function BioLinkCard({ link }: { link: BioLink }) {
         className="flex items-center gap-3.5 rounded-2xl bg-gradient-to-br from-peach-deep to-gold-bg p-4 no-underline"
       >
         {link.image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={link.image_url}
             alt=""
+            width={44}
+            height={44}
             className="h-11 w-11 shrink-0 rounded-full object-cover"
           />
         ) : (
@@ -170,10 +172,11 @@ export function BioLinkCard({ link }: { link: BioLink }) {
       className="flex items-center gap-3.5 rounded-2xl border border-gold-soft/30 bg-shell/[0.04] px-4 py-3.5 no-underline transition-colors hover:border-gold-soft/60"
     >
       {link.image_url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={link.image_url}
           alt=""
+          width={42}
+          height={42}
           className="h-[42px] w-[42px] shrink-0 rounded-full object-cover"
         />
       ) : (

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { formatGBP } from "@/lib/format";
 import { AddToOrderButton } from "@/components/cart/AddToOrderButton";
@@ -13,10 +14,15 @@ export function WholesaleCard({ b }: { b: WholesaleProduct }) {
   return (
     <article className={`card overflow-hidden ${soldOut ? "opacity-80" : ""}`}>
       <Link href={`/wholesale/${b.slug}`} className="block no-underline">
-        <div className="flex aspect-square w-full items-center justify-center overflow-hidden bg-peach-deep">
+        <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden bg-peach-deep">
           {cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={cover} alt={b.name} className="h-full w-full object-cover" />
+            <Image
+              src={cover}
+              alt={b.name}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
           ) : (
             <span className="font-display text-3xl text-ink/50">
               {b.name.charAt(0)}

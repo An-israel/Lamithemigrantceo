@@ -21,15 +21,18 @@ export function NewsletterForm({
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">(
     "idle"
   );
+  // Honeypot for basic spam protection.
+  const [company, setCompany] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (company) return;
     setState("sending");
     try {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, company }),
       });
       if (!res.ok) throw new Error();
       setState("done");
@@ -66,6 +69,18 @@ export function NewsletterForm({
             : "bg-shell border-line text-ink"
         )}
       />
+      {/* Honeypot — hidden from users, catches bots */}
+      <div className="hidden" aria-hidden>
+        <label>
+          Company
+          <input
+            tabIndex={-1}
+            autoComplete="off"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+          />
+        </label>
+      </div>
       <button
         type="submit"
         disabled={state === "sending"}

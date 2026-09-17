@@ -18,6 +18,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
+  // Honeypot — a real visitor never fills this in. Report success without
+  // writing anything, so scripted submissions get no useful signal back.
+  if (String(body.company || "").trim()) {
+    return NextResponse.json({ ok: true });
+  }
+
   const name = String(body.name || "").trim();
   const email = String(body.email || "").trim();
   if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {

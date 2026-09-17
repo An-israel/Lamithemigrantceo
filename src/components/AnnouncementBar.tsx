@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { SiteSettings } from "@/lib/types";
 
@@ -13,10 +14,11 @@ export function AnnouncementBar({ settings }: { settings: SiteSettings }) {
   const content = (
     <span className="inline-flex items-center gap-2 text-shell">
       {settings.announcement_image_url && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={settings.announcement_image_url}
           alt=""
+          width={20}
+          height={20}
           className="h-5 w-5 shrink-0 rounded-full object-cover"
         />
       )}

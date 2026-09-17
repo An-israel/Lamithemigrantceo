@@ -142,6 +142,17 @@ domain**, then add the records it shows at Lami's registrar. Typically:
 Until the domain is verified, `RESEND_FROM_EMAIL` falls back to Resend's
 onboarding sender (`onboarding@resend.dev`) so testing is not blocked.
 
+### Newsletter → real mailing list
+
+The footer signup adds subscribers to a Resend Audience so they're an actual
+sendable list, not just rows in the enquiries inbox:
+
+1. Resend dashboard → **Audiences → Create audience**.
+2. Copy its id → `RESEND_AUDIENCE_ID` (Vercel env vars + `.env.local`).
+
+Optional: without this, signups still work and are still recorded as
+enquiries, they just won't be added to a list until it's set.
+
 ---
 
 ## 5. Storage (for uploaded program/product images, Release 2)
@@ -158,6 +169,39 @@ on conflict (id) do nothing;
 
 ---
 
+## 6. Backups and staging
+
+**Database backups.** Supabase's free tier keeps no automatic backups beyond
+a few hours of PITR — not enough to recover from a bad migration or an admin
+mistake. Before launch:
+
+- Upgrade to the **Pro** plan (Project Settings → Billing) to get daily
+  backups with 7-day retention, or **Team/Enterprise** for point-in-time
+  recovery to any second.
+- For an extra manual snapshot before anything risky (a migration, a bulk
+  edit), run `supabase db dump --project-ref mnhpprzuheyowtiuibat -f backup.sql`
+  and keep the file somewhere safe.
+
+**Staging environment.** Right now every Vercel Preview deployment (every
+PR) points at the **same** Supabase project as production — there is no
+isolated environment to test against. Before relying on previews for
+real testing:
+
+1. Create a second Supabase project (e.g. `lamithemigrantceo-staging`) and
+   run the same migrations against it.
+2. In Vercel → **Settings → Environment Variables**, scope the
+   `NEXT_PUBLIC_SUPABASE_*` / `SUPABASE_SERVICE_ROLE_KEY` vars to
+   **Production** only, and add a second set scoped to **Preview** pointing
+   at the staging project.
+3. Use Stripe **test** keys and a second Resend audience for the staging
+   project so test traffic never touches real customer data or sends real
+   email.
+
+Until this is set up, treat every preview deployment as if it can write to
+production data — because it can.
+
+---
+
 ## Launch checklist
 
 - [ ] Migrations run, seed reviewed and real content entered from `/admin`.
@@ -165,7 +209,21 @@ on conflict (id) do nothing;
 - [ ] Admin role granted; `/admin` unreachable when logged out / as a student.
 - [ ] Magic-link sign-in works on a phone.
 - [ ] Stripe test purchase completes and an order appears in `/admin/orders`.
-- [ ] Enquiry form sends both emails.
+- [ ] Enquiry form sends both emails (requires the Database Webhook in
+      section 4 to be wired up manually — it isn't created by a migration).
+- [ ] Newsletter signups land in the Resend Audience, not just enquiries
+      (requires `RESEND_AUDIENCE_ID`, section 4).
 - [ ] Domain verified for Resend; SPF + DKIM live.
 - [ ] Privacy / Terms replaced with reviewed copy.
 - [ ] Lighthouse mobile performance ≥ 90.
+- [ ] Supabase Pro (or equivalent) enabled for real backup retention, and a
+      staging project set up per section 6, before this stops being a toy.
+- [ ] **Next.js major-version upgrade.** `npm audit` currently reports a
+      critical unauthenticated RCE (GHSA-2xp9-vwfh-vxw4) in Next's Image
+      Optimization API, only patched at `next@>=15.5.24` — 14.2.35 (installed)
+      is the latest 14.x release and was never patched for it. AVIF output is
+      disabled in `next.config.mjs` as an interim mitigation (the RCE requires
+      AVIF), but the only real fix is upgrading past Next 14, which is a
+      breaking-change migration (async `cookies()`/`params`/`searchParams`,
+      React 19) affecting most routes — plan it as its own tested PR, not a
+      quick patch bump.

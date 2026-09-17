@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useCart } from "@/components/cart/CartProvider";
 import { formatGBP } from "@/lib/format";
 
@@ -82,10 +83,11 @@ export function CartDrawer({
                 <li key={l.id} className="flex gap-4">
                   <div className="h-16 w-16 shrink-0 overflow-hidden rounded-input bg-peach-deep">
                     {l.image && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={l.image}
                         alt={l.name}
+                        width={64}
+                        height={64}
                         className="h-full w-full object-cover"
                       />
                     )}
