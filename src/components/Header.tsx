@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ButtonLink } from "@/components/Button";
@@ -21,11 +22,15 @@ const NAV = [
 
 function Wordmark({ onClick }: { onClick?: () => void }) {
   return (
-    <Link href="/" onClick={onClick} className="whitespace-nowrap no-underline leading-none">
-      <span className="block font-display font-bold text-[22px] text-ink">
-        LAMI
-      </span>
-      <span className="label block">The Migrant CEO</span>
+    <Link href="/" onClick={onClick} className="block whitespace-nowrap no-underline leading-none">
+      <Image
+        src="/brand/lockup-horizontal-color.png"
+        alt="Lami the Migrant CEO"
+        width={547}
+        height={185}
+        priority
+        className="h-9 w-auto md:h-10"
+      />
     </Link>
   );
 }
