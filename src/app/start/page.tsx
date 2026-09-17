@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getBioLinks } from "@/lib/content";
 import { getSettings } from "@/lib/data";
 import { BioLinkCard } from "@/components/BioLinkCard";
@@ -39,10 +40,12 @@ export default async function StartLinksPage() {
           <div className="mt-1.5 h-[108px] w-[108px] rounded-full bg-gradient-to-br from-gold-soft to-gold p-[3px]">
             <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-ink">
               {settings.founder_portrait_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={settings.founder_portrait_url}
                   alt="Lami the Migrant CEO"
+                  width={108}
+                  height={108}
+                  priority
                   className="h-full w-full object-cover"
                 />
               ) : (

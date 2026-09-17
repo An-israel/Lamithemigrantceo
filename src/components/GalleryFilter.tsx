@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Section } from "@/components/Section";
 import { GallerySlider } from "@/components/GallerySlider";
 import { clsx } from "@/lib/clsx";
@@ -55,16 +56,18 @@ export function GalleryFilter({ images }: { images: GalleryImage[] }) {
             <h2 className="text-shell">More from the archive.</h2>
             <div className="mt-8 grid auto-rows-[130px] grid-cols-2 gap-4 sm:grid-cols-4">
               {shown.map((img, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <div
                   key={img.id}
-                  src={img.image_url}
-                  alt={img.caption || img.category}
-                  className={clsx(
-                    "h-full w-full rounded-input object-cover",
-                    spanClass(i)
-                  )}
-                />
+                  className={clsx("relative h-full w-full", spanClass(i))}
+                >
+                  <Image
+                    src={img.image_url}
+                    alt={img.caption || img.category}
+                    fill
+                    sizes="(min-width: 640px) 25vw, 50vw"
+                    className="rounded-input object-cover"
+                  />
+                </div>
               ))}
             </div>
           </Section>

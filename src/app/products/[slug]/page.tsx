@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { BuyButton } from "@/components/BuyButton";
@@ -139,13 +140,15 @@ export default async function ProductDetailPage({
                 <h3 className="mt-10">Gallery</h3>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {product.gallery_images.map((src) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={src}
-                      src={src}
-                      alt={product.name}
-                      className="aspect-square w-full rounded-input object-cover"
-                    />
+                    <div key={src} className="relative aspect-square w-full">
+                      <Image
+                        src={src}
+                        alt={product.name}
+                        fill
+                        sizes="(min-width: 640px) 33vw, 50vw"
+                        className="rounded-input object-cover"
+                      />
+                    </div>
                   ))}
                 </div>
               </>
@@ -155,13 +158,14 @@ export default async function ProductDetailPage({
           {/* Right: sticky buy card */}
           <div>
             <div className="rounded-card border border-line bg-peach-deep p-6 md:sticky md:top-24">
-              <div className="mb-4 aspect-[4/3] w-full overflow-hidden rounded-input bg-peach">
+              <div className="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-input bg-peach">
                 {product.cover_image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={product.cover_image}
                     alt={product.name}
-                    className="h-full w-full object-cover"
+                    fill
+                    sizes="(min-width: 768px) 35vw, 100vw"
+                    className="object-cover"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center font-display text-3xl text-ink/40">

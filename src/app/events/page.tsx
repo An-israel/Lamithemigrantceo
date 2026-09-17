@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { EventWaitlist } from "@/components/EventWaitlist";
@@ -50,10 +51,15 @@ export default async function EventsPage() {
                 href={`/events/${e.slug}`}
                 className="block no-underline transition-colors hover:opacity-90"
               >
-                <div className="flex aspect-[16/9] items-center justify-center bg-peach-deep">
+                <div className="relative flex aspect-[16/9] items-center justify-center bg-peach-deep">
                   {e.cover_image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={e.cover_image} alt={e.name} className="h-full w-full object-cover" />
+                    <Image
+                      src={e.cover_image}
+                      alt={e.name}
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover"
+                    />
                   ) : (
                     <span className="font-display text-2xl text-ink/40">{e.name}</span>
                   )}

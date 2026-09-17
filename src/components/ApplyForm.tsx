@@ -16,9 +16,12 @@ export function ApplyForm({
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  // Honeypot for basic spam protection.
+  const [company, setCompany] = useState("");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (company) return;
     setState("sending");
     setError(null);
     const fd = new FormData(e.currentTarget);
@@ -33,6 +36,7 @@ export function ApplyForm({
           email: fd.get("email"),
           whatsapp: fd.get("whatsapp"),
           answers: { goal: fd.get("goal"), stage: fd.get("stage") },
+          company, // honeypot — a real visitor never fills this in
         }),
       });
       if (!res.ok) {
@@ -76,6 +80,18 @@ export function ApplyForm({
         <option>Scaling</option>
       </select>
       <textarea name="goal" rows={3} placeholder="What do you want to achieve?" className="field resize-y" />
+      {/* Honeypot — hidden from users, catches bots */}
+      <div className="hidden" aria-hidden>
+        <label>
+          Company
+          <input
+            tabIndex={-1}
+            autoComplete="off"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+          />
+        </label>
+      </div>
       {state === "error" && error && <p className="text-sm text-clay">{error}</p>}
       <button type="submit" disabled={state === "sending"} className="btn btn-secondary w-full text-sm">
         {state === "sending" ? "Submitting…" : "Submit application"}

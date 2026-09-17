@@ -56,6 +56,7 @@ export function ContactForm({
           message: data.message,
           marketing_opt_in: data.marketing_opt_in === "on",
           source_page: "/contact",
+          company, // honeypot — a real visitor never fills this in
         }),
       });
       if (!res.ok) {

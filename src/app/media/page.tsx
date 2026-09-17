@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { getSettings } from "@/lib/data";
@@ -32,12 +33,13 @@ export default async function MediaPage() {
 
       <Section background="gold" className="!pt-0">
         {settings.media_headshot_url && (
-          <div className="mb-8 aspect-square w-full max-w-[220px] overflow-hidden rounded-card">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className="relative mb-8 aspect-square w-full max-w-[220px] overflow-hidden rounded-card">
+            <Image
               src={settings.media_headshot_url}
               alt="Lami the Migrant CEO, approved press headshot"
-              className="h-full w-full object-cover"
+              fill
+              sizes="220px"
+              className="object-cover"
             />
           </div>
         )}

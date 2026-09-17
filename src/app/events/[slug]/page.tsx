@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { TicketButton } from "@/components/TicketButton";
@@ -109,13 +110,15 @@ export default async function EventDetailPage({
                 <h3>Gallery.</h3>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {event.gallery_images.map((img, i) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={i}
-                      src={img}
-                      alt={`${event.name} ${i + 1}`}
-                      className="aspect-square w-full rounded-card object-cover"
-                    />
+                    <div key={i} className="relative aspect-square w-full">
+                      <Image
+                        src={img}
+                        alt={`${event.name} ${i + 1}`}
+                        fill
+                        sizes="(min-width: 640px) 33vw, 50vw"
+                        className="rounded-card object-cover"
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
