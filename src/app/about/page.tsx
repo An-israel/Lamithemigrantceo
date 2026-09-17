@@ -2,6 +2,21 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { getSettings } from "@/lib/data";
+import type { GalleryTileSize } from "@/lib/types";
+
+// Photos-per-row the admin picked, capped by however many photos actually
+// exist so a handful of uploads never gets stretched into empty columns.
+const GALLERY_SIZE_COLS: Record<GalleryTileSize, number> = {
+  large: 2,
+  medium: 3,
+  small: 4,
+};
+const GALLERY_GRID_CLASS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-2",
+  3: "grid-cols-2 sm:grid-cols-3",
+  4: "grid-cols-2 sm:grid-cols-4",
+};
 
 export const metadata: Metadata = {
   title: "The Story Behind The Migrant CEO",
@@ -99,8 +114,17 @@ export default async function AboutPage() {
         </div>
 
         {settings.founder_gallery_urls.length > 0 && (
-          <div className="mx-auto mt-16 max-w-4xl">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mx-auto mt-16 max-w-5xl">
+            <div
+              className={`grid gap-4 sm:gap-6 ${
+                GALLERY_GRID_CLASS[
+                  Math.min(
+                    GALLERY_SIZE_COLS[settings.founder_gallery_size],
+                    settings.founder_gallery_urls.length
+                  )
+                ]
+              }`}
+            >
               {settings.founder_gallery_urls.map((img, i) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

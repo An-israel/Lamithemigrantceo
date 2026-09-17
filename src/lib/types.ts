@@ -78,6 +78,8 @@ export interface JournalPost {
 
 export type BioLinkStyle = "simple" | "product" | "resource" | "banner";
 
+export type GalleryTileSize = "small" | "medium" | "large";
+
 export interface BioLink {
   id: string;
   created_at: string;
@@ -261,6 +263,7 @@ export interface SiteSettings {
   receipt_note: string | null;
   founder_portrait_url: string | null;
   founder_gallery_urls: string[];
+  founder_gallery_size: GalleryTileSize;
   media_headshot_url: string | null;
   hero_portrait_url: string | null;
   waitlist_locations: string[];
