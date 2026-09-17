@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "@/lib/clsx";
@@ -100,9 +101,15 @@ export function AdminNav() {
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 bg-ink text-shell md:block">
         <div className="sticky top-0 flex h-screen flex-col p-4">
-          <Link href="/admin" className="mb-6 no-underline">
-            <span className="font-display text-xl font-bold text-shell">LAMI</span>
-            <span className="label block text-gold-soft">Control room</span>
+          <Link href="/admin" className="mb-6 block no-underline">
+            <Image
+              src="/brand/lockup-horizontal-white.png"
+              alt="Lami the Migrant CEO"
+              width={528}
+              height={178}
+              className="h-7 w-auto"
+            />
+            <span className="label mt-2 block text-gold-soft">Control room</span>
           </Link>
 
           <nav className="flex-1 space-y-1 overflow-y-auto">

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import type { SiteSettings } from "@/lib/types";
@@ -41,8 +42,13 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         <div className="grid gap-10 md:grid-cols-4">
           {/* Brand + mission */}
           <div className="md:col-span-1">
-            <span className="block font-display text-[22px] font-bold">LAMI</span>
-            <span className="label block text-gold-soft">The Migrant CEO</span>
+            <Image
+              src="/brand/lockup-stacked-white.png"
+              alt="Lami the Migrant CEO"
+              width={216}
+              height={267}
+              className="h-16 w-auto"
+            />
             <p className="mt-4 max-w-xs text-shell/80">
               Build the Business. Build the Wealth. Build the Legacy. Helping
               African women migrants build businesses and generational wealth.

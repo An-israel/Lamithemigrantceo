@@ -41,8 +41,12 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GB",
     url: siteUrl,
+    images: [{ url: "/brand/og-image.png", width: 1200, height: 630 }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/brand/og-image.png"],
+  },
 };
 
 export default async function RootLayout({
