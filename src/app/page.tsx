@@ -113,10 +113,10 @@ export default async function HomePage() {
             </div>
             <div className="mx-auto w-full max-w-sm pb-6 lg:pb-0">
               <div className="aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
-                {settings.founder_portrait_url ? (
+                {settings.hero_portrait_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={settings.founder_portrait_url}
+                    src={settings.hero_portrait_url}
                     alt="Lami the Migrant CEO"
                     className="h-full w-full object-cover"
                   />
@@ -136,23 +136,39 @@ export default async function HomePage() {
 
       {/* 3. SHORT STORY */}
       <Section background="gold">
-        <div className="mx-auto max-w-prose">
-          <h2>I rebuilt my life, so you can build yours.</h2>
-          <p className="mt-6 text-ink/75">
-            I built and ran businesses in Nigeria for years. In 2022 I moved to
-            the United Kingdom and started again: new country, new rules, and
-            less than £200 to my name. From there I built product businesses, a
-            warehouse wholesale operation, an education programme and a
-            community of women doing the same.
-          </p>
-          <p className="mt-4 text-ink/75">
-            From starting again to building an ecosystem. Business ownership is
-            the beginning. Wealth and legacy are the destination.
-          </p>
-          <div className="mt-6">
-            <Link href="/about" className="text-clay underline underline-offset-4">
-              Read the full story →
-            </Link>
+        <div className="grid items-center gap-14 lg:grid-cols-[2fr_3fr]">
+          <div className="aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
+            {settings.founder_portrait_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={settings.founder_portrait_url}
+                alt="Lami the Migrant CEO"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-ink/50">
+                Founder portrait
+              </div>
+            )}
+          </div>
+          <div className="max-w-prose">
+            <h2>I rebuilt my life, so you can build yours.</h2>
+            <p className="mt-6 text-ink/75">
+              I built and ran businesses in Nigeria for years. In 2022 I moved to
+              the United Kingdom and started again: new country, new rules, and
+              less than £200 to my name. From there I built product businesses, a
+              warehouse wholesale operation, an education programme and a
+              community of women doing the same.
+            </p>
+            <p className="mt-4 text-ink/75">
+              From starting again to building an ecosystem. Business ownership is
+              the beginning. Wealth and legacy are the destination.
+            </p>
+            <div className="mt-6">
+              <Link href="/about" className="text-clay underline underline-offset-4">
+                Read the full story →
+              </Link>
+            </div>
           </div>
         </div>
       </Section>
