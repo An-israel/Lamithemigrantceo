@@ -115,20 +115,19 @@ Admin access is enforced in the middleware **and** in Postgres RLS via the
 
 ## 4. Resend (email)
 
-```bash
-supabase functions deploy notify-enquiry
-supabase secrets set RESEND_API_KEY=re_... \
-  RESEND_FROM_EMAIL="Lami <hello@lamithemigrantceo.com>" \
-  ENQUIRY_NOTIFY_EMAIL=aniekaneazy@gmail.com \
-  SITE_URL=https://YOUR_DOMAIN
-```
+No CLI, no Supabase Edge Function, no Database Webhook — the enquiry-email
+sending lives in `src/app/api/enquiries/route.ts` itself, right after it
+saves the message, so it just needs the same env vars as everything else.
+In Vercel → **Settings → Environment Variables**, add:
 
-Then wire the enquiry notifier to the table:
+- `RESEND_API_KEY` — from Resend dashboard → **API Keys**
+- `RESEND_FROM_EMAIL` — e.g. `Lami <hello@lamithemigrantceo.com>`
+- `ENQUIRY_NOTIFY_EMAIL` — where new-enquiry notifications land, e.g.
+  `aniekaneazy@gmail.com`
 
-Supabase dashboard → **Database → Webhooks → Create a new hook**:
-- Table: `public.enquiries`
-- Events: **Insert**
-- Type: **HTTP Request** → POST to the `notify-enquiry` function URL.
+Redeploy (or just wait for the next push) and both emails — the notification
+to Lami and the "I got your message" confirmation to whoever wrote in — send
+automatically on every enquiry, no further setup.
 
 ### DNS — required before real sending works
 
@@ -209,8 +208,8 @@ production data — because it can.
 - [ ] Admin role granted; `/admin` unreachable when logged out / as a student.
 - [ ] Magic-link sign-in works on a phone.
 - [ ] Stripe test purchase completes and an order appears in `/admin/orders`.
-- [ ] Enquiry form sends both emails (requires the Database Webhook in
-      section 4 to be wired up manually — it isn't created by a migration).
+- [ ] Enquiry form sends both emails (requires `RESEND_API_KEY`,
+      `RESEND_FROM_EMAIL`, `ENQUIRY_NOTIFY_EMAIL` set in Vercel — section 4).
 - [ ] Newsletter signups land in the Resend Audience, not just enquiries
       (requires `RESEND_AUDIENCE_ID`, section 4).
 - [ ] Domain verified for Resend; SPF + DKIM live.
