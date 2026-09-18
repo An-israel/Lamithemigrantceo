@@ -84,28 +84,29 @@ Admin access is enforced in the middleware **and** in Postgres RLS via the
 
 ## 3. Stripe (GBP)
 
+No Supabase CLI needed — the webhook is a Next.js route
+(`src/app/api/stripe-webhook`), deployed automatically with the rest of the
+app whenever you push.
+
 1. Create products/prices are **not** needed — prices come from the database.
 2. Get **test** keys (Dashboard → Developers → API keys):
    - Secret key → `STRIPE_SECRET_KEY`
    - Publishable key → `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
-3. Deploy the webhook function and point Stripe at it:
-
-   ```bash
-   supabase functions deploy stripe-webhook
-   supabase secrets set STRIPE_SECRET_KEY=sk_test_... \
-     SUPABASE_URL=https://mnhpprzuheyowtiuibat.supabase.co \
-     SUPABASE_SERVICE_ROLE_KEY=... \
-     SITE_URL=https://YOUR_DOMAIN
-   ```
+   - Set both in Vercel → Settings → Environment Variables.
+3. Point Stripe at your deployed site:
 
    Stripe dashboard → **Developers → Webhooks → Add endpoint**:
-   - URL: `https://mnhpprzuheyowtiuibat.functions.supabase.co/stripe-webhook`
+   - URL: `https://YOUR_DOMAIN/api/stripe-webhook`
    - Event: `checkout.session.completed`
-   - Copy the signing secret → `supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...`
+   - Copy the signing secret it shows you → set `STRIPE_WEBHOOK_SECRET` in
+     Vercel's environment variables.
 
 4. Test end-to-end with card `4242 4242 4242 4242`.
 5. Only switch to **live** keys once Lami confirms her live, UK-registered
-   Stripe account is ready.
+   Stripe account is ready. Same three variables, just swap `sk_test_...` /
+   `pk_test_...` for the live equivalents and re-point the webhook at a new
+   endpoint using the live keys (Stripe keeps test and live webhooks
+   separate).
 
 > The Next.js `/api/checkout` route returns a friendly "use WhatsApp to enrol"
 > message while `STRIPE_SECRET_KEY` is still the placeholder, so the site never
