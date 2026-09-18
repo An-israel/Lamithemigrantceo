@@ -77,7 +77,9 @@ src/
   middleware.ts   session refresh + /admin & /my guards
 supabase/
   migrations/     schema (0001) + seed (0002), with full RLS
-  functions/      notify-enquiry, create-checkout-session, stripe-webhook
+  functions/      stripe-webhook (create-checkout-session is unused — the
+                  real checkout flow is src/app/api/checkout, a Next.js
+                  route, not this function)
 docs/             deployment guide + Lami's plain-English guide
 ```
 
