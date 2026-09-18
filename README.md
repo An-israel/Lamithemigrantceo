@@ -77,8 +77,6 @@ src/
   middleware.ts   session refresh + /admin & /my guards
 supabase/
   migrations/     schema (0001) + seed (0002), with full RLS
-  functions/      create-checkout-session — unused leftover, the real
-                  checkout flow is src/app/api/checkout, a Next.js route
 docs/             deployment guide + Lami's plain-English guide
 ```
 
