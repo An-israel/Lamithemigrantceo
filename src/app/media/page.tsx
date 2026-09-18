@@ -32,34 +32,40 @@ export default async function MediaPage() {
       </Section>
 
       <Section background="gold" className="!pt-0">
-        {settings.media_headshot_url && (
-          <div className="relative mb-8 aspect-square w-full max-w-[220px] overflow-hidden rounded-card">
-            <Image
-              src={settings.media_headshot_url}
-              alt="Lami the Migrant CEO, approved press headshot"
-              fill
-              sizes="220px"
-              className="object-cover"
-            />
+        <div className="grid gap-8 md:grid-cols-[minmax(0,340px)_1fr] md:items-stretch">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-card bg-peach-deep">
+            {settings.media_headshot_url ? (
+              <Image
+                src={settings.media_headshot_url}
+                alt="Lami the Migrant CEO, approved press headshot"
+                fill
+                sizes="(min-width: 768px) 340px, 100vw"
+                className="object-cover"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-ink/50">
+                Press headshot
+              </div>
+            )}
           </div>
-        )}
-        <div className="grid gap-8 md:grid-cols-2">
-          <div className="card p-6">
-            <h3>Approved name &amp; title</h3>
-            <p className="mt-2 text-muted">
-              <strong>Temitope Olamide Oni Mole</strong>, known publicly as{" "}
-              <strong>Lami the Migrant CEO</strong>, entrepreneur, educator and
-              speaker.
-            </p>
-          </div>
-          <div className="card p-6">
-            <h3>Press contact</h3>
-            <p className="mt-2 text-muted">
-              <a href={`mailto:${email}`}>{email}</a>
-            </p>
-            <ButtonLink href="/contact?type=media" variant="secondary" className="mt-4 text-sm">
-              Media enquiry
-            </ButtonLink>
+          <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+            <div className="card p-6">
+              <h3>Approved name &amp; title</h3>
+              <p className="mt-2 text-muted">
+                <strong>Temitope Olamide Oni Mole</strong>, known publicly as{" "}
+                <strong>Lami the Migrant CEO</strong>, entrepreneur, educator and
+                speaker.
+              </p>
+            </div>
+            <div className="card p-6">
+              <h3>Press contact</h3>
+              <p className="mt-2 text-muted">
+                <a href={`mailto:${email}`}>{email}</a>
+              </p>
+              <ButtonLink href="/contact?type=media" variant="secondary" className="mt-4 text-sm">
+                Media enquiry
+              </ButtonLink>
+            </div>
           </div>
         </div>
 
