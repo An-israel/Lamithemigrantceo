@@ -246,6 +246,71 @@
     font-size: 13px;
   }
 
+  /* Rich text — output of RichTextEditor (product full_description etc),
+     both as rendered on the public page and while being edited in admin. */
+  .rich-content {
+    color: var(--muted);
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .rich-content > * + * {
+    margin-top: 14px;
+  }
+  .rich-content h2 {
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-top: 28px;
+  }
+  .rich-content h3 {
+    font-family: var(--font-karla), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--ink);
+    margin-top: 22px;
+  }
+  .rich-content ul,
+  .rich-content ol {
+    padding-left: 22px;
+  }
+  .rich-content ul {
+    list-style: disc;
+  }
+  .rich-content ol {
+    list-style: decimal;
+  }
+  .rich-content li + li {
+    margin-top: 6px;
+  }
+  .rich-content a {
+    color: var(--clay);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .rich-content strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .rich-content blockquote {
+    border-left: 3px solid var(--gold);
+    padding-left: 16px;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .rich-content-editable {
+    min-height: 160px;
+    outline: none;
+  }
+  .rich-content-editable p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: var(--muted);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
   /* Skip link — off-screen until keyboard-focused, then jumps above the
      header so keyboard/screen-reader users can bypass nav on every page. */
   .skip-link {
