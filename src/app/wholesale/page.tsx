@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { WholesaleFilter } from "@/components/WholesaleFilter";
 import { getBundles } from "@/lib/wholesale";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "GBG Wholesale Hub",
@@ -10,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default async function WholesalePage() {
-  const bundles = await getBundles();
+  const [bundles, siteContent] = await Promise.all([getBundles(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <>
@@ -19,11 +22,7 @@ export default async function WholesalePage() {
           <h1 className="text-shell">
             Buy the stock. <span className="text-gold-soft">Sell it on.</span>
           </h1>
-          <p className="mt-4 text-shell/80">
-            Wholesale bundles of jewelry and accessories, vetted to sell. Every
-            bundle shows the typical resale value up front, so you know your
-            margin before you buy. Restocked monthly.
-          </p>
+          <p className="mt-4 text-shell/80">{c("wholesale.subtext")}</p>
         </div>
       </Section>
 

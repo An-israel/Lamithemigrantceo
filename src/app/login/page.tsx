@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { LoginForm } from "@/components/LoginForm";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -8,18 +10,18 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
   searchParams: { next?: string };
 }) {
+  const siteContent = await getSiteContent();
+  const c = (key: string) => content(siteContent, key);
   return (
     <Section background="shell">
       <div className="mx-auto max-w-md">
         <h1>Sign in.</h1>
-        <p className="mt-4 text-muted">
-          No passwords here. Enter your email and we send you a one-tap link.
-        </p>
+        <p className="mt-4 text-muted">{c("login.subtext")}</p>
         <div className="mt-8">
           <LoginForm next={searchParams.next} />
         </div>

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/Section";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Start Here",
@@ -8,47 +10,20 @@ export const metadata: Metadata = {
     "What are you here to build? Choose your path and get pointed to the right next step.",
 };
 
-// §6.3 — six pathways
+// §6.3 — six pathways. Copy lives in contentRegistry.ts (starthere.N.*),
+// only routing stays here.
 const PATHS = [
-  {
-    q: "I want to start a business",
-    to: "Start Your Product Biz: the self-paced route from nothing to your first paid order.",
-    href: "/products/the-200-starter",
-    cta: "Start Your Product Biz",
-  },
-  {
-    q: "I already run a product business",
-    to: "The GBG Wholesale Hub and growth support.",
-    href: "/ecosystem#wholesale",
-    cta: "Visit the Wholesale Hub",
-  },
-  {
-    q: "I want community and collaboration",
-    to: "African Women Builds: build alongside others.",
-    href: "/movement",
-    cta: "Join the Movement",
-  },
-  {
-    q: "I want to attend an event",
-    to: "Build Her Empire Live and future events.",
-    href: "/events",
-    cta: "View events",
-  },
-  {
-    q: "I want to book Lami",
-    to: "Speaking and working with Lami.",
-    href: "/speaking",
-    cta: "See speaking",
-  },
-  {
-    q: "I want free business resources",
-    to: "Free guides and The Build Letter newsletter.",
-    href: "/resources",
-    cta: "Get resources",
-  },
+  { href: "/products/the-200-starter" },
+  { href: "/ecosystem#wholesale" },
+  { href: "/movement" },
+  { href: "/events" },
+  { href: "/speaking" },
+  { href: "/resources" },
 ];
 
-export default function StartHerePage() {
+export default async function StartHerePage() {
+  const siteContent = await getSiteContent();
+  const c = (key: string) => content(siteContent, key);
   return (
     <Section background="shell">
       <div className="mx-auto max-w-3xl text-center">
@@ -56,25 +31,22 @@ export default function StartHerePage() {
         <h1 className="mt-3">
           What are you here to <span className="text-clay">build</span>?
         </h1>
-        <p className="mt-4 text-muted">
-          One simple question so you never feel lost. Pick what fits you and
-          I&rsquo;ll point you to the right next step.
-        </p>
+        <p className="mt-4 text-muted">{c("starthere.subtext")}</p>
       </div>
 
       <div className="mx-auto mt-12 grid max-w-3xl gap-4">
-        {PATHS.map((p) => (
+        {PATHS.map((p, i) => (
           <Link
-            key={p.q}
+            key={p.href}
             href={p.href}
             className="group flex items-center justify-between gap-4 rounded-card border border-clay bg-clay p-6 no-underline transition-colors hover:border-gold hover:bg-gold"
           >
             <div>
-              <p className="font-display text-xl text-shell group-hover:text-ink">{p.q}</p>
-              <p className="mt-1 text-sm text-shell/70 group-hover:text-ink/70">{p.to}</p>
+              <p className="font-display text-xl text-shell group-hover:text-ink">{c(`starthere.${i}.q`)}</p>
+              <p className="mt-1 text-sm text-shell/70 group-hover:text-ink/70">{c(`starthere.${i}.to`)}</p>
             </div>
             <span className="shrink-0 font-bold text-gold-soft group-hover:text-clay">
-              {p.cta} →
+              {c(`starthere.${i}.cta`)} →
             </span>
           </Link>
         ))}

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ProductFilter } from "@/components/ProductFilter";
 import { Accordion } from "@/components/Accordion";
-import { getProducts } from "@/lib/data";
+import { getProducts, getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ProductsPage() {
-  const products = await getProducts();
+  const [products, siteContent] = await Promise.all([getProducts(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <>
@@ -20,10 +22,7 @@ export default async function ProductsPage() {
         <h1 className="mt-3">
           Three ways to <span className="text-gold-soft">work with Lami.</span>
         </h1>
-        <p className="mt-4 max-w-prose text-shell/80">
-          Every product is built for the same person: someone starting a real
-          product business in the UK on a small budget.
-        </p>
+        <p className="mt-4 max-w-prose text-shell/80">{c("products.subtext")}</p>
       </Section>
 
       <Section background="shell">
@@ -41,10 +40,8 @@ export default async function ProductsPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <h3 className="mt-4 text-shell">Built from real experience</h3>
-            <p className="mt-2 text-sm text-shell/70">
-              Every module comes from what actually worked, not theory.
-            </p>
+            <h3 className="mt-4 text-shell">{c("products.feature.0.h")}</h3>
+            <p className="mt-2 text-sm text-shell/70">{c("products.feature.0.b")}</p>
           </div>
           <div>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -56,10 +53,8 @@ export default async function ProductsPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <h3 className="mt-4 text-shell">You work to your budget</h3>
-            <p className="mt-2 text-sm text-shell/70">
-              Start from around £200. Nothing here assumes deep pockets.
-            </p>
+            <h3 className="mt-4 text-shell">{c("products.feature.1.h")}</h3>
+            <p className="mt-2 text-sm text-shell/70">{c("products.feature.1.b")}</p>
           </div>
           <div>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -71,32 +66,21 @@ export default async function ProductsPage() {
                 strokeLinecap="round"
               />
             </svg>
-            <h3 className="mt-4 text-shell">A community, not a course</h3>
-            <p className="mt-2 text-sm text-shell/70">
-              Every product plugs you into other women building the same thing.
-            </p>
+            <h3 className="mt-4 text-shell">{c("products.feature.2.h")}</h3>
+            <p className="mt-2 text-sm text-shell/70">{c("products.feature.2.b")}</p>
           </div>
         </div>
       </Section>
 
       <Section background="gold">
         <div className="mx-auto max-w-prose">
-          <h2>Questions before you join.</h2>
+          <h2>{c("products.faq.heading")}</h2>
           <div className="mt-8">
             <Accordion
               items={[
-                {
-                  title: "What if I have never sold anything?",
-                  body: "That is exactly who this is built for. We start from your first order.",
-                },
-                {
-                  title: "How much stock money do I need?",
-                  body: "You can start from around £200. We work to your budget, not a fixed one.",
-                },
-                {
-                  title: "Do I get access straight away?",
-                  body: "Yes. Payment gives instant access by email to your student area.",
-                },
+                { title: c("products.faq.0.q"), body: c("products.faq.0.a") },
+                { title: c("products.faq.1.q"), body: c("products.faq.1.a") },
+                { title: c("products.faq.2.q"), body: c("products.faq.2.a") },
               ]}
             />
           </div>

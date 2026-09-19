@@ -8,67 +8,27 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { getTestimonials, getSettings, getSiteContent } from "@/lib/data";
 import { content } from "@/lib/contentRegistry";
 
-// §6.1 Choose your path
+// §6.1 Choose your path — copy for each card lives in contentRegistry.ts
+// (home.paths.N.*), only the routing stays here.
 const PATHS = [
-  {
-    title: "Start a business",
-    body: "You have ambition and a little to start with. Get the first steps.",
-    href: "/start-here",
-    cta: "Start Here",
-  },
-  {
-    title: "Grow a product business",
-    body: "You are selling already and need stock, systems and scale.",
-    href: "/ecosystem#wholesale",
-    cta: "Visit the Wholesale Hub",
-  },
-  {
-    title: "Join the community",
-    body: "Build alongside other African women, not in isolation.",
-    href: "/movement",
-    cta: "Join the Movement",
-  },
-  {
-    title: "Book Lami",
-    body: "A speaker who moves an audience to action, not just applause.",
-    href: "/speaking",
-    cta: "See Speaking",
-  },
-  {
-    title: "Explore resources",
-    body: "Free guides and The Build Letter to get moving today.",
-    href: "/resources",
-    cta: "Get Resources",
-  },
+  { href: "/start-here" },
+  { href: "/ecosystem#wholesale" },
+  { href: "/movement" },
+  { href: "/speaking" },
+  { href: "/resources" },
 ];
 
-// §6.5 The ecosystem
+// §6.5 The ecosystem — copy lives in contentRegistry.ts (home.ecosystem.N.*).
 const ECOSYSTEM = [
-  {
-    name: "GBG Wholesale Hub",
-    body: "Wholesale inventory and product opportunities for resellers and product-business owners.",
-    href: "/ecosystem#wholesale",
-    cta: "Visit the Wholesale Hub",
-  },
-  {
-    name: "African Women Builds",
-    body: "A community and movement helping African women build businesses, wealth and legacy.",
-    href: "/movement",
-    cta: "Join the Movement",
-  },
-  {
-    name: "GBG Academy",
-    body: "Practical business education for people starting and growing product businesses.",
-    href: "/ecosystem#academy",
-    cta: "Explore Products",
-  },
-  {
-    name: "Build Her Empire Live",
-    body: "The flagship in-person experience for ambitious African women business owners.",
-    href: "/ecosystem#build-her-empire",
-    cta: "View the Event",
-  },
+  { href: "/ecosystem#wholesale" },
+  { href: "/movement" },
+  { href: "/ecosystem#academy" },
+  { href: "/ecosystem#build-her-empire" },
 ];
+
+// Impact strip figures — labels/figures live in contentRegistry.ts
+// (home.impact.N.*).
+const IMPACT_STATS = [0, 1, 2];
 
 export default async function HomePage() {
   const [testimonials, settings, siteContent] = await Promise.all([
@@ -180,15 +140,15 @@ export default async function HomePage() {
         <h2>{c("home.paths.heading")}</h2>
         <p className="mt-3 max-w-prose text-shell/75">{c("home.paths.subtext")}</p>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {PATHS.map((p) => (
+          {PATHS.map((p, i) => (
             <Link
-              key={p.title}
+              key={p.href}
               href={p.href}
               className="card flex flex-col p-6 no-underline transition-colors hover:border-clay"
             >
-              <h3 className="text-ink">{p.title}</h3>
-              <p className="mt-2 flex-1 text-muted">{p.body}</p>
-              <span className="mt-4 font-bold text-clay">{p.cta} →</span>
+              <h3 className="text-ink">{c(`home.paths.${i}.title`)}</h3>
+              <p className="mt-2 flex-1 text-muted">{c(`home.paths.${i}.body`)}</p>
+              <span className="mt-4 font-bold text-clay">{c(`home.paths.${i}.cta`)} →</span>
             </Link>
           ))}
         </div>
@@ -210,12 +170,12 @@ export default async function HomePage() {
           </ButtonLink>
         </div>
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {ECOSYSTEM.map((e) => (
-            <div key={e.name} className="card border-t-4 border-t-clay p-6">
-              <h3>{e.name}</h3>
-              <p className="mt-2 text-muted">{e.body}</p>
+          {ECOSYSTEM.map((e, i) => (
+            <div key={e.href} className="card border-t-4 border-t-clay p-6">
+              <h3>{c(`home.ecosystem.${i}.name`)}</h3>
+              <p className="mt-2 text-muted">{c(`home.ecosystem.${i}.body`)}</p>
               <Link href={e.href} className="mt-4 inline-block font-bold text-clay">
-                {e.cta} →
+                {c(`home.ecosystem.${i}.cta`)} →
               </Link>
             </div>
           ))}
@@ -235,16 +195,12 @@ export default async function HomePage() {
           </ButtonLink>
         </div>
         <div className="mt-8 grid grid-cols-3 gap-4 border-y border-shell/15 py-6">
-          {[
-            ["30", "units sold out"],
-            ["£1,000+", "first-revenue milestone"],
-            ["50", "products sold"],
-          ].map(([figure, label]) => (
-            <div key={label} className="text-center">
+          {IMPACT_STATS.map((i) => (
+            <div key={i} className="text-center">
               <p className="font-display text-2xl font-bold text-gold-soft md:text-3xl">
-                {figure}
+                {c(`home.impact.${i}.figure`)}
               </p>
-              <p className="label mt-1 text-shell/70">{label}</p>
+              <p className="label mt-1 text-shell/70">{c(`home.impact.${i}.label`)}</p>
             </div>
           ))}
         </div>

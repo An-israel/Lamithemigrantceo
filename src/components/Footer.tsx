@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { content } from "@/lib/contentRegistry";
 import type { SiteSettings } from "@/lib/types";
 
 const EXPLORE = [
@@ -23,7 +24,14 @@ const WORK = [
   ["/contact", "Contact"],
 ];
 
-export function Footer({ settings }: { settings: SiteSettings }) {
+export function Footer({
+  settings,
+  siteContent,
+}: {
+  settings: SiteSettings;
+  siteContent: Record<string, string>;
+}) {
+  const c = (key: string) => content(siteContent, key);
   const year = new Date().getFullYear();
   const email = settings.public_email || "hello@lamithemigrantceo.com";
   const wa = settings.whatsapp_number
@@ -49,10 +57,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               height={267}
               className="h-16 w-auto"
             />
-            <p className="mt-4 max-w-xs text-shell/80">
-              Build the Business. Build the Wealth. Build the Legacy. Helping
-              African women migrants build businesses and generational wealth.
-            </p>
+            <p className="mt-4 max-w-xs text-shell/80">{c("chrome.footer.mission")}</p>
             <ul className="mt-6 flex gap-4">
               <li>
                 <a href={ig} target="_blank" rel="noopener noreferrer" className="text-shell no-underline hover:text-gold-soft">
@@ -103,9 +108,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           {/* The Build Letter */}
           <div>
             <p className="label mb-2 text-gold-soft">The Build Letter</p>
-            <p className="mb-4 text-shell/80">
-              Practical business, wealth and legacy insights. No fluff.
-            </p>
+            <p className="mb-4 text-shell/80">{c("chrome.footer.buildletter")}</p>
             <NewsletterForm />
           </div>
         </div>
@@ -123,10 +126,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             </div>
           </div>
           {/* TODO(lami): confirm registered company name/number + address for the footer. */}
-          <p className="text-shell/50">
-            Lami the Migrant CEO is the home of African Women Builds and the GBG
-            Wholesale Hub. Company details to be confirmed before launch.
-          </p>
+          <p className="text-shell/50">{c("chrome.footer.companynote")}</p>
           <p className="text-right text-[10px] text-shell/30">
             Built by{" "}
             <a

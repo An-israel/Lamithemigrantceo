@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ContactForm } from "@/components/ContactForm";
-import { getSettings } from "@/lib/data";
+import { getSettings, getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -51,7 +52,8 @@ export default async function ContactPage({
 }: {
   searchParams: { type?: string; note?: string };
 }) {
-  const settings = await getSettings();
+  const [settings, siteContent] = await Promise.all([getSettings(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
   const waDigits = (settings.whatsapp_number || "").replace(/[^0-9]/g, "");
   const initialType =
     searchParams.type && TYPE_LABELS[searchParams.type]
@@ -65,10 +67,7 @@ export default async function ContactPage({
       <h1 className="mt-3">
         Let&rsquo;s <span className="text-clay">talk</span>.
       </h1>
-      <p className="mt-4 max-w-prose text-muted">
-        Choose the right route below and I&rsquo;ll make sure your message
-        reaches the right place. I aim to reply within one working day.
-      </p>
+      <p className="mt-4 max-w-prose text-muted">{c("contact.subtext")}</p>
 
       <div className="mt-10 grid gap-10 md:grid-cols-2">
         <ContactForm initialType={initialType} initialMessage={initialMessage} />
@@ -96,10 +95,7 @@ export default async function ContactPage({
               />
             )}
           </div>
-          <p className="mt-6 text-sm text-muted">
-            For press and speaking, use the form and pick the matching enquiry
-            type so it routes correctly.
-          </p>
+          <p className="mt-6 text-sm text-muted">{c("contact.footnote")}</p>
         </div>
       </div>
     </Section>

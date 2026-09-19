@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { createServiceClient } from "@/lib/supabase/server";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 import type { Order } from "@/lib/types";
 
 export const metadata: Metadata = {
@@ -9,43 +11,46 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-const COPY: Record<
-  "product" | "wholesale" | "unknown",
-  { badge: string; title: string; body: string; primary: { href: string; label: string } }
-> = {
-  product: {
-    badge: "Payment received",
-    title: "You are in.",
-    body: "Your place is confirmed. Check your email for your receipt and joining details. If you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
-    primary: { href: "/my", label: "Go to my product" },
-  },
-  wholesale: {
-    badge: "Order confirmed",
-    title: "Your order is in.",
-    body: "Your payment went through and your bundle is being packed. Check your email for your receipt; tracking details follow once it ships.",
-    primary: { href: "/wholesale", label: "Keep browsing" },
-  },
-  unknown: {
-    badge: "Payment received",
-    title: "You are in.",
-    body: "Your place is confirmed. Check your email for your receipt and joining details. If you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
-    primary: { href: "/my", label: "Go to my products" },
-  },
-};
-
-// Event orders share the "product" shape of copy but point back at events.
-const EVENT_COPY = {
-  badge: "Ticket confirmed",
-  title: "Your ticket is booked.",
-  body: "Your payment went through and your place is booked. Check your email for your ticket and joining details. If you do not see it in a few minutes, look in your spam folder or message Lami on WhatsApp.",
-  primary: { href: "/events", label: "See other events" },
-};
-
 export default async function ThankYouPage({
   searchParams,
 }: {
   searchParams: { session_id?: string };
 }) {
+  const siteContent = await getSiteContent();
+  const c = (key: string) => content(siteContent, key);
+
+  const COPY: Record<
+    "product" | "wholesale" | "unknown",
+    { badge: string; title: string; body: string; primary: { href: string; label: string } }
+  > = {
+    product: {
+      badge: "Payment received",
+      title: "You are in.",
+      body: c("thankyou.product.body"),
+      primary: { href: "/my", label: "Go to my product" },
+    },
+    wholesale: {
+      badge: "Order confirmed",
+      title: "Your order is in.",
+      body: c("thankyou.wholesale.body"),
+      primary: { href: "/wholesale", label: "Keep browsing" },
+    },
+    unknown: {
+      badge: "Payment received",
+      title: "You are in.",
+      body: c("thankyou.product.body"),
+      primary: { href: "/my", label: "Go to my products" },
+    },
+  };
+
+  // Event orders share the "product" shape of copy but point back at events.
+  const EVENT_COPY = {
+    badge: "Ticket confirmed",
+    title: "Your ticket is booked.",
+    body: c("thankyou.event.body"),
+    primary: { href: "/events", label: "See other events" },
+  };
+
   let order: Order | null = null;
   if (searchParams.session_id) {
     try {

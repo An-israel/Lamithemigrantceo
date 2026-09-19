@@ -5,7 +5,8 @@ import { Section } from "@/components/Section";
 import { EventWaitlist } from "@/components/EventWaitlist";
 import { formatGBP } from "@/lib/format";
 import { getEvents, isEventOver } from "@/lib/events";
-import { getSettings } from "@/lib/data";
+import { getSettings, getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -24,8 +25,8 @@ function formatWhen(iso: string | null) {
 }
 
 export default async function EventsPage() {
-  const events = await getEvents();
-  const settings = await getSettings();
+  const [events, settings, siteContent] = await Promise.all([getEvents(), getSettings(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <Section background="shell">
@@ -33,10 +34,7 @@ export default async function EventsPage() {
       <h1 className="mt-3">
         Build <span className="text-clay">in the room</span>.
       </h1>
-      <p className="mt-4 max-w-prose text-muted">
-        In-person experiences where African women build businesses, wealth and
-        community together.
-      </p>
+      <p className="mt-4 max-w-prose text-muted">{c("events.subtext")}</p>
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         {events.map((e) => {

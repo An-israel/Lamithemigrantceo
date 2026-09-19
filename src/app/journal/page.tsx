@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { getJournalPosts } from "@/lib/content";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "The Build Journal",
@@ -11,16 +13,14 @@ export const metadata: Metadata = {
 };
 
 export default async function JournalPage() {
-  const posts = await getJournalPosts();
+  const [posts, siteContent] = await Promise.all([getJournalPosts(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <Section background="shell">
       <p className="label text-clay">The Build Journal</p>
-      <h1 className="mt-3">Business lessons, migration and wealth.</h1>
-      <p className="mt-4 max-w-prose text-muted">
-        Long-form insight and behind-the-scenes thinking on building businesses,
-        wealth and legacy.
-      </p>
+      <h1 className="mt-3">{c("journal.heading")}</h1>
+      <p className="mt-4 max-w-prose text-muted">{c("journal.subtext")}</p>
 
       <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {posts.map((p) => (

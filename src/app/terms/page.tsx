@@ -1,40 +1,30 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Terms",
   description: "Terms of service and refund policy.",
 };
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const siteContent = await getSiteContent();
+  const c = (key: string) => content(siteContent, key);
   return (
     <Section background="shell">
       <div className="mx-auto max-w-prose">
         <h1>Terms</h1>
-        <p className="mt-2 text-sm text-muted">
-          {/* TODO(lami): replace with reviewed copy before launch. */}
-          Placeholder. To be reviewed by a solicitor before launch.
-        </p>
+        <p className="mt-2 text-sm text-muted">{c("terms.notice")}</p>
 
         <h3 className="mt-8">Products and access</h3>
-        <p className="mt-2 text-muted">
-          When you buy a product you get access to its materials as described on
-          its page. Live cohort dates are shown before you pay.
-        </p>
+        <p className="mt-2 text-muted">{c("terms.access")}</p>
 
         <h3 className="mt-8">Refund policy</h3>
-        <p className="mt-2 text-muted">
-          Because products give instant digital access, they are non-refundable
-          once accessed, except where required by UK consumer law. If something
-          is wrong, contact us and we will make it right. This policy is also
-          shown at checkout.
-        </p>
+        <p className="mt-2 text-muted">{c("terms.refund")}</p>
 
         <h3 className="mt-8">Wholesale orders</h3>
-        <p className="mt-2 text-muted">
-          Physical bundles are covered by our shipping and returns terms, shown
-          on each product page.
-        </p>
+        <p className="mt-2 text-muted">{c("terms.wholesale")}</p>
       </div>
     </Section>
   );
