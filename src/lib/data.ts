@@ -240,6 +240,28 @@ export async function getSettings(): Promise<SiteSettings> {
   return DEFAULT_SETTINGS;
 }
 
+/**
+ * All site-wide editable text overrides, as a flat {key: value} map. Pair
+ * with content() from @/lib/contentRegistry to read a key with its
+ * registered default as the fallback.
+ */
+export async function getSiteContent(): Promise<Record<string, string>> {
+  try {
+    const supabase = createClient();
+    const { data } = await supabase.from("site_content").select("key, value");
+    if (data) {
+      const map: Record<string, string> = {};
+      for (const row of data as { key: string; value: string }[]) {
+        map[row.key] = row.value;
+      }
+      return map;
+    }
+  } catch {
+    // fall through to no overrides — pages fall back to their defaults
+  }
+  return {};
+}
+
 // Re-exported for existing server-side callers. Client components should
 // import from "@/lib/format" directly to avoid pulling in server-only code.
 export { formatGBP } from "@/lib/format";

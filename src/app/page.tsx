@@ -5,7 +5,8 @@ import { Section } from "@/components/Section";
 import { TestimonialsSlider } from "@/components/TestimonialsSlider";
 import { AuthorityStrip } from "@/components/AuthorityStrip";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { getTestimonials, getSettings } from "@/lib/data";
+import { getTestimonials, getSettings, getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 // §6.1 Choose your path
 const PATHS = [
@@ -70,10 +71,12 @@ const ECOSYSTEM = [
 ];
 
 export default async function HomePage() {
-  const [testimonials, settings] = await Promise.all([
+  const [testimonials, settings, siteContent] = await Promise.all([
     getTestimonials(),
     getSettings(),
+    getSiteContent(),
   ]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <>
@@ -82,15 +85,19 @@ export default async function HomePage() {
         <div className="mx-auto max-w-content px-5 py-16 md:px-10 md:py-24">
           <div className="grid items-center gap-14 lg:grid-cols-[3fr_2fr]">
             <div>
-              <p className="label text-clay">Lami, The Migrant CEO</p>
-              <h1 className="mt-4 max-w-4xl">
-                Build the Business.{" "}
-                <span className="text-clay">Build the Wealth.</span>{" "}
-                <span className="text-gold">Build the Legacy.</span>
-              </h1>
+              <p className="label text-clay">{c("home.hero.kicker")}</p>
+              {settings.hero_headline ? (
+                <h1 className="mt-4 max-w-4xl">{settings.hero_headline}</h1>
+              ) : (
+                <h1 className="mt-4 max-w-4xl">
+                  Build the Business.{" "}
+                  <span className="text-clay">Build the Wealth.</span>{" "}
+                  <span className="text-gold">Build the Legacy.</span>
+                </h1>
+              )}
               <p className="prose-measure mt-6 text-lg text-muted">
-                Helping African women transform ambition into thriving businesses,
-                financial freedom and generational wealth.
+                {settings.hero_paragraph ||
+                  "Helping African women transform ambition into thriving businesses, financial freedom and generational wealth."}
               </p>
               <p className="prose-measure mt-4 text-muted">
                 I&rsquo;m Lami, The Migrant CEO: entrepreneur, educator, speaker and
@@ -156,18 +163,9 @@ export default async function HomePage() {
             )}
           </div>
           <div className="max-w-prose">
-            <h2>I rebuilt my life, so you can build yours.</h2>
-            <p className="mt-6 text-ink/75">
-              I built and ran businesses in Nigeria for years. In 2022 I moved to
-              the United Kingdom and started again: new country, new rules, and
-              less than £200 to my name. From there I built product businesses, a
-              warehouse wholesale operation, an education programme and a
-              community of women doing the same.
-            </p>
-            <p className="mt-4 text-ink/75">
-              From starting again to building an ecosystem. Business ownership is
-              the beginning. Wealth and legacy are the destination.
-            </p>
+            <h2>{c("home.story.heading")}</h2>
+            <p className="mt-6 text-ink/75">{c("home.story.paragraph1")}</p>
+            <p className="mt-4 text-ink/75">{c("home.story.paragraph2")}</p>
             <div className="mt-6">
               <Link href="/about" className="text-clay underline underline-offset-4">
                 Read the full story →
@@ -179,11 +177,8 @@ export default async function HomePage() {
 
       {/* 4. CHOOSE YOUR PATH */}
       <Section background="clay">
-        <h2>What are you here to build?</h2>
-        <p className="mt-3 max-w-prose text-shell/75">
-          Pick the path that fits where you are. Each one points you to the
-          right next step.
-        </p>
+        <h2>{c("home.paths.heading")}</h2>
+        <p className="mt-3 max-w-prose text-shell/75">{c("home.paths.subtext")}</p>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PATHS.map((p) => (
             <Link
@@ -203,11 +198,12 @@ export default async function HomePage() {
       <Section background="shell">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2>One founder. <span className="text-clay">A whole ecosystem.</span></h2>
-            <p className="mt-3 max-w-prose text-muted">
-              Education, wholesale, community and live events, built to move you
-              from income to ownership.
-            </p>
+            {siteContent["home.ecosystem.heading"]?.trim() ? (
+              <h2>{siteContent["home.ecosystem.heading"]}</h2>
+            ) : (
+              <h2>One founder. <span className="text-clay">A whole ecosystem.</span></h2>
+            )}
+            <p className="mt-3 max-w-prose text-muted">{c("home.ecosystem.subtext")}</p>
           </div>
           <ButtonLink href="/ecosystem" variant="secondary" className="hidden sm:inline-flex">
             Explore the ecosystem
@@ -229,7 +225,7 @@ export default async function HomePage() {
       {/* 6. IMPACT */}
       <Section background="ink">
         <div className="flex items-end justify-between gap-4">
-          <h2>Real people. Real businesses.</h2>
+          <h2>{c("home.impact.heading")}</h2>
           <ButtonLink
             href="/impact"
             variant="secondary"
@@ -261,12 +257,9 @@ export default async function HomePage() {
       <Section background="gold">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
-            <p className="label text-ink/60">Watch my story</p>
-            <h2 className="mt-3">From starting again to building an ecosystem.</h2>
-            <p className="mt-4 text-ink/75">
-              A short introduction to the journey: migration, rebuilding, and
-              the movement it became.
-            </p>
+            <p className="label text-ink/60">{c("home.video.kicker")}</p>
+            <h2 className="mt-3">{c("home.video.heading")}</h2>
+            <p className="mt-4 text-ink/75">{c("home.video.paragraph")}</p>
           </div>
           <div className="aspect-video w-full overflow-hidden rounded-card bg-ink/10">
             {/* TODO(lami): embed the 60–120s brand-story video (YouTube/Vimeo/Mux). */}
@@ -282,20 +275,14 @@ export default async function HomePage() {
         <div className="grid gap-8 md:grid-cols-2">
           <div className="card p-8">
             <h3>Speaking</h3>
-            <p className="mt-2 text-muted">
-              Keynotes, panels and workshops on migration, rebuilding, and
-              building businesses, wealth and legacy.
-            </p>
+            <p className="mt-2 text-muted">{c("home.speaking.paragraph")}</p>
             <ButtonLink href="/speaking" variant="secondary" className="mt-6">
               Book Lami to speak
             </ButtonLink>
           </div>
           <div className="card p-8">
             <h3>Partnerships</h3>
-            <p className="mt-2 text-muted">
-              Brand, media and institutional partnerships that reach an engaged
-              African migrant-business audience.
-            </p>
+            <p className="mt-2 text-muted">{c("home.partnerships.paragraph")}</p>
             <ButtonLink href="/work-with-lami" variant="secondary" className="mt-6">
               Explore partnerships
             </ButtonLink>
@@ -306,11 +293,8 @@ export default async function HomePage() {
       {/* 9. THE BUILD LETTER */}
       <Section background="clay">
         <div className="mx-auto max-w-prose text-center">
-          <h2>The Build Letter.</h2>
-          <p className="mt-4 text-shell/75">
-            Practical business, wealth and legacy insights, straight to your
-            inbox. No fluff, no filler.
-          </p>
+          <h2>{c("home.buildletter.heading")}</h2>
+          <p className="mt-4 text-shell/75">{c("home.buildletter.subtext")}</p>
           <div className="mx-auto mt-8 max-w-md">
             <NewsletterForm
               theme="dark"
@@ -323,7 +307,7 @@ export default async function HomePage() {
       {/* 10. FINAL CTA — ivory, so it doesn't repeat the footer's black right after it */}
       <Section background="shell">
         <div className="mx-auto max-w-prose text-center">
-          <h2>Your next chapter can start here.</h2>
+          <h2>{c("home.finalcta.heading")}</h2>
           <div className="mt-8 flex justify-center gap-3">
             <ButtonLink
               href="/start-here"
