@@ -3,8 +3,9 @@ import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { ProofGallery } from "@/components/ProofGallery";
-import { getTestimonials } from "@/lib/data";
+import { getTestimonials, getSiteContent } from "@/lib/data";
 import { getImpactStats } from "@/lib/content";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Impact",
@@ -12,18 +13,16 @@ export const metadata: Metadata = {
     "Over 500 people directly supported, impact approaching 1,000. Real numbers and real business stories.",
 };
 
-const OUTCOMES = [
-  "Businesses started after viewers watched Lami's livestreams and educational videos.",
-  "Course and mentorship outcomes across starting and scaling.",
-  "Wholesale customers who have launched or expanded product businesses.",
-  "Community member stories shared inside African Women Builds.",
-];
+// Copy lives in contentRegistry.ts (impact.outcomes.N)
+const OUTCOME_INDEXES = [0, 1, 2, 3];
 
 export default async function ImpactPage() {
-  const [stats, testimonials] = await Promise.all([
+  const [stats, testimonials, siteContent] = await Promise.all([
     getImpactStats(),
     getTestimonials(),
+    getSiteContent(),
   ]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <>
@@ -33,10 +32,7 @@ export default async function ImpactPage() {
           <h1 className="mt-3 text-shell">
             The <span className="text-gold-soft">proof</span> behind the story.
           </h1>
-          <p className="mt-4 text-shell/80">
-            Numbers matter, but so do the people behind them. Over 500 people
-            directly supported, with total impact approaching 1,000.
-          </p>
+          <p className="mt-4 text-shell/80">{c("impact.subtext")}</p>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">
           {stats.map((s) => (
@@ -52,12 +48,12 @@ export default async function ImpactPage() {
 
       {/* Outcomes */}
       <Section background="shell">
-        <h2>What that support turns into.</h2>
+        <h2>{c("impact.outcomes.heading")}</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {OUTCOMES.map((o) => (
-            <div key={o} className="card flex gap-3 p-6">
+          {OUTCOME_INDEXES.map((i) => (
+            <div key={i} className="card flex gap-3 p-6">
               <span className="text-clay" aria-hidden>✓</span>
-              <p>{o}</p>
+              <p>{c(`impact.outcomes.${i}`)}</p>
             </div>
           ))}
         </div>
@@ -65,20 +61,16 @@ export default async function ImpactPage() {
 
       {/* Human stories */}
       <Section background="clay">
-        <h2>In their words.</h2>
-        <p className="mt-2 text-sm text-shell/70">
-          Real businesses. Real sales. Real results.
-        </p>
+        <h2>{c("impact.stories.heading")}</h2>
+        <p className="mt-2 text-sm text-shell/70">{c("impact.stories.subtext")}</p>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
             <TestimonialCard key={t.id} t={t} />
           ))}
         </div>
 
-        <h3 className="mt-14">The real messages.</h3>
-        <p className="mt-2 text-sm text-shell/70">
-          Unedited proof, straight from the community.
-        </p>
+        <h3 className="mt-14">{c("impact.messages.heading")}</h3>
+        <p className="mt-2 text-sm text-shell/70">{c("impact.messages.subtext")}</p>
         <div className="mt-6">
           <ProofGallery />
         </div>
@@ -86,7 +78,7 @@ export default async function ImpactPage() {
 
       <Section background="shell">
         <div className="mx-auto max-w-prose text-center">
-          <h2>Be the next story.</h2>
+          <h2>{c("impact.finalcta.heading")}</h2>
           <div className="mt-8 flex justify-center gap-3">
             <ButtonLink href="/start-here">Start Here</ButtonLink>
             <ButtonLink href="/ecosystem" variant="secondary">See the ecosystem</ButtonLink>

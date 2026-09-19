@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
-import { getTestimonials } from "@/lib/data";
+import { getTestimonials, getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Speaking",
@@ -10,19 +11,12 @@ export const metadata: Metadata = {
     "Book Lami to inspire action, not just applause. Keynotes on migration, rebuilding, business, wealth and legacy.",
 };
 
-// §6.7 speaking topics
-const TOPICS = [
-  "Starting Again Without Starting Small: Rebuilding After Migration",
-  "From Less Than £200 to a Business Ecosystem",
-  "The Truth About Building a Product-Based Business in the UK",
-  "How African Women Can Build Businesses, Wealth and Legacy",
-  "Community, Collaboration and the Power of Collective Buying",
-  "Building a Personal Brand That Creates Business Opportunities",
-  "From Business Income to Asset Ownership",
-];
+// §6.7 speaking topics — copy lives in contentRegistry.ts (speaking.topics.N)
+const TOPIC_INDEXES = [0, 1, 2, 3, 4, 5, 6];
 
 export default async function SpeakingPage() {
-  const testimonials = await getTestimonials();
+  const [testimonials, siteContent] = await Promise.all([getTestimonials(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <>
@@ -32,11 +26,7 @@ export default async function SpeakingPage() {
           <h1 className="mt-3 text-shell">
             Book Lami to <span className="text-gold-soft">Inspire Action</span>, not Just Applause.
           </h1>
-          <p className="mt-4 text-shell/80">
-            A credible speaker with a real story and practical expertise, for
-            audiences of ambitious founders, migrants and women building
-            businesses.
-          </p>
+          <p className="mt-4 text-shell/80">{c("speaking.subtext")}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ButtonLink
               href="/contact?type=speaking"
@@ -59,9 +49,11 @@ export default async function SpeakingPage() {
       <Section background="shell">
         <h2>Signature talks.</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {TOPICS.map((t, i) => (
+          {TOPIC_INDEXES.map((i) => {
+            const t = c(`speaking.topics.${i}`);
+            return (
             <div
-              key={t}
+              key={i}
               className="group flex gap-4 rounded-card border border-clay bg-clay p-6 transition-colors hover:border-gold hover:bg-gold"
             >
               <span className="label text-gold-soft group-hover:text-clay">
@@ -79,7 +71,8 @@ export default async function SpeakingPage() {
                 </Link>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </Section>
 
@@ -89,27 +82,23 @@ export default async function SpeakingPage() {
           <div>
             <h2>Experience.</h2>
             <ul className="mt-6 space-y-3 text-ink/75">
-              <li className="flex gap-3">
-                <span className="text-clay" aria-hidden>✓</span>
-                Speaker at Enry Live and Direct in Birmingham, organised by OREP Limited.
-              </li>
-              <li className="flex gap-3">
-                <span className="text-clay" aria-hidden>✓</span>
-                Founder and host of Build Her Empire Live, Liverpool, 15 August 2026.
-              </li>
-              <li className="flex gap-3">
-                <span className="text-clay" aria-hidden>✓</span>
-                10+ years building and running businesses across Nigeria and the UK.
-              </li>
+              {[0, 1, 2].map((i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="text-clay" aria-hidden>✓</span>
+                  {c(`speaking.experience.${i}`)}
+                </li>
+              ))}
             </ul>
           </div>
           <div>
             <h2>Right for audiences of.</h2>
             <ul className="mt-6 space-y-3 text-ink/75">
-              <li className="flex gap-3"><span className="text-clay" aria-hidden>✓</span>African women migrants and diaspora communities</li>
-              <li className="flex gap-3"><span className="text-clay" aria-hidden>✓</span>Aspiring and early-stage founders</li>
-              <li className="flex gap-3"><span className="text-clay" aria-hidden>✓</span>Universities, councils and entrepreneurship programmes</li>
-              <li className="flex gap-3"><span className="text-clay" aria-hidden>✓</span>Women&rsquo;s empowerment and enterprise events</li>
+              {[0, 1, 2, 3].map((i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="text-clay" aria-hidden>✓</span>
+                  {c(`speaking.audience.${i}`)}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -136,11 +125,8 @@ export default async function SpeakingPage() {
       {/* Booking CTA */}
       <Section background="ink">
         <div className="mx-auto max-w-prose text-center">
-          <h2 className="text-shell">Bring Lami to your stage.</h2>
-          <p className="mt-4 text-shell/80">
-            Tell me about your event, audience and date and I&rsquo;ll come back
-            with availability and options.
-          </p>
+          <h2 className="text-shell">{c("speaking.cta.heading")}</h2>
+          <p className="mt-4 text-shell/80">{c("speaking.cta.subtext")}</p>
           <div className="mt-8 flex justify-center">
             <ButtonLink
               href="/contact?type=speaking"

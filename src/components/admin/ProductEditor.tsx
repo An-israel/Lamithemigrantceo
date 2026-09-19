@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { MultiImageUploader } from "@/components/admin/MultiImageUploader";
 import { RepeatableRows } from "@/components/admin/RepeatableRows";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import type { Product, ProductFormat, ProductStatus } from "@/lib/types";
 
 function slugify(s: string) {
@@ -129,11 +130,9 @@ export function ProductEditor({ product }: { product: Product }) {
       </Field>
 
       <Field label="Full description">
-        <textarea
+        <RichTextEditor
           value={form.full_description}
-          onChange={(e) => set("full_description", e.target.value)}
-          rows={5}
-          className="field resize-y"
+          onChange={(html) => set("full_description", html)}
         />
       </Field>
 

@@ -1,47 +1,33 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
   description: "How Lami the Migrant CEO handles your data.",
 };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const siteContent = await getSiteContent();
+  const c = (key: string) => content(siteContent, key);
   return (
     <Section background="shell">
       <div className="mx-auto max-w-prose">
         <h1>Privacy policy</h1>
-        <p className="mt-2 text-sm text-muted">
-          {/* TODO(lami): replace this placeholder with copy from a solicitor
-              or a UK-compliant template service before launch. */}
-          Placeholder. To be reviewed by a solicitor before launch.
-        </p>
+        <p className="mt-2 text-sm text-muted">{c("privacy.notice")}</p>
 
         <h3 className="mt-8">What we collect</h3>
-        <p className="mt-2 text-muted">
-          When you contact us or buy a product we collect your name, email, and
-          any details you choose to share. Payments are handled by Stripe; we do
-          not store your card details.
-        </p>
+        <p className="mt-2 text-muted">{c("privacy.collect")}</p>
 
         <h3 className="mt-8">How we use it</h3>
-        <p className="mt-2 text-muted">
-          To reply to you, deliver what you bought, and, only if you opt in,
-          send occasional emails about new products. You can unsubscribe at any
-          time.
-        </p>
+        <p className="mt-2 text-muted">{c("privacy.use")}</p>
 
         <h3 className="mt-8">Analytics</h3>
-        <p className="mt-2 text-muted">
-          We measure page visits without cookies and without storing your IP
-          address, so there is no tracking that would require a consent banner.
-        </p>
+        <p className="mt-2 text-muted">{c("privacy.analytics")}</p>
 
         <h3 className="mt-8">Your rights</h3>
-        <p className="mt-2 text-muted">
-          You can ask us to show, correct, or delete the data we hold about you.
-          Email the address on our contact page.
-        </p>
+        <p className="mt-2 text-muted">{c("privacy.rights")}</p>
       </div>
     </Section>
   );

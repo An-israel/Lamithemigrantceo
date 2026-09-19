@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { GalleryFilter } from "@/components/GalleryFilter";
 import { getGalleryImages } from "@/lib/content";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Gallery",
@@ -10,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default async function GalleryPage() {
-  const images = await getGalleryImages();
+  const [images, siteContent] = await Promise.all([getGalleryImages(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <>
@@ -19,9 +22,7 @@ export default async function GalleryPage() {
         <h1 className="mt-3">
           Moments <span className="text-clay">from the build</span>.
         </h1>
-        <p className="mt-4 max-w-prose text-ink/75">
-          Events, the warehouse, and life behind the scenes.
-        </p>
+        <p className="mt-4 max-w-prose text-ink/75">{c("gallery.subtext")}</p>
       </Section>
 
       {images.length === 0 ? (

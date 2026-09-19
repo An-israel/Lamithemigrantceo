@@ -33,6 +33,7 @@ const GROUPS: Group[] = [
     id: "content",
     label: "Content & Site",
     items: [
+      { href: "/admin/content", label: "Page text" },
       { href: "/admin/journal", label: "Journal" },
       { href: "/admin/resources", label: "Resources" },
       { href: "/admin/links", label: "Links" },

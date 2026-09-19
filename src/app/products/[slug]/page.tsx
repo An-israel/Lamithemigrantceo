@@ -8,6 +8,7 @@ import { ApplyForm } from "@/components/ApplyForm";
 import { Accordion } from "@/components/Accordion";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { ProductWaitlist } from "@/components/ProductWaitlist";
+import { RichText } from "@/components/RichText";
 import {
   getProductBySlug,
   getProducts,
@@ -94,7 +95,7 @@ export default async function ProductDetailPage({
           {/* Left: details */}
           <div>
             <h1>{product.name}</h1>
-            <p className="mt-4 text-muted">{product.full_description}</p>
+            <RichText html={product.full_description} className="mt-4" />
 
             <h3 className="mt-10">What you get</h3>
             <ul className="mt-4 space-y-3">
