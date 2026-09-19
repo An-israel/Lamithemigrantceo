@@ -43,6 +43,9 @@ export async function POST(request: Request) {
 
   const stripe = new Stripe(secret, { apiVersion: "2024-06-20" });
   const supabase = createServiceClient();
+  // Sessions expire in an hour instead of Stripe's 24h default, so an
+  // abandoned checkout email can go out promptly (see /api/stripe-webhook).
+  const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
 
   try {
     // --- Event ticket checkout -------------------------------------------
@@ -77,7 +80,13 @@ export async function POST(request: Request) {
             },
           },
         ],
-        metadata: { item_type: "event", item_id: event.id },
+        metadata: {
+          item_type: "event",
+          item_id: event.id,
+          item_name: `${event.name} ticket`,
+          resume_path: `/events/${event.slug}`,
+        },
+        expires_at: expiresAt,
         success_url: `${siteUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${siteUrl}/events/${event.slug}`,
       });
@@ -113,7 +122,13 @@ export async function POST(request: Request) {
             },
           },
         ],
-        metadata: { item_type: "product", item_id: product.id },
+        metadata: {
+          item_type: "product",
+          item_id: product.id,
+          item_name: product.name,
+          resume_path: `/products/${product.slug}`,
+        },
+        expires_at: expiresAt,
         success_url: `${siteUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${siteUrl}/checkout-cancelled?product=${product.slug}`,
       });
@@ -190,7 +205,16 @@ export async function POST(request: Request) {
         // Compact {id, quantity} pairs so the webhook can decrement stock
         // and record what was bought, without hitting Stripe's 500-char
         // per-value metadata limit.
-        metadata: { item_type: "wholesale", items: JSON.stringify(orderedItems) },
+        metadata: {
+          item_type: "wholesale",
+          items: JSON.stringify(orderedItems),
+          item_name:
+            orderedItems.length === 1
+              ? products.find((p) => p.id === orderedItems[0].i)?.name || "Wholesale order"
+              : `Wholesale order (${orderedItems.length} bundles)`,
+          resume_path: "/wholesale",
+        },
+        expires_at: expiresAt,
         success_url: `${siteUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${siteUrl}/wholesale`,
       });
