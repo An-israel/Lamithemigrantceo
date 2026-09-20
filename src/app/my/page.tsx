@@ -4,7 +4,8 @@ import { Section } from "@/components/Section";
 import { ButtonLink } from "@/components/Button";
 import { SignOutButton } from "@/components/SignOutButton";
 import { createClient } from "@/lib/supabase/server";
-import { formatGBP } from "@/lib/data";
+import { formatGBP, getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 import type { Order, Product } from "@/lib/types";
 
 export const metadata: Metadata = {
@@ -14,9 +15,11 @@ export const metadata: Metadata = {
 
 export default async function MyPage() {
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [{ data: { user } }, siteContent] = await Promise.all([
+    supabase.auth.getUser(),
+    getSiteContent(),
+  ]);
+  const c = (key: string) => content(siteContent, key);
 
   // Middleware guarantees a signed-in user here, but guard anyway.
   const firstName =
@@ -59,10 +62,8 @@ export default async function MyPage() {
 
       {products.length === 0 ? (
         <div className="mt-10 rounded-card border border-line bg-peach p-8 text-center">
-          <p className="font-display text-2xl">Nothing here yet.</p>
-          <p className="mt-2 text-muted">
-            When you join a product it shows up here with all your materials.
-          </p>
+          <p className="font-display text-2xl">{c("my.empty.heading")}</p>
+          <p className="mt-2 text-muted">{c("my.empty.subtext")}</p>
           <div className="mt-6 flex justify-center">
             <ButtonLink href="/products">See the products</ButtonLink>
           </div>

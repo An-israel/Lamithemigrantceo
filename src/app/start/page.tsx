@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getBioLinks } from "@/lib/content";
-import { getSettings } from "@/lib/data";
+import { getSettings, getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 import { BioLinkCard } from "@/components/BioLinkCard";
 import { NewsletterForm } from "@/components/NewsletterForm";
 
@@ -18,7 +19,8 @@ export const metadata: Metadata = {
  * reads as a proper storefront rather than a flat list.
  */
 export default async function StartLinksPage() {
-  const [links, settings] = await Promise.all([getBioLinks(), getSettings()]);
+  const [links, settings, siteContent] = await Promise.all([getBioLinks(), getSettings(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
 
   const quickLinks = links.filter((l) => l.style === "simple");
   const products = links.filter((l) => l.style === "product" && l.product);
@@ -60,7 +62,7 @@ export default async function StartLinksPage() {
           </div>
 
           <p className="max-w-[270px] text-center text-sm leading-relaxed text-shell/80">
-            Build the Business. Build the Wealth. Build the Legacy.
+            {c("start.tagline")}
           </p>
 
           {(ig || tt) && (
@@ -116,9 +118,9 @@ export default async function StartLinksPage() {
         {/* NEWSLETTER */}
         <div className="flex flex-col gap-3.5 rounded-[20px] border border-shell/10 bg-shell/[0.045] px-5 py-6">
           <div className="text-center">
-            <div className="font-display text-lg font-semibold">Subscribe to updates.</div>
+            <div className="font-display text-lg font-semibold">{c("start.newsletter.heading")}</div>
             <p className="mt-1.5 text-[12.5px] leading-relaxed text-shell/65">
-              New drops, free tools and business insight, straight to your inbox.
+              {c("start.newsletter.subtext")}
             </p>
           </div>
           <NewsletterForm

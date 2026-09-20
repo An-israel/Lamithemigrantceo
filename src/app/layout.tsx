@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { SiteFrame } from "@/components/SiteFrame";
 import { PageViewTracker } from "@/components/PageViewTracker";
-import { getSettings } from "@/lib/data";
+import { getSettings, getSiteContent } from "@/lib/data";
 
 // Variable font: when `axes` are set, `weight` must not be pinned — the wght
 // axis stays variable and we pick 500 / 700 in CSS.
@@ -54,7 +54,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const settings = await getSettings();
+  const [settings, siteContent] = await Promise.all([getSettings(), getSiteContent()]);
 
   return (
     <html lang="en-GB" className={`${fraunces.variable} ${karla.variable}`}>
@@ -66,7 +66,7 @@ export default async function RootLayout({
               <Header settings={settings} />
             </>
           }
-          footer={<Footer settings={settings} />}
+          footer={<Footer settings={settings} siteContent={siteContent} />}
           whatsappNumber={settings.whatsapp_number}
         >
           {children}

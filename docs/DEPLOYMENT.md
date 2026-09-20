@@ -97,12 +97,18 @@ app whenever you push.
 
    Stripe dashboard → **Developers → Webhooks → Add endpoint**:
    - URL: `https://YOUR_DOMAIN/api/stripe-webhook`
-   - Event: `checkout.session.completed`
+   - Events: `checkout.session.completed` **and** `checkout.session.expired`
+     (the second one triggers the abandoned-checkout email — tick both
+     boxes, don't just pick one)
    - Copy the signing secret it shows you → set `STRIPE_WEBHOOK_SECRET` in
      Vercel's environment variables.
 
 4. Test end-to-end with card `4242 4242 4242 4242`.
-5. Only switch to **live** keys once Lami confirms her live, UK-registered
+5. Also set `RESEND_API_KEY` and `RESEND_FROM_EMAIL` (section 4 below) —
+   without them, orders/tickets still save correctly, but no confirmation
+   or abandoned-checkout email will send. This is silent by design (a
+   missing email should never break a real payment), so it's easy to miss.
+6. Only switch to **live** keys once Lami confirms her live, UK-registered
    Stripe account is ready. Same three variables, just swap `sk_test_...` /
    `pk_test_...` for the live equivalents and re-point the webhook at a new
    endpoint using the live keys (Stripe keeps test and live webhooks
@@ -208,7 +214,14 @@ production data — because it can.
 - [ ] Receipt numbers, stats band and prices **confirmed true** with Lami.
 - [ ] Admin role granted; `/admin` unreachable when logged out / as a student.
 - [ ] Magic-link sign-in works on a phone.
-- [ ] Stripe test purchase completes and an order appears in `/admin/orders`.
+- [ ] Stripe test purchase completes, an order appears in `/admin/orders`,
+      **and the payment-confirmation email actually arrives** (requires
+      `RESEND_API_KEY`/`RESEND_FROM_EMAIL` — the purchase itself will look
+      fine even if these are missing, since a failed email never blocks
+      the order).
+- [ ] Start a test checkout and abandon it — the "did you mean to finish?"
+      email arrives about an hour later (requires `checkout.session.expired`
+      enabled on the Stripe webhook, section 3).
 - [ ] Enquiry form sends both emails (requires `RESEND_API_KEY`,
       `RESEND_FROM_EMAIL`, `ENQUIRY_NOTIFY_EMAIL` set in Vercel — section 4).
 - [ ] Newsletter signups land in the Resend Audience, not just enquiries

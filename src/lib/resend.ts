@@ -7,7 +7,12 @@ const FROM = process.env.RESEND_FROM_EMAIL || "Lami <onboarding@resend.dev>";
  * RESEND_API_KEY isn't set yet, and never throws — a failed notification
  * email should never take down the request that triggered it.
  */
-export async function sendEmail(to: string, subject: string, text: string) {
+export async function sendEmail(
+  to: string,
+  subject: string,
+  text: string,
+  html?: string
+) {
   if (!RESEND_API_KEY) return;
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -16,7 +21,7 @@ export async function sendEmail(to: string, subject: string, text: string) {
         Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from: FROM, to, subject, text }),
+      body: JSON.stringify({ from: FROM, to, subject, text, ...(html ? { html } : {}) }),
     });
     if (!res.ok) {
       console.error("Resend error", await res.text());

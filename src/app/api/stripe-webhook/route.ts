@@ -2,17 +2,28 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/resend";
+import { orderConfirmationEmail, abandonedCheckoutEmail } from "@/lib/emailTemplates";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://lamithemigrantceo.uk";
 
 /**
  * Stripe calls this directly (no Supabase Edge Function / Database Webhook
- * involved) on checkout.session.completed. Verifies the signature, then:
- *   - inserts an order (idempotent on stripe_session_id)
- *   - increments ticket/decrements stock counts
- *   - emails a payment confirmation
+ * involved). Verifies the signature, then handles two events:
+ *
+ *   checkout.session.completed — inserts an order (idempotent on
+ *   stripe_session_id), increments ticket/decrements stock counts, and
+ *   emails a payment confirmation.
+ *
+ *   checkout.session.expired — checkout sessions expire 1 hour after
+ *   creation (set in /api/checkout) instead of Stripe's 24h default, so
+ *   this fires promptly for anyone who starts paying and doesn't finish.
+ *   Emails a "did you mean to finish?" nudge with a link back to the item,
+ *   only if Stripe captured an email before they left.
  *
  * Configure in the Stripe dashboard: Developers → Webhooks → Add endpoint,
- * URL <your-domain>/api/stripe-webhook, event checkout.session.completed.
- * Copy the signing secret into STRIPE_WEBHOOK_SECRET (Vercel env vars).
+ * URL <your-domain>/api/stripe-webhook, events checkout.session.completed
+ * AND checkout.session.expired. Copy the signing secret into
+ * STRIPE_WEBHOOK_SECRET (Vercel env vars).
  */
 export async function POST(request: Request) {
   const secret = process.env.STRIPE_SECRET_KEY;
@@ -110,19 +121,33 @@ export async function POST(request: Request) {
       // on_auth_user_created trigger), so nothing to insert here.
 
       if (email) {
-        await sendEmail(
-          email,
-          "You are in — payment confirmed",
-          [
-            `Hi ${name.split(" ")[0] || "there"},`,
-            ``,
-            `Your payment of £${amount.toFixed(2)} is confirmed and your place is booked.`,
-            `I will email your joining details shortly. Sign in any time to see your products.`,
-            ``,
-            `Lami`,
-          ].join("\n")
-        );
+        const { subject, text, html } = orderConfirmationEmail({
+          name,
+          itemName: session.metadata?.item_name || "Your order",
+          amountGbp: amount,
+          siteUrl: SITE_URL,
+        });
+        await sendEmail(email, subject, text, html);
       }
+    }
+  }
+
+  if (event.type === "checkout.session.expired") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const email = session.customer_details?.email || session.customer_email || "";
+    const name = session.customer_details?.name || "";
+    const amount = (session.amount_total ?? 0) / 100;
+
+    // Nothing to email if they left before Stripe ever captured an address.
+    if (email) {
+      const resumePath = session.metadata?.resume_path || "/";
+      const { subject, text, html } = abandonedCheckoutEmail({
+        name,
+        itemName: session.metadata?.item_name || "Your order",
+        amountGbp: amount,
+        resumeUrl: `${SITE_URL}${resumePath}`,
+      });
+      await sendEmail(email, subject, text, html);
     }
   }
 

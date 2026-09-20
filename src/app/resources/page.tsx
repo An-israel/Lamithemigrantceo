@@ -4,6 +4,8 @@ import { Section } from "@/components/Section";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { ResourceRequestForm } from "@/components/ResourceRequestForm";
 import { getResources } from "@/lib/content";
+import { getSiteContent } from "@/lib/data";
+import { content } from "@/lib/contentRegistry";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -12,7 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ResourcesPage() {
-  const resources = await getResources();
+  const [resources, siteContent] = await Promise.all([getResources(), getSiteContent()]);
+  const c = (key: string) => content(siteContent, key);
 
   return (
     <>
@@ -22,10 +25,7 @@ export default async function ResourcesPage() {
           <h1 className="mt-3">
             Free tools to <span className="text-clay">help you build</span>.
           </h1>
-          <p className="mt-4 text-ink/75">
-            Practical guides you can use today, plus The Build Letter for
-            ongoing insights. Grab what you need.
-          </p>
+          <p className="mt-4 text-ink/75">{c("resources.subtext")}</p>
         </div>
       </Section>
 
@@ -45,11 +45,8 @@ export default async function ResourcesPage() {
       <Section background="ink">
         <div className="mx-auto max-w-prose text-center">
           <p className="label text-gold-soft">The Build Letter</p>
-          <h2 className="mt-3 text-shell">Get the guides and the insights.</h2>
-          <p className="mt-4 text-shell/80">
-            Join The Build Letter and I&rsquo;ll send practical business, wealth
-            and legacy insights, plus the free resources above.
-          </p>
+          <h2 className="mt-3 text-shell">{c("resources.buildletter.heading")}</h2>
+          <p className="mt-4 text-shell/80">{c("resources.buildletter.subtext")}</p>
           <div className="mx-auto mt-8 max-w-md">
             <NewsletterForm cta="Join The Build Letter" />
           </div>
@@ -58,11 +55,8 @@ export default async function ResourcesPage() {
 
       <Section background="shell">
         <div className="mx-auto max-w-prose text-center">
-          <h2>Prefer to read?</h2>
-          <p className="mt-4 text-muted">
-            The Build Journal has longer articles on business, migration and
-            wealth.
-          </p>
+          <h2>{c("resources.journal.heading")}</h2>
+          <p className="mt-4 text-muted">{c("resources.journal.subtext")}</p>
           <div className="mt-6">
             <Link href="/journal" className="font-bold text-clay">
               Read The Build Journal →
