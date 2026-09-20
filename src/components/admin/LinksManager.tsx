@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import type { BioLink, BioLinkStyle, Product, Resource } from "@/lib/types";
@@ -136,6 +137,11 @@ export function LinksManager({
                   <p className="mt-1 text-xs text-muted">
                     Price, compare-at price, duration and image come straight from
                     the product and update automatically if you change them there.
+                    Edit the product&rsquo;s cover image in{" "}
+                    <Link href="/admin/products" className="underline">
+                      Products
+                    </Link>
+                    .
                   </p>
                 </div>
               )}
@@ -156,7 +162,12 @@ export function LinksManager({
                     ))}
                   </select>
                   <p className="mt-1 text-xs text-muted">
-                    Image and description come straight from the resource.
+                    Image and description come straight from the resource. Add
+                    or change the cover image in{" "}
+                    <Link href="/admin/resources" className="underline">
+                      Resources
+                    </Link>{" "}
+                    (each resource has a &ldquo;Card image&rdquo; field).
                   </p>
                 </div>
               )}
