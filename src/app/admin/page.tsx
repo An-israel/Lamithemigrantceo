@@ -26,6 +26,7 @@ export default async function AdminDashboard() {
   let ordersThisMonth: Order[] = [];
   let recentEnquiries: Enquiry[] = [];
   let recentOrders: Order[] = [];
+  let problemsToday = 0;
 
   try {
     const [{ count: enqCount }, { data: monthOrders }, { data: enq }, { data: ord }] =
@@ -59,11 +60,34 @@ export default async function AdminDashboard() {
     // Tables not ready — show zeros.
   }
 
+  try {
+    const { count } = await supabase
+      .from("service_log")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "failed")
+      .gte("created_at", new Date(Date.now() - 864e5).toISOString());
+    problemsToday = count || 0;
+  } catch {
+    // Service log not set up yet.
+  }
+
   const revenue = ordersThisMonth.reduce((sum, o) => sum + (o.amount_gbp || 0), 0);
 
   return (
     <>
       <h1>Dashboard</h1>
+
+      {problemsToday > 0 && (
+        <Link
+          href="/admin/service-log?status=failed"
+          className="mt-6 block rounded-card border border-[#9b2c1f] bg-[#9b2c1f]/5 p-4 text-sm text-ink no-underline"
+        >
+          <span className="font-bold text-[#9b2c1f]">
+            {problemsToday} problem{problemsToday === 1 ? "" : "s"} in the last 24 hours
+          </span>{" "}
+          — a payment, email or form didn&rsquo;t go through. Open the service log →
+        </Link>
+      )}
 
       <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
         <StatCard label="New enquiries this week" value={String(newEnquiries)} />

@@ -69,7 +69,21 @@ Go to **Analytics**. Pick a time range at the top (7 days, 30 days, and so on).
 
 _(Analytics arrives in Release 3.)_
 
-## 6. Change your details or the homepage
+## 6. Check that payments and emails went through
+
+Go to **Overview → Service log**. It lists everything the site did on its own,
+newest first: payments, checkouts started and abandoned, every email sent (or
+not sent, and why), form submissions and order updates.
+
+- **Setup health** at the top shows a green / gold / red dot for each service.
+  Red means something isn't switched on — the line tells you exactly which.
+- If a buyer says "I never got my email", search their email address. A
+  **failed** or **skipped** tag says why.
+- If the dashboard shows "problems in the last 24 hours", click it to jump
+  straight to them.
+- **Download CSV** keeps a copy for your records.
+
+## 7. Change your details or the homepage
 
 Go to **Settings**. You can change your WhatsApp number, email, booking link
 and social handles, and edit the homepage headline and paragraph — no developer

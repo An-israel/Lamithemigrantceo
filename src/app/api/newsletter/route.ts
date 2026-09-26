@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
+import { logEvent, errorText } from "@/lib/serviceLog";
 
 /**
  * Footer "free starter list" capture. Adds the subscriber to a real Resend
@@ -12,7 +13,16 @@ import { rateLimit, clientIp } from "@/lib/rateLimit";
 async function addToResendAudience(email: string) {
   const apiKey = process.env.RESEND_API_KEY;
   const audienceId = process.env.RESEND_AUDIENCE_ID;
-  if (!apiKey || !audienceId) return;
+  if (!apiKey || !audienceId) {
+    await logEvent({
+      category: "form",
+      event: "newsletter.audience_skipped",
+      status: "skipped",
+      summary: `${email} not added to the Resend mailing list: RESEND_AUDIENCE_ID is not set (saved in Enquiries instead)`,
+      ref: email,
+    });
+    return;
+  }
 
   try {
     const res = await fetch(
@@ -27,9 +37,26 @@ async function addToResendAudience(email: string) {
       }
     );
     if (!res.ok) {
-      console.error("Resend audience add failed", await res.text());
+      const error = (await res.text()).slice(0, 500);
+      console.error("Resend audience add failed", error);
+      await logEvent({
+        category: "form",
+        event: "newsletter.audience_failed",
+        status: "failed",
+        summary: `${email} could not be added to the Resend mailing list (Resend ${res.status})`,
+        ref: email,
+        detail: { error },
+      });
     }
   } catch (e) {
+    await logEvent({
+      category: "form",
+      event: "newsletter.audience_failed",
+      status: "failed",
+      summary: `${email} could not be added to the Resend mailing list (could not reach Resend)`,
+      ref: email,
+      detail: { error: errorText(e) },
+    });
     // Never fail the signup over the ESP call — the enquiries row is the
     // fallback record of who asked to be added.
     console.error("Resend audience add errored", e);
@@ -72,11 +99,27 @@ export async function POST(request: Request) {
     });
     if (error) throw error;
 
+    await logEvent({
+      category: "form",
+      event: "newsletter.signup",
+      status: "success",
+      summary: `Build Letter signup: ${email}`,
+      ref: email,
+    });
+
     await addToResendAudience(email);
 
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error("newsletter insert failed", e);
+    await logEvent({
+      category: "form",
+      event: "newsletter.save_failed",
+      status: "failed",
+      summary: `Build Letter signup for ${email} could NOT be saved`,
+      ref: email,
+      detail: { error: errorText(e) },
+    });
     return NextResponse.json({ error: "Could not sign you up." }, { status: 500 });
   }
 }
