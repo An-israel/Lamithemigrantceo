@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
+import { logEvent, errorText } from "@/lib/serviceLog";
 
 /** Captures an African Women Builds community join/waitlist request. */
 export async function POST(request: Request) {
@@ -37,9 +38,24 @@ export async function POST(request: Request) {
       status: "new",
     });
     if (error) throw error;
+    await logEvent({
+      category: "form",
+      event: "membership.received",
+      status: "success",
+      summary: `African Women Builds join request from ${name}`,
+      ref: email,
+    });
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error("membership insert failed", e);
+    await logEvent({
+      category: "form",
+      event: "membership.save_failed",
+      status: "failed",
+      summary: `Join request from ${name} (${email}) could NOT be saved`,
+      ref: email,
+      detail: { error: errorText(e) },
+    });
     return NextResponse.json({ error: "Could not sign you up." }, { status: 500 });
   }
 }

@@ -3,6 +3,20 @@ import Stripe from "stripe";
 import { createServiceClient } from "@/lib/supabase/server";
 import { isEventOver } from "@/lib/events";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
+import { logEvent, errorText } from "@/lib/serviceLog";
+
+async function logCheckoutStarted(session: Stripe.Checkout.Session, itemType: string) {
+  const amount = (session.amount_total ?? 0) / 100;
+  const itemName = session.metadata?.item_name || itemType;
+  await logEvent({
+    category: "checkout",
+    event: "checkout.started",
+    status: "info",
+    summary: `Checkout started: ${itemName} (£${amount.toFixed(2)})`,
+    ref: session.id,
+    detail: { item_type: itemType, item_name: itemName, amount_gbp: amount, livemode: session.livemode },
+  });
+}
 
 /**
  * Creates a Stripe Checkout Session in GBP for either:
@@ -23,6 +37,12 @@ export async function POST(request: Request) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   if (!secret || secret.includes("your_key")) {
+    await logEvent({
+      category: "checkout",
+      event: "checkout.not_configured",
+      status: "failed",
+      summary: "Someone tried to pay but STRIPE_SECRET_KEY is not set — checkout is switched off",
+    });
     return NextResponse.json(
       { error: "Payments are not switched on yet. Please use WhatsApp to enrol." },
       { status: 503 }
@@ -91,6 +111,7 @@ export async function POST(request: Request) {
         cancel_url: `${siteUrl}/events/${event.slug}`,
       });
 
+      await logCheckoutStarted(session, "event");
       return NextResponse.json({ url: session.url });
     }
 
@@ -133,6 +154,7 @@ export async function POST(request: Request) {
         cancel_url: `${siteUrl}/checkout-cancelled?product=${product.slug}`,
       });
 
+      await logCheckoutStarted(session, "product");
       return NextResponse.json({ url: session.url });
     }
 
@@ -219,12 +241,20 @@ export async function POST(request: Request) {
         cancel_url: `${siteUrl}/wholesale`,
       });
 
+      await logCheckoutStarted(session, "wholesale");
       return NextResponse.json({ url: session.url });
     }
 
     return NextResponse.json({ error: "Unknown item." }, { status: 400 });
   } catch (e) {
     console.error("checkout failed", e);
+    await logEvent({
+      category: "checkout",
+      event: "checkout.error",
+      status: "failed",
+      summary: `Could not start a ${body.type || "unknown"} checkout — the buyer saw an error`,
+      detail: { type: body.type ?? null, product_id: body.productId ?? null, event_id: body.eventId ?? null, error: errorText(e) },
+    });
     return NextResponse.json(
       { error: "Could not start checkout. Please try again or use WhatsApp." },
       { status: 500 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
+import { logEvent, errorText } from "@/lib/serviceLog";
 
 /** Captures a restock-alert email for a sold-out wholesale bundle. */
 export async function POST(request: Request) {
@@ -19,11 +20,27 @@ export async function POST(request: Request) {
       typeof productId === "string" && !productId.startsWith("w-seed-")
         ? productId
         : null;
-    await supabase
+    const { error } = await supabase
       .from("restock_alerts")
       .insert({ email, product_id: realId });
+    if (error) throw error;
+    await logEvent({
+      category: "form",
+      event: "restock.requested",
+      status: "success",
+      summary: `Restock alert requested by ${email}`,
+      ref: email,
+      detail: { product_id: realId },
+    });
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (e) {
+    await logEvent({
+      category: "form",
+      event: "restock.save_failed",
+      status: "failed",
+      summary: "A restock-alert request could NOT be saved",
+      detail: { error: errorText(e) },
+    });
     return NextResponse.json({ error: "Could not save." }, { status: 500 });
   }
 }

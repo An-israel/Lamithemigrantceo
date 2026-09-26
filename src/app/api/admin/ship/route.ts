@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/auth";
 import { createServiceClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/resend";
+import { logEvent } from "@/lib/serviceLog";
 
 /**
  * Updates an order's fulfilment status (and tracking). When the status moves
@@ -30,37 +32,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Update failed." }, { status: 500 });
   }
 
+  await logEvent({
+    category: "order",
+    event: "order.status_changed",
+    status: "info",
+    summary: `Order for ${order?.email || "unknown buyer"} marked "${fulfilment_status}" by ${admin.email}${tracking_number ? ` (tracking ${tracking_number})` : ""}`,
+    ref: orderId,
+    detail: { fulfilment_status, tracking_number: tracking_number || null, by: admin.email },
+  });
+
   // Email the customer on shipment (best-effort).
   if (fulfilment_status === "shipped" && order?.email) {
-    const key = process.env.RESEND_API_KEY;
-    if (key && !key.includes("your_key")) {
-      try {
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${key}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: process.env.RESEND_FROM_EMAIL || "Lami <onboarding@resend.dev>",
-            to: order.email,
-            subject: "Your order is on its way",
-            text: [
-              `Hi ${(order.name || "there").split(" ")[0]},`,
-              ``,
-              `Good news, your order has shipped.`,
-              tracking_number ? `Tracking number: ${tracking_number}` : "",
-              ``,
-              `Lami`,
-            ]
-              .filter(Boolean)
-              .join("\n"),
-          }),
-        });
-      } catch {
-        // don't fail the request if the email doesn't send
-      }
-    }
+    await sendEmail({
+      to: order.email,
+      subject: "Your order is on its way",
+      text: [
+        `Hi ${(order.name || "there").split(" ")[0]},`,
+        ``,
+        `Good news, your order has shipped.`,
+        tracking_number ? `Tracking number: ${tracking_number}` : "",
+        ``,
+        `Lami`,
+      ]
+        .filter(Boolean)
+        .join("\n"),
+      kind: "shipping_notice",
+      label: "Shipping notice",
+      ref: orderId,
+    });
   }
 
   return NextResponse.json({ ok: true });

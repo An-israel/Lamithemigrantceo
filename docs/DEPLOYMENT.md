@@ -24,6 +24,10 @@ Supabase dashboard → **SQL editor** → paste and run, in order:
    `memberships` (African Women Builds join), `applications` (programme
    applications), `ventures` (future ventures), and the
    `increment_tickets_sold` RPC. Seeds Build Her Empire Live.
+6. Every later file in number order, `0006_…` through `0019_…`. The two
+   newest: `0018_site_content.sql` (the **Page text** editor) and
+   `0019_service_log.sql` (the **Service log** — payments, emails, forms and
+   errors, in admin under Overview). Each is safe to re-run.
 
 Running `0003` also creates the image-upload bucket, so the admin editors work
 out of the box — you can skip the manual bucket step in section 5.

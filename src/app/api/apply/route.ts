@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
+import { logEvent, errorText } from "@/lib/serviceLog";
 
 /** Stores a product application (§11 Phase 4). */
 export async function POST(request: Request) {
@@ -49,9 +50,25 @@ export async function POST(request: Request) {
       status: "new",
     });
     if (error) throw error;
+    await logEvent({
+      category: "form",
+      event: "application.received",
+      status: "success",
+      summary: `New application${body.product_name ? ` for ${String(body.product_name)}` : ""} from ${name}`,
+      ref: email,
+      detail: { product_id: productId, product_name: body.product_name ?? null },
+    });
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error("application insert failed", e);
+    await logEvent({
+      category: "form",
+      event: "application.save_failed",
+      status: "failed",
+      summary: `Application from ${name} (${email}) could NOT be saved`,
+      ref: email,
+      detail: { error: errorText(e) },
+    });
     return NextResponse.json({ error: "Could not submit your application." }, { status: 500 });
   }
 }

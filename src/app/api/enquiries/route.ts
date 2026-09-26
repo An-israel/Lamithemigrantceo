@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
 import { sendEmail } from "@/lib/resend";
+import { logEvent, errorText } from "@/lib/serviceLog";
 
 const NOTIFY_TO = process.env.ENQUIRY_NOTIFY_EMAIL || "";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://lamithemigrantceo.com";
@@ -77,11 +78,28 @@ export async function POST(request: Request) {
     if (error) throw error;
   } catch (e) {
     console.error("enquiry insert failed", e);
+    await logEvent({
+      category: "form",
+      event: "enquiry.save_failed",
+      status: "failed",
+      summary: `Enquiry from ${name} (${email}) could NOT be saved — they were told to use WhatsApp`,
+      ref: email,
+      detail: { topic, error: errorText(e) },
+    });
     return NextResponse.json(
       { error: "Could not save your message. Please try WhatsApp instead." },
       { status: 500 }
     );
   }
+
+  await logEvent({
+    category: "form",
+    event: "enquiry.received",
+    status: "success",
+    summary: `New ${topic} enquiry from ${name}`,
+    ref: email,
+    detail: { topic, organisation, event_date: eventDate, budget_range: budgetRange, source_page: sourcePage },
+  });
 
   // Email both sides. Best-effort — the enquiry is already saved, so a
   // failed send here never loses the message, it just delays the reply.
@@ -104,13 +122,29 @@ export async function POST(request: Request) {
       `Open in admin: ${SITE_URL}/admin/enquiries`,
       `Reply: mailto:${email}`,
     ].join("\n");
-    await sendEmail(NOTIFY_TO, `New enquiry: ${topic} from ${name}`, adminBody);
+    await sendEmail({
+      to: NOTIFY_TO,
+      subject: `New enquiry: ${topic} from ${name}`,
+      text: adminBody,
+      replyTo: email,
+      kind: "enquiry_notification",
+      label: "New-enquiry alert to Lami",
+      ref: email,
+    });
+  } else {
+    await logEvent({
+      category: "email",
+      event: "email.enquiry_notification",
+      status: "skipped",
+      summary: `New-enquiry alert not sent: ENQUIRY_NOTIFY_EMAIL is not set`,
+      ref: email,
+    });
   }
 
-  await sendEmail(
-    email,
-    "I got your message",
-    [
+  await sendEmail({
+    to: email,
+    subject: "I got your message",
+    text: [
       `Hi ${name.split(" ")[0]},`,
       ``,
       `Thank you for reaching out — I have your message and I reply within one working day.`,
@@ -118,8 +152,10 @@ export async function POST(request: Request) {
       ``,
       `Lami`,
       SITE_URL,
-    ].join("\n")
-  );
+    ].join("\n"),
+    kind: "enquiry_acknowledgement",
+    label: "Enquiry acknowledgement",
+  });
 
   return NextResponse.json({ ok: true });
 }

@@ -17,6 +17,7 @@ const GROUPS: Group[] = [
     items: [
       { href: "/admin", label: "Dashboard" },
       { href: "/admin/analytics", label: "Analytics" },
+      { href: "/admin/service-log", label: "Service log" },
     ],
   },
   {
