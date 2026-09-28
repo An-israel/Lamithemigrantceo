@@ -1,7 +1,10 @@
+import { configuredFrom, senderProblem } from "@/lib/sender";
+
 /**
  * Configuration checks for the Service log page. Server-only: reads env
- * vars but only ever reports whether each is set (and Stripe's test/live
- * mode) — never a value.
+ * vars but only reports whether each is set (and Stripe's test/live mode)
+ * — never a key or secret. Non-secret addresses (sender, alert inbox, site
+ * URL) are shown so mistakes in them can be spotted.
  */
 export type HealthLevel = "ok" | "warn" | "missing";
 export type HealthCheck = { name: string; level: HealthLevel; detail: string };
@@ -13,7 +16,8 @@ function set(v: string | undefined) {
 export function configurationChecks(): HealthCheck[] {
   const stripeKey = process.env.STRIPE_SECRET_KEY;
   const resendKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL;
+  const from = configuredFrom();
+  const fromProblem = senderProblem();
 
   const stripeMode = !set(stripeKey)
     ? null
@@ -47,10 +51,12 @@ export function configurationChecks(): HealthCheck[] {
     },
     {
       name: "Sender address",
-      level: set(from) ? "ok" : "warn",
-      detail: set(from)
-        ? `Emails are sent from ${from}.`
-        : "RESEND_FROM_EMAIL is not set — using Resend's test sender, which only delivers to the Resend account owner. Verify your domain in Resend and set it.",
+      level: fromProblem ? "missing" : set(from) ? "ok" : "warn",
+      detail: fromProblem
+        ? `RESEND_FROM_EMAIL is set to ${JSON.stringify(process.env.RESEND_FROM_EMAIL ?? "")}, which Resend rejects: ${fromProblem}. Every email fails until this is fixed. In Vercel, change it to exactly Lami <hello@yourdomain> (no quotes), using a domain verified in Resend, then redeploy.`
+        : set(from)
+          ? `Emails are sent from ${from}. Its domain must show "Verified" in Resend → Domains, or Resend rejects every email.`
+          : "RESEND_FROM_EMAIL is not set — using Resend's test sender, which only delivers to the Resend account owner. Verify your domain in Resend and set it.",
     },
     {
       name: "Enquiry alerts",
