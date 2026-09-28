@@ -183,3 +183,72 @@ export function abandonedCheckoutEmail(params: {
 
   return { subject: "Did you mean to finish checking out?", html, text };
 }
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+export function freeResourceEmail(params: {
+  title: string;
+  /** Direct file or video link, when the resource has one. */
+  accessUrl: string | null;
+  kind: "file" | "video" | "none";
+  resourcesUrl: string;
+}) {
+  const title = escapeHtml(params.title);
+  const cta =
+    params.kind === "file" ? "Download your guide" : params.kind === "video" ? "Watch now" : "View free resources";
+  const link = params.accessUrl || params.resourcesUrl;
+  const lead =
+    params.kind === "none"
+      ? "Thank you for requesting it. I'll send it to this address shortly."
+      : "Here it is, as promised. Keep this email so you can come back to it any time.";
+
+  const html = wrap(`
+    <tr>
+      <td style="padding:8px 32px 0;">
+        <p style="margin:0; font-family:Georgia, 'Times New Roman', serif; font-size:24px; line-height:1.3; color:${BRAND.ink};">
+          Your free resource is here.
+        </p>
+        <p style="margin:16px 0 0; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:1.6; color:${BRAND.muted};">
+          ${lead}
+        </p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px; border:1px solid ${BRAND.line}; border-radius:12px;">
+          <tr>
+            <td style="padding:18px 20px;">
+              <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; letter-spacing:0.08em; text-transform:uppercase; color:${BRAND.gold};">
+                Free resource
+              </p>
+              <p style="margin:6px 0 0; font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight:bold; color:${BRAND.ink};">
+                ${title}
+              </p>
+            </td>
+          </tr>
+        </table>
+        ${params.kind === "none" ? "" : button(cta, escapeHtml(link))}
+        <p style="margin:24px 0 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.6; color:${BRAND.muted};">
+          Questions about getting started? Just reply to this email. I read them myself.
+        </p>
+        <p style="margin:16px 0 0; font-family:Arial, Helvetica, sans-serif; font-size:15px; color:${BRAND.ink};">
+          Lami
+        </p>
+      </td>
+    </tr>
+  `);
+
+  const text = [
+    `Your free resource is here.`,
+    ``,
+    params.kind === "none" ? lead : `${params.title}: ${link}`,
+    ``,
+    `Questions about getting started? Just reply to this email. I read them myself.`,
+    ``,
+    `Lami`,
+  ].join("\n");
+
+  return { subject: `Your free resource: ${params.title}`, html, text };
+}

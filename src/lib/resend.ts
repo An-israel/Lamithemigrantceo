@@ -1,8 +1,19 @@
 import { logEvent, errorText } from "@/lib/serviceLog";
+import { senderAddress, senderProblem } from "@/lib/sender";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 // Falls back to Resend's onboarding sender until the domain is verified.
-const FROM = process.env.RESEND_FROM_EMAIL || "Lami <onboarding@resend.dev>";
+const FROM = senderAddress();
+
+/** Pulls Resend's own explanation out of an error response body. */
+function resendMessage(body: string): string {
+  try {
+    const parsed = JSON.parse(body) as { message?: string; name?: string };
+    return parsed.message || parsed.name || body;
+  } catch {
+    return body;
+  }
+}
 
 export function emailConfigured(): boolean {
   return !!RESEND_API_KEY && !RESEND_API_KEY.includes("your_key");
@@ -64,11 +75,18 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
     if (!res.ok) {
       const error = (await res.text()).slice(0, 500);
       console.error("Resend error", error);
+      const reason = resendMessage(error).slice(0, 200);
+      const problem = senderProblem();
       await logEvent({
         ...base,
         status: "failed",
-        summary: `${label} to ${to} failed (Resend ${res.status})`,
-        detail: { ...detail, http_status: res.status, error },
+        summary: `${label} to ${to} failed (Resend ${res.status}: ${reason})`,
+        detail: {
+          ...detail,
+          http_status: res.status,
+          error,
+          ...(problem ? { likely_cause: `RESEND_FROM_EMAIL ${problem}` } : {}),
+        },
       });
       return { ok: false, error };
     }

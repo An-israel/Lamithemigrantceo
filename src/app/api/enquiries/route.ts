@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
 import { sendEmail } from "@/lib/resend";
+import { freeResourceEmail } from "@/lib/emailTemplates";
 import { logEvent, errorText } from "@/lib/serviceLog";
 
 const NOTIFY_TO = process.env.ENQUIRY_NOTIFY_EMAIL || "";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://lamithemigrantceo.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://lamithemigrantceo.uk";
 
 /**
  * Stores a contact-form submission and emails both Lami and the enquirer
@@ -59,6 +60,11 @@ export async function POST(request: Request) {
   const marketingOptIn = Boolean(body.marketing_opt_in);
   const sourcePage = body.source_page ? String(body.source_page) : null;
   const trimmedMessage = message.slice(0, 1000);
+  const isResource = topic === "Resource";
+  const resourceId =
+    typeof body.resource_id === "string" && /^[0-9a-f-]{36}$/i.test(body.resource_id)
+      ? body.resource_id
+      : null;
 
   try {
     const supabase = createServiceClient();
@@ -92,11 +98,30 @@ export async function POST(request: Request) {
     );
   }
 
+  // Free-resource downloads come through this route too; look the resource
+  // up so the requester is emailed the actual file/video, not a generic reply.
+  let resource: { title: string; file_url: string | null; video_url: string | null } | null = null;
+  if (isResource && resourceId) {
+    try {
+      const { data } = await createServiceClient()
+        .from("resources")
+        .select("title, file_url, video_url")
+        .eq("id", resourceId)
+        .maybeSingle();
+      resource = data;
+    } catch {
+      resource = null;
+    }
+  }
+  const resourceTitle = resource?.title || trimmedMessage.replace(/^Requested:\s*/, "");
+
   await logEvent({
     category: "form",
-    event: "enquiry.received",
+    event: isResource ? "resource.requested" : "enquiry.received",
     status: "success",
-    summary: `New ${topic} enquiry from ${name}`,
+    summary: isResource
+      ? `Free resource requested: ${resourceTitle} by ${email}`
+      : `New ${topic} enquiry from ${name}`,
     ref: email,
     detail: { topic, organisation, event_date: eventDate, budget_range: budgetRange, source_page: sourcePage },
   });
@@ -105,7 +130,7 @@ export async function POST(request: Request) {
   // failed send here never loses the message, it just delays the reply.
   if (NOTIFY_TO) {
     const adminBody = [
-      `New enquiry from ${name}`,
+      isResource ? `Free resource downloaded: ${resourceTitle}` : `New enquiry from ${name}`,
       ``,
       `Type:     ${topic}`,
       `Email:    ${email}`,
@@ -124,7 +149,9 @@ export async function POST(request: Request) {
     ].join("\n");
     await sendEmail({
       to: NOTIFY_TO,
-      subject: `New enquiry: ${topic} from ${name}`,
+      subject: isResource
+        ? `Free resource downloaded: ${resourceTitle} (${email})`
+        : `New enquiry: ${topic} from ${name}`,
       text: adminBody,
       replyTo: email,
       kind: "enquiry_notification",
@@ -139,6 +166,26 @@ export async function POST(request: Request) {
       summary: `New-enquiry alert not sent: ENQUIRY_NOTIFY_EMAIL is not set`,
       ref: email,
     });
+  }
+
+  if (isResource) {
+    const kind = resource?.file_url ? "file" : resource?.video_url ? "video" : "none";
+    const { subject, text, html } = freeResourceEmail({
+      title: resourceTitle,
+      accessUrl: resource?.file_url || resource?.video_url || null,
+      kind,
+      resourcesUrl: `${SITE_URL}/resources${resourceId ? `#${resourceId}` : ""}`,
+    });
+    await sendEmail({
+      to: email,
+      subject,
+      text,
+      html,
+      kind: "free_resource",
+      label: "Free resource email",
+      ref: resourceId ?? undefined,
+    });
+    return NextResponse.json({ ok: true });
   }
 
   await sendEmail({

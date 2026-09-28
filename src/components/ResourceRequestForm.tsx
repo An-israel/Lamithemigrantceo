@@ -28,6 +28,7 @@ export function ResourceRequestForm({ resource }: { resource: Resource }) {
           email,
           topic: "Resource",
           message: `Requested: ${resource.title}`,
+          resource_id: resource.id,
           marketing_opt_in: true,
           source_page: `/resources#${resource.id}`,
         }),
