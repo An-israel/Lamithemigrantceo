@@ -12,6 +12,7 @@ import {
   type ServiceLogRow,
 } from "@/lib/serviceLogQuery";
 import { ServiceLogClearButton } from "@/components/admin/ServiceLogClearButton";
+import { TestEmailButton } from "@/components/admin/TestEmailButton";
 
 export const dynamic = "force-dynamic";
 
@@ -138,6 +139,9 @@ export default async function ServiceLogPage({
             </li>
           ))}
         </ul>
+        <div className="mt-4">
+          <TestEmailButton />
+        </div>
       </section>
 
       {/* Last 7 days */}

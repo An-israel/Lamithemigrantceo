@@ -1,4 +1,4 @@
-import { configuredFrom, senderProblem } from "@/lib/sender";
+import { resolveSender } from "@/lib/sender";
 
 /**
  * Configuration checks for the Service log page. Server-only: reads env
@@ -16,8 +16,10 @@ function set(v: string | undefined) {
 export function configurationChecks(): HealthCheck[] {
   const stripeKey = process.env.STRIPE_SECRET_KEY;
   const resendKey = process.env.RESEND_API_KEY;
-  const from = configuredFrom();
-  const fromProblem = senderProblem();
+  const sender = resolveSender();
+  const senderDomain = sender.address.split("@")[1]?.toLowerCase() ?? "";
+  const freeMailbox =
+    /^(gmail|googlemail|yahoo|ymail|hotmail|outlook|live|msn|icloud|me|aol|proton|protonmail)\./.test(senderDomain);
 
   const stripeMode = !set(stripeKey)
     ? null
@@ -51,12 +53,14 @@ export function configurationChecks(): HealthCheck[] {
     },
     {
       name: "Sender address",
-      level: fromProblem ? "missing" : set(from) ? "ok" : "warn",
-      detail: fromProblem
-        ? `RESEND_FROM_EMAIL is set to ${JSON.stringify(process.env.RESEND_FROM_EMAIL ?? "")}, which Resend rejects: ${fromProblem}. Every email fails until this is fixed. In Vercel, change it to exactly Lami <hello@yourdomain> (no quotes), using a domain verified in Resend, then redeploy.`
-        : set(from)
-          ? `Emails are sent from ${from}. Its domain must show "Verified" in Resend → Domains, or Resend rejects every email.`
-          : "RESEND_FROM_EMAIL is not set — using Resend's test sender, which only delivers to the Resend account owner. Verify your domain in Resend and set it.",
+      level: sender.usingTestSender || freeMailbox ? "missing" : sender.repaired ? "warn" : "ok",
+      detail: freeMailbox
+        ? `RESEND_FROM_EMAIL uses ${sender.address}. Resend cannot send from a ${senderDomain} address, so every email will fail. Use an address at the site's own domain (e.g. hello@lamithemigrantceo.uk) after verifying that domain in Resend → Domains, then update Vercel and redeploy.`
+        : sender.usingTestSender
+        ? `RESEND_FROM_EMAIL contains no email address (it is ${sender.raw ? `"${sender.raw}"` : "empty"}), so emails go from Resend's test sender, which only delivers to the Resend account owner. Set it in Vercel to Lami <hello@yourdomain> and redeploy.`
+        : sender.repaired
+          ? `Emails are sent as "${sender.from}". The value in Vercel ("${sender.raw}") isn't in a format Resend accepts, so it is tidied automatically — no action needed, but you can replace it with exactly ${sender.from}. The domain must show "Verified" in Resend → Domains.`
+          : `Emails are sent as "${sender.from}". The domain must show "Verified" in Resend → Domains, or Resend rejects every email.`,
     },
     {
       name: "Enquiry alerts",
