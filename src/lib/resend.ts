@@ -1,9 +1,11 @@
 import { logEvent, errorText } from "@/lib/serviceLog";
-import { senderAddress, senderProblem } from "@/lib/sender";
+import { resolveSender } from "@/lib/sender";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-// Falls back to Resend's onboarding sender until the domain is verified.
-const FROM = senderAddress();
+// Always a valid `Name <address>`, rebuilt from RESEND_FROM_EMAIL however
+// it was pasted; falls back to Resend's test sender if it holds no address.
+const SENDER = resolveSender();
+const FROM = SENDER.from;
 
 /** Pulls Resend's own explanation out of an error response body. */
 function resendMessage(body: string): string {
@@ -13,6 +15,10 @@ function resendMessage(body: string): string {
   } catch {
     return body;
   }
+}
+
+export function senderInUse(): string {
+  return FROM;
 }
 
 export function emailConfigured(): boolean {
@@ -33,7 +39,14 @@ export type SendEmailInput = {
   ref?: string;
 };
 
-export type SendEmailResult = { ok: boolean; skipped?: boolean; id?: string; error?: string };
+export type SendEmailResult = {
+  ok: boolean;
+  skipped?: boolean;
+  id?: string;
+  error?: string;
+  /** Resend's own human-readable reason, when it rejected the send. */
+  reason?: string;
+};
 
 /**
  * Sends one transactional email via Resend and records the outcome in the
@@ -76,7 +89,6 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
       const error = (await res.text()).slice(0, 500);
       console.error("Resend error", error);
       const reason = resendMessage(error).slice(0, 200);
-      const problem = senderProblem();
       await logEvent({
         ...base,
         status: "failed",
@@ -85,10 +97,10 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
           ...detail,
           http_status: res.status,
           error,
-          ...(problem ? { likely_cause: `RESEND_FROM_EMAIL ${problem}` } : {}),
+          resend_from_email_in_vercel: SENDER.raw,
         },
       });
-      return { ok: false, error };
+      return { ok: false, error, reason };
     }
     const body = (await res.json().catch(() => ({}))) as { id?: string };
     await logEvent({
@@ -106,6 +118,6 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
       summary: `${label} to ${to} failed (could not reach Resend)`,
       detail: { ...detail, error: errorText(e) },
     });
-    return { ok: false, error: errorText(e) };
+    return { ok: false, error: errorText(e), reason: "Could not reach Resend" };
   }
 }
