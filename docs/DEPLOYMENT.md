@@ -24,10 +24,12 @@ Supabase dashboard → **SQL editor** → paste and run, in order:
    `memberships` (African Women Builds join), `applications` (programme
    applications), `ventures` (future ventures), and the
    `increment_tickets_sold` RPC. Seeds Build Her Empire Live.
-6. Every later file in number order, `0006_…` through `0019_…`. The two
-   newest: `0018_site_content.sql` (the **Page text** editor) and
-   `0019_service_log.sql` (the **Service log** — payments, emails, forms and
-   errors, in admin under Overview). Each is safe to re-run.
+6. Every later file in number order, `0006_…` through `0020_…`. The
+   newest: `0018_site_content.sql` (the **Page text** editor),
+   `0019_service_log.sql` (the **Service log**) and
+   `0020_email_marketing.sql` (**Email marketing**: the subscriber list,
+   campaigns and send tracking; it also imports everyone who already asked
+   for The Build Letter). Each is safe to re-run.
 
 Running `0003` also creates the image-upload bucket, so the admin editors work
 out of the box — you can skip the manual bucket step in section 5.
@@ -152,16 +154,18 @@ domain**, then add the records it shows at Lami's registrar. Typically:
 Until the domain is verified, `RESEND_FROM_EMAIL` falls back to Resend's
 onboarding sender (`onboarding@resend.dev`) so testing is not blocked.
 
-### Newsletter → real mailing list
+### Newsletter → mailing list
 
-The footer signup adds subscribers to a Resend Audience so they're an actual
-sendable list, not just rows in the enquiries inbox:
+Build Letter sign-ups are stored in the site's own `subscribers` table
+(migration 0020) and managed in **Admin → Email marketing**. Campaigns are
+sent through the same Resend account as every other email, so the only
+setup is the verified sending domain above. Marketing emails use
+`ENQUIRY_NOTIFY_EMAIL` as their reply-to address, so replies reach Lami.
 
-1. Resend dashboard → **Audiences → Create audience**.
-2. Copy its id → `RESEND_AUDIENCE_ID` (Vercel env vars + `.env.local`).
-
-Optional: without this, signups still work and are still recorded as
-enquiries, they just won't be added to a list until it's set.
+Resend's free plan allows 100 emails a day and 3,000 a month in total,
+shared with order confirmations. A campaign that hits the limit pauses
+safely and can be resumed; upgrade the Resend plan before the list grows
+past that.
 
 ---
 
@@ -203,7 +207,7 @@ real testing:
    `NEXT_PUBLIC_SUPABASE_*` / `SUPABASE_SERVICE_ROLE_KEY` vars to
    **Production** only, and add a second set scoped to **Preview** pointing
    at the staging project.
-3. Use Stripe **test** keys and a second Resend audience for the staging
+3. Use Stripe **test** keys and a separate Resend API key for the staging
    project so test traffic never touches real customer data or sends real
    email.
 
@@ -228,8 +232,8 @@ production data — because it can.
       enabled on the Stripe webhook, section 3).
 - [ ] Enquiry form sends both emails (requires `RESEND_API_KEY`,
       `RESEND_FROM_EMAIL`, `ENQUIRY_NOTIFY_EMAIL` set in Vercel — section 4).
-- [ ] Newsletter signups land in the Resend Audience, not just enquiries
-      (requires `RESEND_AUDIENCE_ID`, section 4).
+- [ ] Newsletter signup on the live site appears in Admin → Subscribers and
+      the welcome email arrives; send a test campaign to yourself.
 - [ ] Domain verified for Resend; SPF + DKIM live.
 - [ ] Privacy / Terms replaced with reviewed copy.
 - [ ] Lighthouse mobile performance ≥ 90.

@@ -70,11 +70,11 @@ export function configurationChecks(): HealthCheck[] {
         : "ENQUIRY_NOTIFY_EMAIL is not set — enquiries are saved but nobody is emailed about them.",
     },
     {
-      name: "Newsletter list",
-      level: set(process.env.RESEND_AUDIENCE_ID) ? "ok" : "warn",
-      detail: set(process.env.RESEND_AUDIENCE_ID)
-        ? "Build Letter sign-ups are added to your Resend audience."
-        : "RESEND_AUDIENCE_ID is not set — sign-ups are only saved in Enquiries, not added to a mailing list.",
+      name: "Newsletter replies",
+      level: set(process.env.ENQUIRY_NOTIFY_EMAIL) ? "ok" : "warn",
+      detail: set(process.env.ENQUIRY_NOTIFY_EMAIL)
+        ? `Replies to Build Letter emails go to ${process.env.ENQUIRY_NOTIFY_EMAIL}.`
+        : "ENQUIRY_NOTIFY_EMAIL is not set — replies to Build Letter emails go to the sender address, which may not be a real inbox.",
     },
     {
       name: "Database (server access)",

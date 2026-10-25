@@ -9,7 +9,7 @@ import { clsx } from "@/lib/clsx";
 type Item = { href: string; label: string };
 type Group = { id: string; label: string; items: Item[] };
 
-// Grouped by relatedness into 5 collapsible sections.
+// Grouped by relatedness into collapsible sections.
 const GROUPS: Group[] = [
   {
     id: "overview",
@@ -28,6 +28,14 @@ const GROUPS: Group[] = [
       { href: "/admin/applications", label: "Applications" },
       { href: "/admin/members", label: "Members" },
       { href: "/admin/students", label: "Students" },
+    ],
+  },
+  {
+    id: "email",
+    label: "Email marketing",
+    items: [
+      { href: "/admin/campaigns", label: "Campaigns" },
+      { href: "/admin/subscribers", label: "Subscribers" },
     ],
   },
   {

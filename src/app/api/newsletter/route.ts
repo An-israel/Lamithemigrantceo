@@ -2,67 +2,24 @@ import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
 import { logEvent, errorText } from "@/lib/serviceLog";
+import { normaliseEmail, subscribe } from "@/lib/subscribers";
 
-/**
- * Footer "free starter list" capture. Adds the subscriber to a real Resend
- * Audience (create one at resend.com/audiences and set RESEND_AUDIENCE_ID)
- * so she can actually send to a list later, not just see rows in an inbox.
- * Also stored as an enquiry so it still shows up where Lami already looks,
- * even before RESEND_AUDIENCE_ID is configured.
- */
-async function addToResendAudience(email: string) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const audienceId = process.env.RESEND_AUDIENCE_ID;
-  if (!apiKey || !audienceId) {
-    await logEvent({
-      category: "form",
-      event: "newsletter.audience_skipped",
-      status: "skipped",
-      summary: `${email} not added to the Resend mailing list: RESEND_AUDIENCE_ID is not set (saved in Enquiries instead)`,
-      ref: email,
-    });
-    return;
-  }
-
+/** Which page the sign-up form was on, for the Subscribers list's "source". */
+function sourceFrom(request: Request): string {
   try {
-    const res = await fetch(
-      `https://api.resend.com/audiences/${audienceId}/contacts`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, unsubscribed: false }),
-      }
-    );
-    if (!res.ok) {
-      const error = (await res.text()).slice(0, 500);
-      console.error("Resend audience add failed", error);
-      await logEvent({
-        category: "form",
-        event: "newsletter.audience_failed",
-        status: "failed",
-        summary: `${email} could not be added to the Resend mailing list (Resend ${res.status})`,
-        ref: email,
-        detail: { error },
-      });
-    }
-  } catch (e) {
-    await logEvent({
-      category: "form",
-      event: "newsletter.audience_failed",
-      status: "failed",
-      summary: `${email} could not be added to the Resend mailing list (could not reach Resend)`,
-      ref: email,
-      detail: { error: errorText(e) },
-    });
-    // Never fail the signup over the ESP call — the enquiries row is the
-    // fallback record of who asked to be added.
-    console.error("Resend audience add errored", e);
+    const path = new URL(request.headers.get("referer") || "").pathname;
+    return path === "/" ? "newsletter: homepage" : `newsletter: ${path}`;
+  } catch {
+    return "newsletter";
   }
 }
 
+/**
+ * The Build Letter sign-up (footer, homepage, /start, resources, journal).
+ * Adds the person to the mailing list in Admin → Subscribers and sends a
+ * welcome email. If the list can't be saved, the sign-up is kept as an
+ * enquiry instead so nobody is lost.
+ */
 export async function POST(request: Request) {
   if (!rateLimit(`newsletter:${clientIp(request)}`, 5, 60_000)) {
     return NextResponse.json({ error: "Too many attempts. Wait a minute and try again." }, { status: 429 });
@@ -81,34 +38,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  const email = String(body.email || "").trim();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  const email = normaliseEmail(body.email);
+  if (!email) {
     return NextResponse.json({ error: "Enter a valid email." }, { status: 400 });
   }
 
+  const result = await subscribe(email, { source: sourceFrom(request) });
+  if (result !== "error") {
+    return NextResponse.json({ ok: true });
+  }
+
   try {
-    const supabase = createServiceClient();
-    const { error } = await supabase.from("enquiries").insert({
+    const { error } = await createServiceClient().from("enquiries").insert({
       name: "Newsletter signup",
       email,
       topic: "Newsletter",
-      message: "Requested the free starter list from the footer.",
+      message: "Signed up for The Build Letter (could not be added to the mailing list automatically).",
       marketing_opt_in: true,
       status: "new",
-      source_page: "footer",
+      source_page: sourceFrom(request),
     });
     if (error) throw error;
-
-    await logEvent({
-      category: "form",
-      event: "newsletter.signup",
-      status: "success",
-      summary: `Build Letter signup: ${email}`,
-      ref: email,
-    });
-
-    await addToResendAudience(email);
-
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error("newsletter insert failed", e);
