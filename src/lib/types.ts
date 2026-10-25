@@ -195,6 +195,46 @@ export interface WholesaleProduct {
   sort_order: number;
 }
 
+export interface Subscriber {
+  id: string;
+  created_at: string;
+  email: string;
+  name: string | null;
+  status: "subscribed" | "unsubscribed";
+  source: string;
+  consent_at: string;
+  unsubscribed_at: string | null;
+}
+
+export interface EmailCampaign {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  subject: string;
+  preview_text: string;
+  body_html: string;
+  image_url: string | null;
+  cta_label: string | null;
+  cta_url: string | null;
+  status: "draft" | "sending" | "sent";
+  recipient_count: number;
+  sent_count: number;
+  failed_count: number;
+  skipped_count: number;
+  started_at: string | null;
+  sent_at: string | null;
+  last_error: string | null;
+}
+
+export interface EmailCampaignRecipient {
+  campaign_id: string;
+  email: string;
+  status: "pending" | "sending" | "sent" | "failed" | "skipped";
+  sent_at: string | null;
+  error: string | null;
+}
+
 export interface Order {
   id: string;
   created_at: string;

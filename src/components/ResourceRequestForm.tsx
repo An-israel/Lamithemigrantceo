@@ -12,6 +12,7 @@ import type { Resource } from "@/lib/types";
  */
 export function ResourceRequestForm({ resource }: { resource: Resource }) {
   const [email, setEmail] = useState("");
+  const [optIn, setOptIn] = useState(false);
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">(
     "idle"
   );
@@ -29,7 +30,7 @@ export function ResourceRequestForm({ resource }: { resource: Resource }) {
           topic: "Resource",
           message: `Requested: ${resource.title}`,
           resource_id: resource.id,
-          marketing_opt_in: true,
+          marketing_opt_in: optIn,
           source_page: `/resources#${resource.id}`,
         }),
       });
@@ -106,6 +107,15 @@ export function ResourceRequestForm({ resource }: { resource: Resource }) {
           {state === "sending" ? "Sending…" : "Get it free"}
         </button>
       </div>
+      <label className="mt-2 flex items-start gap-2 text-xs text-muted">
+        <input
+          type="checkbox"
+          checked={optIn}
+          onChange={(e) => setOptIn(e.target.checked)}
+          className="mt-0.5 h-3.5 w-3.5 accent-clay"
+        />
+        <span>Also send me The Build Letter: occasional business insights. Unsubscribe any time.</span>
+      </label>
       {state === "error" && (
         <p className="mt-1 text-xs text-clay">That didn&rsquo;t go through.</p>
       )}

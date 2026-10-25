@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/rateLimit";
 import { sendEmail } from "@/lib/resend";
 import { freeResourceEmail } from "@/lib/emailTemplates";
+import { subscribe } from "@/lib/subscribers";
 import { logEvent, errorText } from "@/lib/serviceLog";
 
 const NOTIFY_TO = process.env.ENQUIRY_NOTIFY_EMAIL || "";
@@ -125,6 +126,15 @@ export async function POST(request: Request) {
     ref: email,
     detail: { topic, organisation, event_date: eventDate, budget_range: budgetRange, source_page: sourcePage },
   });
+
+  // Ticking "Send me The Build Letter" (contact form, free resources) is
+  // marketing consent; waitlist sign-ups are only about that product/event.
+  if (marketingOptIn && topic !== "Product waitlist" && topic !== "Event waitlist") {
+    await subscribe(email, {
+      name: isResource ? null : name,
+      source: isResource ? "free resource" : "contact form",
+    });
+  }
 
   // Email both sides. Best-effort — the enquiry is already saved, so a
   // failed send here never loses the message, it just delays the reply.

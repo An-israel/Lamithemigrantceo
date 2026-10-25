@@ -83,7 +83,47 @@ not sent, and why), form submissions and order updates.
   straight to them.
 - **Download CSV** keeps a copy for your records.
 
-## 7. Change your details or the homepage
+## 7. Send The Build Letter (email marketing)
+
+Go to **Email marketing**.
+
+**Your list: Subscribers.** Everyone who signs up on the site lands here
+automatically and gets a welcome email. That covers the newsletter boxes, plus
+anyone who ticks "Send me The Build Letter" on the contact form or a free
+resource. You can also:
+
+- **Add someone** by hand, if they asked you to.
+- **Import a list** from Beacons or a spreadsheet: upload the CSV or paste it.
+  Only import people who agreed to get your emails. Anyone who unsubscribed
+  stays unsubscribed.
+- **Unsubscribe** someone who asks by message, or **Delete** them completely
+  if they ask you to erase their details.
+- **Download CSV** for your records.
+
+**Writing and sending: Campaigns.**
+
+1. Click **Write a new email**. Fill in the subject, an optional preview line,
+   an optional header image, the email itself and an optional button. Type
+   `{{first_name}}` anywhere to greet each person by name. It saves as you type.
+2. The preview on the right shows exactly what people will get. Switch to
+   **Phone** to check it on mobile.
+3. Click **Send test**. It goes to your own inbox only. Read it there first.
+4. Click **Send to … subscribers**, then **Yes, send it now**. Keep the page
+   open while the progress bar fills.
+5. When it's done you'll see how many were sent. If any failed, **Retry
+   failed** sends to just those people.
+
+Every email automatically gets your sign-off, a link to your site and an
+**Unsubscribe** link. Unsubscribes are handled for you.
+
+**If sending pauses:** Resend's free plan sends 100 emails a day (3,000 a
+month), counting order confirmations too. If the limit is reached, sending
+stops safely and tells you. Press **Resume sending** the next day, or upgrade
+Resend and resume straight away. Nobody gets the same email twice.
+
+To reuse an email, open it and click **Duplicate as new draft**.
+
+## 8. Change your details or the homepage
 
 Go to **Settings**. You can change your WhatsApp number, email, booking link
 and social handles, and edit the homepage headline and paragraph — no developer
